@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profil Sekolah - SMK Plus Pelita Nusantara</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f3faff",
+                        "surface": "#f3faff",
+                        "inverse-on-surface": "#dff4ff",
+                        "surface-variant": "#cfe6f2",
+                        "secondary-fixed-dim": "#fabd00",
+                        "primary-container": "#1a237e",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c6c5d4",
+                        "on-tertiary-fixed-variant": "#065043",
+                        "surface-container-high": "#d5ecf8",
+                        "on-background": "#071e27",
+                        "surface-container-low": "#e6f6ff",
+                        "on-secondary-container": "#6c5000",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "secondary-fixed": "#ffdf9e",
+                        "on-surface-variant": "#454652",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#dbf1fe",
+                        "secondary-container": "#fdc003",
+                        "outline": "#767683",
+                        "surface-tint": "#4c56af",
+                        "on-tertiary-fixed": "#00201a",
+                        "inverse-primary": "#bdc2ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#afefdd",
+                        "on-primary-container": "#8690ee",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#e0e0ff",
+                        "on-primary-fixed-variant": "#343d96",
+                        "on-primary-fixed": "#000767",
+                        "background": "#f3faff",
+                        "tertiary-container": "#00372d",
+                        "secondary": "#785900",
+                        "on-secondary-fixed": "#261a00",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#1e333c",
+                        "tertiary-fixed-dim": "#94d3c1",
+                        "surface-dim": "#c7dde9",
+                        "on-secondary-fixed-variant": "#5b4300",
+                        "surface-container-highest": "#cfe6f2",
+                        "primary": "#000666",
+                        "on-surface": "#071e27",
+                        "tertiary": "#002019",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#65a393",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Public Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f3faff;
+            color: #071e27;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Navigation Bar -->
+<nav class="bg-slate-50/80 backdrop-blur-md dark:bg-slate-950/80 docked full-width top-0 sticky z-50 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<img alt="SMK Plus Pelita Nusantara Logo" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ugnjBU_yv7hTsA_zH5ax1CJECq5ruqcSO4XqvzkiEC0GGFxCGSPVw04Q6zNZ1dJywtNXO4H2x30FEbk9EKiM1rozPHu1-enHQEq5ey3xoQZ1kBZmN9SgCrm9v6IkocsFaJDSjmvirxEy1au76cyZ5zhu1HXcIxBwHB72lCmI6j8tiJs2Hhw0fVkCN_dMcoxQJCDpqB2wKftcc9ozghO7eEhsHGEr5vJZyuGSSwunvn_ABNbY_kqFrrHEaFeIzQdt2Bxdk6IFWSB7A"/>
+</div>
+<div class="hidden md:flex items-center gap-8 font-headline tracking-tight font-bold text-lg">
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-amber-700 dark:hover:text-amber-400 transition-all duration-300" href="#">Beranda</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-amber-700 dark:hover:text-amber-400 transition-all duration-300" href="#">PPDB</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-amber-700 dark:hover:text-amber-400 transition-all duration-300" href="#">Kelulusan</a>
+<a class="text-indigo-900 dark:text-indigo-400 border-b-2 border-amber-600 pb-1 hover:text-amber-700 dark:hover:text-amber-400 transition-all duration-300" href="#">Profil</a>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-md font-bold hover:scale-95 transition-transform">Login</button>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-[1px] w-full absolute bottom-0 opacity-10"></div>
+</nav>
+<main>
+<!-- Hero Section: Prestige Editorial Style -->
+<section class="relative min-h-[716px] flex items-center pt-20 pb-32 overflow-hidden px-8">
+<div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7 z-10">
+<span class="inline-block px-4 py-1 mb-6 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label text-sm font-bold tracking-widest">SMK UNGGULAN INDONESIA</span>
+<h1 class="text-6xl md:text-8xl font-headline font-black text-primary leading-none tracking-tighter mb-8 italic">
+                        Berakar pada Tradisi,<br/>
+<span class="text-secondary">Unggul dalam Teknologi.</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-xl leading-relaxed font-light">
+                        Membangun generasi emas yang kompeten secara teknis dan kokoh secara karakter. SMK Plus Pelita Nusantara adalah pusat keunggulan pendidikan vokasi modern.
+                    </p>
+</div>
+<div class="lg:col-span-5 relative">
+<div class="aspect-[4/5] rounded-xl overflow-hidden shadow-2xl relative">
+<img class="w-full h-full object-cover" data-alt="Modern vocational school student working with advanced robotics and computer systems in a high-tech lab setting with clean lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACFZMs3Kq-vvBIrdckSu3J1sFJWCG3Ockw4ZEO8EbGe8jWndbnT91bM__5DFYi00MP3F61Z8ohzcltjpMRyDXW2gCZ_JQojzhi6do-8xc_i27IXzbjx1ilqpRN6PpWjDCXT8WssoWTM1xfkvuI2im08Vc31R3MN-vTDK0qeM4RadMgs2egrjk4ev6dnQ-O_O2qY9cwthtKtZ4FJT60rWe-nSjFhSrcs4SHnD1fbNx6beMQ5hIhHxWGf-6caTpojgZk-pAs7f2ugAg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+</div>
+<!-- Overlapping Decorative Box -->
+<div class="absolute -bottom-10 -left-10 bg-surface-container-highest p-8 rounded-xl shadow-xl hidden md:block max-w-xs">
+<h3 class="font-headline font-bold text-primary text-xl mb-2 italic">Akreditasi A</h3>
+<p class="text-sm text-on-surface-variant leading-tight">Menjamin kualitas kurikulum yang selaras dengan kebutuhan industri global terkini.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Vision & Mission: Asymmetric Layout -->
+<section class="bg-surface-container-low py-24 px-8">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+<div class="space-y-8">
+<h2 class="text-4xl font-headline font-extrabold text-primary tracking-tight">Visi Sekolah</h2>
+<p class="text-2xl text-on-surface font-light leading-snug border-l-4 border-secondary pl-6">
+                        Menjadi institusi pendidikan vokasi terdepan yang menghasilkan lulusan berakhlak mulia, kompeten secara profesional, dan mampu bersaing di tingkat internasional.
+                    </p>
+</div>
+<div class="space-y-8 md:mt-24">
+<h2 class="text-4xl font-headline font-extrabold text-primary tracking-tight">Misi Utama</h2>
+<ul class="space-y-6">
+<li class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-secondary font-bold">verified</span>
+<p class="text-on-surface-variant">Menyelenggarakan pembelajaran berbasis proyek (Project Based Learning) yang selaras dengan Dunia Usaha dan Dunia Industri (DUDI).</p>
+</li>
+<li class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-secondary font-bold">verified</span>
+<p class="text-on-surface-variant">Mengintegrasikan nilai-nilai karakter luhur dan disiplin dalam setiap aspek kehidupan sekolah.</p>
+</li>
+<li class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-secondary font-bold">verified</span>
+<p class="text-on-surface-variant">Mengembangkan fasilitas pendidikan berstandar industri untuk menunjang kreativitas siswa.</p>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Milestones: Bento Grid Style -->
+<section class="py-24 px-8 max-w-7xl mx-auto">
+<div class="mb-16">
+<span class="text-secondary font-label font-bold uppercase tracking-widest text-xs">Jejak Langkah</span>
+<h2 class="text-5xl font-headline font-black text-primary tracking-tight mt-2">Pencapaian &amp; Sejarah</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 h-auto md:h-[600px]">
+<div class="md:col-span-2 md:row-span-2 bg-primary p-12 rounded-xl flex flex-col justify-end text-on-primary group overflow-hidden relative">
+<img class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="A historic view of the school foundation stone ceremony with academic leaders and community members in a celebratory atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsFezUI0c7sZaLt8HsJZAu-ThT83uTC-p2LwZuY68fUivnJYi_64uR8yc3whBOl_UdasZgJ0NqxytetPlA3Hm05VCvDD1epNE7nfWnThcPGc0anrOdpgpBSjzylw4Ikcu_bLfJnHluS_vTYnWAmT3SIdHQTfdjSyM8Xle7cp7f4D697RVuYlvSsUZrd_yQdM8EXLJ9WDFOZjj7HO3CroyV0hzsuNLK_iaJ4d3o0NcQhKr21W3fMOdx9ZBviDW0d5bvjf1AzlWs4Rk"/>
+<div class="relative z-10">
+<span class="text-6xl font-headline font-black mb-4 block">2005</span>
+<h4 class="text-2xl font-bold mb-2">Awal Perjalanan</h4>
+<p class="text-primary-fixed-dim max-w-md">Didirikan dengan semangat untuk memberikan pendidikan vokasi yang terjangkau namun berkualitas tinggi bagi masyarakat.</p>
+</div>
+</div>
+<div class="md:col-span-2 bg-surface-container text-primary p-8 rounded-xl flex items-center gap-6">
+<div class="text-5xl font-headline font-black">15+</div>
+<div>
+<h4 class="text-xl font-bold">Mitra Industri</h4>
+<p class="text-on-surface-variant">Kerjasama strategis dengan perusahaan multinasional untuk penempatan kerja lulusan.</p>
+</div>
+</div>
+<div class="bg-secondary-container text-on-secondary-container p-8 rounded-xl flex flex-col justify-between">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<h4 class="text-lg font-bold">Pusat Keunggulan Nasional 2022</h4>
+</div>
+<div class="bg-surface-container-highest p-8 rounded-xl flex flex-col justify-between">
+<span class="material-symbols-outlined text-4xl text-primary">public</span>
+<h4 class="text-lg font-bold text-primary">Sertifikasi ISO Internasional</h4>
+</div>
+</div>
+</section>
+<!-- Facilities: Tonal Layering -->
+<section class="py-24 px-8 bg-surface-bright">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+<div class="max-w-2xl">
+<span class="text-secondary font-label font-bold uppercase tracking-widest text-xs">Fasilitas Modern</span>
+<h2 class="text-5xl font-headline font-black text-primary tracking-tight mt-2 italic">Ekosistem Belajar Tanpa Batas</h2>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<!-- Facility Card 1 -->
+<div class="group">
+<div class="aspect-video rounded-xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Interior of a modern high-end computer lab with rows of sleek monitors and ergonomic chairs with professional blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLkqaRXZbvbysuhHSOJhIUeXwXrA78Gbt-i2vGMOLSN2e6P1l1c3ofxSUYHTd-x30SBB0TykSBW0AGeBgeL5aYIhOomKs3QAQ3L3Fcth5OiSeF2NwuTz7uMU72T7r67gF72drWqSreQn-syqZD8-HHshcCgdFf2rboIUCH_jHvDczq2uhfaLWtTdlkZg1KsHKKqrvpiQoH1h5OMwltEb-4PEZjCCiG5mdin8ltehd--1-9I0pRL0KprmCiLsB1369GHIIAWnHDB2Q"/>
+</div>
+<h4 class="text-xl font-headline font-bold text-primary mb-3">Laboratorium Komputer iMAC</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Fasilitas komputasi kelas dunia untuk jurusan Multimedia dan Rekayasa Perangkat Lunak.</p>
+</div>
+<!-- Facility Card 2 -->
+<div class="group">
+<div class="aspect-video rounded-xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Sophisticated engineering workshop with industrial machines, robotics arms, and precise workstations for vocational training" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZpKFY-JUopibBWhQ9ZxdvK5EdJRB5zR7BKU--w7Xn6T-mmF1Qd4M9xeOUIJEzwLe2tOqsIc28lHzZK6EoBOZFtI_yHiWZOL96fqKN6SOJSDEoUatxPre5UGpIln1sBwEXYLxhUTuL8PAX4RHb1A6QYl8jS2BmDtap4c8HsNiXxQCt0pXlB2GvBXCv6iFXamW1mUuyHnnpOR1F4tgmBeULM8NqKJKs4uSz52omVESLKHru8g05h9nKaswbqZbsqDGKZBWZdbj5H6I"/>
+</div>
+<h4 class="text-xl font-headline font-bold text-primary mb-3">Workshop Teknik Modern</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Ruang praktik dengan standar industri otomotif dan permesinan terkini.</p>
+</div>
+<!-- Facility Card 3 -->
+<div class="group">
+<div class="aspect-video rounded-xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Bright and airy library space with contemporary shelving, comfortable reading pods, and a vast collection of resources" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC328_KwiJWVBggBjYWfZqW7-4gDBKraYkTAaOOCSySpfa6q_EpiClEA0DcTTISLEHhlnP-ZzCZy1uRypEHTc124CAgMxS8P_sMxpq0YSRYpRzB5YKDkjhV6Uk9TvRizMZ4BNaqSV_MYUHXCnCDj9ITduKTrkoP5Ksxw-R19_hWGVr-mYNwHphqLjuN5FNCuxdMbZqEyztAeosOEhAdh8Oq-nhzOF4ugvA1v4niMhnTMtYMao_RmVvsVA2gFtdMdmiKCgCcDw64gWM"/>
+</div>
+<h4 class="text-xl font-headline font-bold text-primary mb-3">Digital Library &amp; Lounge</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Area literasi nyaman yang dilengkapi dengan akses e-book dan jurnal internasional.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-8">
+<div class="max-w-7xl mx-auto bg-primary rounded-3xl p-12 md:p-24 relative overflow-hidden text-center md:text-left">
+<div class="relative z-10 max-w-2xl">
+<h2 class="text-4xl md:text-6xl font-headline font-black text-on-primary mb-8 leading-tight">Siap Bergabung dengan Keluarga Besar Kami?</h2>
+<p class="text-on-primary-container text-xl mb-12 font-light">Pendaftaran Peserta Didik Baru telah dibuka. Mari rancang masa depan gemilang bersama Pelita Nusantara.</p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-secondary-container text-on-secondary-container px-10 py-4 rounded-lg font-bold text-lg hover:bg-secondary-fixed-dim transition-colors">Daftar Sekarang</button>
+<button class="border-2 border-on-primary text-on-primary px-10 py-4 rounded-lg font-bold text-lg hover:bg-on-primary hover:text-primary transition-all">Hubungi Kami</button>
+</div>
+</div>
+<!-- Glassmorphism decorative element -->
+<div class="absolute right-[-10%] top-[-10%] w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute left-[-5%] bottom-[-5%] w-[300px] h-[300px] bg-secondary/20 rounded-full blur-2xl"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-100 dark:bg-slate-900 tonal shift via background color change w-full rounded-none">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-10 gap-6 w-full max-w-7xl mx-auto">
+<div class="flex flex-col items-center md:items-start gap-2">
+<img alt="SMK Plus Pelita Nusantara Logo" class="h-10 w-auto object-contain mb-2" src="https://lh3.googleusercontent.com/aida/ADBb0ugnjBU_yv7hTsA_zH5ax1CJECq5ruqcSO4XqvzkiEC0GGFxCGSPVw04Q6zNZ1dJywtNXO4H2x30FEbk9EKiM1rozPHu1-enHQEq5ey3xoQZ1kBZmN9SgCrm9v6IkocsFaJDSjmvirxEy1au76cyZ5zhu1HXcIxBwHB72lCmI6j8tiJs2Hhw0fVkCN_dMcoxQJCDpqB2wKftcc9ozghO7eEhsHGEr5vJZyuGSSwunvn_ABNbY_kqFrrHEaFeIzQdt2Bxdk6IFWSB7A"/>
+<p class="text-slate-500 dark:text-slate-400 font-inter text-sm leading-relaxed text-center md:text-left">© 2024 SMK Plus Pelita Nusantara. Unggul dalam Teknologi, Berakar pada Tradisi.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 dark:text-slate-400 font-inter text-sm hover:underline hover:text-amber-700 smooth opacity transition on hover" href="#">Beranda</a>
+<a class="text-slate-500 dark:text-slate-400 font-inter text-sm hover:underline hover:text-amber-700 smooth opacity transition on hover" href="#">PPDB</a>
+<a class="text-slate-500 dark:text-slate-400 font-inter text-sm hover:underline hover:text-amber-700 smooth opacity transition on hover" href="#">Kelulusan</a>
+<a class="text-indigo-800 dark:text-indigo-300 font-semibold font-inter text-sm hover:underline hover:text-amber-700 smooth opacity transition on hover" href="#">Profil</a>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-indigo-900 dark:text-indigo-200 cursor-pointer hover:scale-110 transition-transform">social_leaderboard</span>
+<span class="material-symbols-outlined text-indigo-900 dark:text-indigo-200 cursor-pointer hover:scale-110 transition-transform">share</span>
+<span class="material-symbols-outlined text-indigo-900 dark:text-indigo-200 cursor-pointer hover:scale-110 transition-transform">mail</span>
+</div>
+</div>
+</footer>
+</body></html>

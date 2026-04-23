@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Wawancara - {{ interview.studentName }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #121212;
+            --secondary: #4B4B4B;
+            --accent: #000000;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: var(--primary);
+            line-height: 1.6;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 20mm auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        @media print {
+            body { background: white; margin: 0; }
+            .page { margin: 0; box-shadow: none; width: 100%; border: none; }
+            .no-print { display: none; }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container img {
+            height: 60px;
+            width: auto;
+        }
+
+        .logo-container .app-name {
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+        }
+
+        .report-title {
+            text-align: right;
+        }
+
+        .report-title h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .report-title p {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--secondary);
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .section-number {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        .section-header h2 {
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .assessment-box {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .commitment-list {
+            margin-top: 10px;
+        }
+
+        .commitment-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .check-icon {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .uncheck-icon {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .footer-signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding-top: 20px;
+        }
+
+        .sign-box {
+            text-align: center;
+            width: 200px;
+        }
+
+        .sign-box p {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 60px;
+        }
+
+        .sign-box .name {
+            font-weight: 800;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn no-print" onclick="window.print()">UNDUH PDF / CETAK</button>
+
+    <div class="page">
+        <header>
+            <div class="logo-container">
+                @if(logo)
+                    <img src="{{ logo }}" alt="Logo">
+                @endif
+                <div class="app-name">Portal Akademik</div>
+            </div>
+            <div class="report-title">
+                <h1>Laporan Hasil Wawancara</h1>
+                <p> • TA 2024/2025</p>
+            </div>
+        </header>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <h2>Profil Calon Siswa</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Nama Lengkap</span>
+                    <span class="info-value text-xl">{{ interview.studentName }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ID Pendaftaran</span>
+                    <span class="info-value font-headline">{{ interview.id }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Asal Sekolah</span>
+                    <span class="info-value">{{ interview.schoolOrigin }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tanggal Wawancara</span>
+                    <span class="info-value">{{ interview.interviewDate ? new Date(interview.interviewDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Pendamping</span>
+                    <span class="info-value">{{ interview.accompaniment || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Pewawancara</span>
+                    <span class="info-value">{{ interview.interviewer || '-' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <h2>Identitas & Aspirasi</h2>
+            </div>
+            <div class="info-grid assessment-box">
+                <div class="info-item full-width">
+                    <span class="info-label">Sumber Informasi Sekolah</span>
+                    <span class="info-value">{{ interview.infoSource || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Alasan Memilih Sekolah</span>
+                    <span class="info-value text-sm">{{ interview.reasonChoosingSchool || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Pilihan Jurusan & Alasan</span>
+                    <span class="info-value text-sm">{{ interview.majorChoice || '-' }}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="info-label">Cita-cita & Harapan Jangka Panjang</span>
+                    <span class="info-value text-sm">{{ interview.longTermGoals || '-' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <h2>Success by Character & Disiplin</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Jarak Rumah ke Sekolah</span>
+                    <span class="info-value">{{ interview.characterAnswers?.homeDistance || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Metode Berangkat Sekolah</span>
+                    <span class="info-value">{{ interview.characterAnswers?.travelMethod || '-' }}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="info-label">Komitmen Karakter</span>
+                    <div class="commitment-list">
+                        @if(interview.characterAnswers)
+                            <div class="commitment-item">
+                                <span class="{{ interview.characterAnswers.vehicleCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.characterAnswers.vehicleCommitment ? '✔' : '✘' }}</span>
+                                <span>Sanggup menggunakan kendaraan standar & parkir di tempat yang disediakan.</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.characterAnswers.presenceCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.characterAnswers.presenceCommitment ? '✔' : '✘' }}</span>
+                                <span>Sanggup hadir mengikuti kegiatan pembelajaran Senin - Sabtu.</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.characterAnswers.alfaCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.characterAnswers.alfaCommitment ? '✔' : '✘' }}</span>
+                                <span>Siap dikembalikan ke ortu bila Alfa > 7 kali.</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.characterAnswers.disciplineCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.characterAnswers.disciplineCommitment ? '✔' : '✘' }}</span>
+                                <span>Siap menjalankan disiplin sesuai aturan sekolah.</span>
+                            </div>
+                        @else
+                            <p class="text-sm italic">Data tidak tersedia</p>
+                        @endif
+                    </div>
+                </div>
+                <div class="info-item full-width">
+                    <span class="info-label">Pernyataan Pelanggaran Luar Biasa</span>
+                    <div class="commitment-item" style="margin-top: 4px;">
+                        <span class="{{ interview.violationAgreement ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationAgreement ? '✔' : '✘' }}</span>
+                        <span class="font-bold">Memahami & setuju dengan konsekuensi pelanggaran luar biasa.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="page-break-before: auto;">
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <h2>Dukungan Orang Tua & Pembiayaan</h2>
+            </div>
+            <div class="info-grid assessment-box">
+                <div class="info-item full-width">
+                    <div class="commitment-list">
+                        @if(interview.parentCommitments)
+                            <div class="commitment-item">
+                                <span class="{{ interview.parentCommitments.fullSupport ? 'check-icon' : 'uncheck-icon' }}">{{ interview.parentCommitments.fullSupport ? '✔' : '✘' }}</span>
+                                <span>Sanggup mendukung sepenuhnya program sekolah.</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.parentCommitments.laptopProvision ? 'check-icon' : 'uncheck-icon' }}">{{ interview.parentCommitments.laptopProvision ? '✔' : '✘' }}</span>
+                                <span>Sanggup menyediakan laptop untuk pembelajaran.</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.parentCommitments.pklConsent ? 'check-icon' : 'uncheck-icon' }}">{{ interview.parentCommitments.pklConsent ? '✔' : '✘' }}</span>
+                                <span>Bersedia bila PKL dilakukan di tempat yang jauh.</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Penanggung Jawab</span>
+                    <span class="info-value">{{ interview.billingDetails?.name || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Hubungan</span>
+                    <span class="info-value">{{ interview.billingDetails?.relationship || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Pekerjaan</span>
+                    <span class="info-value">{{ interview.billingDetails?.job || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sumber Dana Lain</span>
+                    <span class="info-value">{{ interview.billingDetails?.otherSource || '-' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-signature">
+            <div class="sign-box">
+                <p>Orang Tua/Wali</p>
+                <div class="name">{{ interview.billingDetails?.name || '____________________' }}</div>
+            </div>
+            <div class="sign-box">
+                <p>Bogor, {{ new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }}<br>Pewawancara</p>
+                <div class="name">{{ interview.interviewer || '____________________' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatic print on load only if intended
+        // window.onload = () => { if(window.location.search.includes('auto=1')) window.print(); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#f3faff",
+                    "surface": "#f3faff",
+                    "inverse-on-surface": "#dff4ff",
+                    "surface-variant": "#cfe6f2",
+                    "secondary-fixed-dim": "#fabd00",
+                    "primary-container": "#1a237e",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#c6c5d4",
+                    "on-tertiary-fixed-variant": "#065043",
+                    "surface-container-high": "#d5ecf8",
+                    "on-background": "#071e27",
+                    "surface-container-low": "#e6f6ff",
+                    "on-secondary-container": "#6c5000",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "secondary-fixed": "#ffdf9e",
+                    "on-surface-variant": "#454652",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#dbf1fe",
+                    "secondary-container": "#fdc003",
+                    "outline": "#767683",
+                    "surface-tint": "#4c56af",
+                    "on-tertiary-fixed": "#00201a",
+                    "inverse-primary": "#bdc2ff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#afefdd",
+                    "on-primary-container": "#8690ee",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#e0e0ff",
+                    "on-primary-fixed-variant": "#343d96",
+                    "on-primary-fixed": "#000767",
+                    "background": "#f3faff",
+                    "tertiary-container": "#00372d",
+                    "secondary": "#785900",
+                    "on-secondary-fixed": "#261a00",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#1e333c",
+                    "tertiary-fixed-dim": "#94d3c1",
+                    "surface-dim": "#c7dde9",
+                    "on-secondary-fixed-variant": "#5b4300",
+                    "surface-container-highest": "#cfe6f2",
+                    "primary": "#000666",
+                    "on-surface": "#071e27",
+                    "tertiary": "#002019",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#65a393",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0 24px 48px -12px rgba(0, 6, 102, 0.04);
+        }
+        .glass-header {
+            background: rgba(243, 250, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<header class="docked full-width top-0 sticky z-50 glass-header shadow-sm">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
+<div class="flex items-center">
+<img alt="Logo SMK Plus Pelita Nusantara" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ugnjBU_yv7hTsA_zH5ax1CJECq5ruqcSO4XqvzkiEC0GGFxCGSPVw04Q6zNZ1dJywtNXO4H2x30FEbk9EKiM1rozPHu1-enHQEq5ey3xoQZ1kBZmN9SgCrm9v6IkocsFaJDSjmvirxEy1au76cyZ5zhu1HXcIxBwHB72lCmI6j8tiJs2Hhw0fVkCN_dMcoxQJCDpqB2wKftcc9ozghO7eEhsHGEr5vJZyuGSSwunvn_ABNbY_kqFrrHEaFeIzQdt2Bxdk6IFWSB7A"/>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 font-medium hover:text-amber-700 transition-all duration-300" href="#">Beranda</a>
+<a class="text-slate-600 font-medium hover:text-amber-700 transition-all duration-300" href="#">PPDB</a>
+<a class="text-primary border-b-2 border-secondary pb-1 transition-all duration-300" href="#">Kelulusan</a>
+<a class="text-slate-600 font-medium hover:text-amber-700 transition-all duration-300" href="#">Profil</a>
+</nav>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-md font-semibold hover:opacity-90 active:scale-95 transition-all">Login</button>
+</div>
+<div class="bg-slate-100 h-[1px] w-full absolute bottom-0 opacity-10"></div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-12 lg:py-20">
+<!-- Hero Section & Editorial Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Left Side: Announcement Text -->
+<div class="lg:col-span-5 space-y-8">
+<div>
+<span class="text-secondary font-label font-bold uppercase tracking-widest text-sm mb-4 block">Pengumuman Kelulusan 2024</span>
+<h1 class="font-headline font-extrabold text-primary text-5xl lg:text-7xl leading-tight tracking-tighter">
+                        Wujudkan <br/> Masa Depan <br/> Gemilang.
+                    </h1>
+</div>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-md">
+                    Selamat kepada seluruh siswa tingkat akhir SMK Plus Pelita Nusantara. Perjalanan baru Anda dimulai hari ini. Silakan periksa status kelulusan dan unduh sertifikat digital Anda di bawah ini.
+                </p>
+<!-- Search Component: Clean Form -->
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6 editorial-shadow">
+<h3 class="font-headline font-bold text-primary text-xl">Cek Kelulusan Siswa</h3>
+<div class="space-y-4">
+<div class="group">
+<label class="block text-xs font-bold text-primary/60 uppercase tracking-widest mb-1 ml-1">Nomor Induk Siswa Nasional (NISN)</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-none rounded-sm px-4 py-4 text-on-surface focus:ring-0 focus:bg-surface-container-highest transition-all duration-300 placeholder:text-outline-variant" placeholder="Masukkan 10 digit NISN..." type="text"/>
+<div class="absolute bottom-0 left-0 h-0.5 w-0 bg-primary group-focus-within:w-full transition-all duration-500"></div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-bold py-4 rounded-md flex items-center justify-center gap-2 hover:bg-primary/95 transition-all group">
+<span class="material-symbols-outlined text-xl">search</span>
+                            Cek Status Kelulusan
+                        </button>
+</div>
+<p class="text-[11px] text-outline-variant italic">Pastikan data yang Anda masukkan sesuai dengan kartu ujian atau database sekolah.</p>
+</div>
+</div>
+<!-- Right Side: Digital Certificate Preview (Bento/Overlap Style) -->
+<div class="lg:col-span-7 relative">
+<!-- Decorative Backdrop -->
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-secondary-container opacity-20 rounded-full blur-3xl -z-10"></div>
+<div class="absolute bottom-0 -left-20 w-80 h-80 bg-primary opacity-5 rounded-full blur-3xl -z-10"></div>
+<div class="relative z-10 space-y-10">
+<!-- Certificate Preview Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow transform lg:rotate-2 hover:rotate-0 transition-transform duration-700">
+<div class="aspect-[1.414/1] relative p-12 flex flex-col items-center justify-between border-[16px] border-surface-container">
+<!-- Certificate Watermark -->
+<div class="absolute inset-0 opacity-[0.03] flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-[300px]">school</span>
+</div>
+<div class="text-center space-y-4 z-10">
+<img class="h-16 mx-auto mb-6" data-alt="SMK Plus Pelita Nusantara official seal in gold and deep blue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn3qfyTOOOJaqT9Fxo1r7ARDDdpLLf69EuIfaM6P5venfZm5dCJ9deVEeWUAK7Yw3XCsgt3L5dSaxaO9dA1NcXvXTmKVyGEGLM-U7MGQfp_SsK92NJEdz2DOXUJhi53KY1Wjn52wxjfNf29EOcWffWg_U6iXGgfXg_KGB7Q9hvj1d6KtAt5f9GYRC9ASC8hQEUTGFlGWElh-5Ynh4Esn62QSk5Ctgy7RiYh8j1H0IQH5XfJWMmpv6ixXMSSXBBKGB-fh9lAGGZmvw"/>
+<h2 class="font-headline font-bold text-primary text-2xl tracking-widest uppercase">Surat Keterangan Lulus</h2>
+<div class="h-0.5 w-24 bg-secondary mx-auto"></div>
+</div>
+<div class="text-center space-y-2 z-10">
+<p class="font-label italic text-outline">Diberikan kepada:</p>
+<p class="font-headline font-black text-primary text-4xl">ARYA KUSUMA</p>
+<p class="font-label text-on-surface-variant font-medium">NISN: 0056123998</p>
+</div>
+<div class="w-full flex justify-between items-end z-10">
+<div class="text-left">
+<p class="text-[10px] uppercase font-bold text-outline-variant">Kompetensi Keahlian</p>
+<p class="text-sm font-bold text-primary">Rekayasa Perangkat Lunak</p>
+</div>
+<div class="text-center">
+<span class="inline-block px-4 py-1 bg-primary text-on-primary text-[10px] font-black uppercase tracking-tighter rounded-full mb-2">Lulus</span>
+<p class="text-[10px] text-outline">Tahun Ajaran 2023/2024</p>
+</div>
+<div class="h-20 w-20 bg-surface-variant/30 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-primary/40 text-4xl">qr_code_2</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions & Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl flex items-center gap-4 group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="h-14 w-14 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">download</span>
+</div>
+<div>
+<p class="font-bold text-primary">Unduh SKL Digital</p>
+<p class="text-xs text-on-surface-variant">Format PDF, Terverifikasi Sistem</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl flex items-center gap-4 group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="h-14 w-14 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">share</span>
+</div>
+<div>
+<p class="font-bold text-primary">Bagikan Kabar</p>
+<p class="text-xs text-on-surface-variant">Publikasikan ke Media Sosial</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Informational Section -->
+<div class="mt-32 grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="space-y-4">
+<h4 class="font-headline font-bold text-primary text-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">verified</span>
+                    Keaslian Dokumen
+                </h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                    Sertifikat digital ini dilengkapi dengan QR Code unik yang terhubung langsung ke basis data pusat SMK Plus Pelita Nusantara untuk verifikasi instan oleh pihak berkepentingan.
+                </p>
+</div>
+<div class="space-y-4">
+<h4 class="font-headline font-bold text-primary text-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">history_edu</span>
+                    Pengambilan Fisik
+                </h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                    Ijazah fisik dan transkrip nilai asli dapat diambil mulai tanggal 20 Juni 2024 di Ruang Tata Usaha dengan membawa tanda bukti kelulusan digital ini.
+                </p>
+</div>
+<div class="space-y-4">
+<h4 class="font-headline font-bold text-primary text-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+                    Langkah Berikutnya
+                </h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                    Butuh bimbingan karir atau bantuan pendaftaran perguruan tinggi? Kunjungi Hub Alumni kami di lantai 2 atau melalui portal alumni terintegrasi.
+                </p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-slate-100 mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-10 gap-6 w-full max-w-7xl mx-auto">
+<div class="flex flex-col items-center md:items-start gap-2">
+<img alt="Logo SMK Plus Pelita Nusantara" class="h-10 w-auto object-contain mb-2" src="https://lh3.googleusercontent.com/aida/ADBb0ugnjBU_yv7hTsA_zH5ax1CJECq5ruqcSO4XqvzkiEC0GGFxCGSPVw04Q6zNZ1dJywtNXO4H2x30FEbk9EKiM1rozPHu1-enHQEq5ey3xoQZ1kBZmN9SgCrm9v6IkocsFaJDSjmvirxEy1au76cyZ5zhu1HXcIxBwHB72lCmI6j8tiJs2Hhw0fVkCN_dMcoxQJCDpqB2wKftcc9ozghO7eEhsHGEr5vJZyuGSSwunvn_ABNbY_kqFrrHEaFeIzQdt2Bxdk6IFWSB7A"/>
+<p class="font-inter text-sm leading-relaxed text-slate-500 text-center md:text-left">© 2024 SMK Plus Pelita Nusantara. Unggul dalam Teknologi, Berakar pada Tradisi.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 text-sm hover:underline hover:text-amber-700 transition-all" href="#">Beranda</a>
+<a class="text-slate-500 text-sm hover:underline hover:text-amber-700 transition-all" href="#">PPDB</a>
+<a class="text-primary text-sm font-semibold hover:underline hover:text-amber-700 transition-all" href="#">Kelulusan</a>
+<a class="text-slate-500 text-sm hover:underline hover:text-amber-700 transition-all" href="#">Profil</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /g)",
+      "Bash(npm create *)",
+      "WebSearch",
+      "Bash(claude mcp *)",
+      "mcp__stitch__list_screens",
+      "Bash(curl -L \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzJiYTNjNmRjYzliODRhODk4ZDJkZjQ1ZWZmOThiZTJmEgsSBxC1xdCh_gMYAZIBIwoKcHJvamVjdF9pZBIVQhMyNzI2MDEyMDY1ODMxOTExMzQ1&filename=&opi=89354086\" -o html/dashboard-wawancara-ppdb.html)",
+      "Bash(curl -L \"https://lh3.googleusercontent.com/aida/ADBb0uhxLxHOe-63PBRFaH9L6z6MghZsozwvaSJRqBisrBuUovlp4MDrdt3l8CN8fPdPgrtPXTpLm4Sx1_YOZfFzq9jl6srPBYyC5kIOXhUT_-LGhacSsQpe2BGzW_ssTF1yxusv0n9dK9wkAXbaMxYx1qmXze8HA8J148KscEciHxO9n00T425aozaDmRUANj076kgy3pFCGxUgeYjrDnFNfbKY5-euHqmHdh6IgixhM22s1lnPwMhakF58OEA\" -o screenshots/dashboard-wawancara-ppdb.jpg)",
+      "Bash(curl *)",
+      "Bash(npm run *)",
+      "Bash(start *)",
+      "Bash(\"C:/Program Files/Google/Chrome/Application/chrome.exe\" \"http://localhost:57360\" --new-window)",
+      "Bash(xdg-open \"http://localhost:57360\")",
+      "Bash(npm install *)",
+      "Bash(npm uninstall *)"
+    ]
+  }
+}

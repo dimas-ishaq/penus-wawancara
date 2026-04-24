@@ -19,14 +19,14 @@ export default class GraduationCheckController {
     }
 
     if (!nisn) {
-      return response.status(400).json({ error: 'NISN harus diisi.' })
+      return response.status(400).json({ error: 'NIS harus diisi.' })
     }
 
     const student = await Student.findBy('nisn', nisn)
 
     if (!student) {
       return response.status(404).json({ 
-        error: 'Data siswa tidak ditemukan. Pastikan NISN yang Anda masukkan benar.' 
+        error: 'Data siswa tidak ditemukan. Pastikan NIS yang Anda masukkan benar.' 
       })
     }
 
@@ -44,10 +44,10 @@ export default class GraduationCheckController {
       website: await Setting.get('letter_website', 'www.smkpluspelnusa.sch.id'),
       subject: await Setting.get('letter_subject', 'Pemberitahuan Kelulusan'),
       city: await Setting.get('letter_city', 'Cimahi'),
-      date: await Setting.get('letter_date', '15 Juli 2024'),
+      date: await Setting.get('letter_date', '15 Juli 2026'),
       principalName: await Setting.get('principal_name', 'Nama Kepala Sekolah, M.Pd.'),
       principalNip: await Setting.get('principal_nip', '19880210 201503 1 002'),
-      numberFormat: await Setting.get('letter_number_format', '{nisn}/SMKP/{year}/2024'),
+      numberFormat: await Setting.get('letter_number_format', '{nisn}/SMKP/{year}/2026'),
     }
 
     return response.json({
@@ -57,7 +57,7 @@ export default class GraduationCheckController {
       majorName: major ? major.name : (student.majorCode || '-'),
       status: student.status,
       letter,
-      academicYear: announcementDateStr ? new Date(announcementDateStr).getFullYear() : 2024
+      academicYear: announcementDateStr ? new Date(announcementDateStr).getFullYear() : 2026
     })
   }
 }

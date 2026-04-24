@@ -5,85 +5,114 @@
 
 @layer base {
   :root {
-    --primary: #000666;
-    --on-primary: #ffffff;
-    --primary-container: #1a237e;
-    --on-primary-container: #8690ee;
-    
-    --secondary: #785900;
-    --on-secondary: #ffffff;
-    --secondary-container: #fdc003;
-    --on-secondary-container: #6c5000;
-    
-    --surface: #f3faff;
-    --on-surface: #071e27;
-    --surface-variant: #cfe6f2;
-    --on-surface-variant: #454652;
-    
+    /* Base Colors - High Contrast & Soft Background */
+    --background: 30 20% 98%; /* Very Soft Warm Sand */
+    --foreground: 222.2 84% 4.9%; /* Near Black for maximum contrast */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 236 100% 15%; /* Bold Midnight Blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 44 100% 35%; /* Deep Contrast Golden */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 30 20% 94%;
+    --muted-foreground: 215.4 16.3% 30%; /* Darker muted text */
+
+    --accent: 44 100% 95%; /* Very light golden hint */
+    --accent-foreground: 236 100% 15%;
+
+    --destructive: 0 72% 51%; /* Vibrant Crimson Red */
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 10% 90%;
+    --input: 30 10% 90%;
+    --ring: 236 100% 15%;
+
+    --radius: 1rem; /* More rounded for premium feel */
+
+    /* Semantic Mappings */
+    --surface: 30 20% 98%;
+    --on-surface: 222.2 84% 4.9%;
+    --surface-variant: 30 15% 94%;
+    --on-surface-variant: 236 100% 15%;
+
     --surface-container-lowest: #ffffff;
-    --surface-container-low: #e6f6ff;
-    --surface-container: #dbf1fe;
-    --surface-container-high: #d5ecf8;
-    --surface-container-highest: #cfe6f2;
-    
-    --outline: #767683;
-    --outline-variant: #c6c5d4;
-    
-    --error: #ba1a1a;
-    --on-error: #ffffff;
-    --error-container: #ffdad6;
-    --on-error-container: #93000a;
-    
-    --success: #10b981;
-    --on-success: #ffffff;
-    --success-container: #d1fae5;
-    --on-success-container: #065f46;
-    
-    --background: #f3faff;
-    --on-background: #071e27;
+    --surface-container-low: #fafaf9;
+    --surface-container: #f5f5f4;
+    --surface-container-high: #e7e7e4;
+    --surface-container-highest: #d6d6d2;
+
+    --outline: #78716c;
+    --outline-variant: #d6d3d1;
+
+    --success: 142 76% 36%; /* Vibrant Emerald Green */
+    --on-success: 0 0% 100%;
+    --info: 199 89% 35%;
+    --on-info: 0 0% 100%;
+    --warning: 38 92% 35%;
+    --on-warning: 0 0% 100%;
   }
 
   .dark {
-    --primary: #bdc2ff;
-    --on-primary: #000767;
-    --primary-container: #343d96;
-    --on-primary-container: #e0e0ff;
-    
-    --secondary: #fabd00;
-    --on-secondary: #3f2e00;
-    --secondary-container: #5b4300;
-    --on-secondary-container: #ffdf9e;
-    
-    --surface: #0f1417;
-    --on-surface: #dee3e6;
-    --surface-variant: #41484d;
-    --on-surface-variant: #c0c8cd;
-    
-    --surface-container-lowest: #0a0f12;
-    --surface-container-low: #171c1f;
-    --surface-container: #1b2024;
-    --surface-container-high: #262b2e;
-    --surface-container-highest: #313639;
-    
-    --outline: #8a9297;
-    --outline-variant: #41484d;
-    
-    --error: #ffb4ab;
-    --on-error: #690005;
-    --error-container: #93000a;
-    --on-error-container: #ffdad6;
-    
-    --success: #6ee7b7;
-    --on-success: #064e3b;
-    --success-container: #065f46;
-    --on-success-container: #d1fae5;
-    
-    --background: #0f1417;
-    --on-background: #dee3e6;
+    --background: 20 14.3% 4.1%; /* Stone 950 - Earthy Deep Grey */
+    --foreground: 0 0% 100%;
+
+    --card: 24 9.8% 8%; 
+    --card-foreground: 0 0% 100%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 0 0% 100%; /* Minimalist Pure White */
+    --primary-foreground: 20 14.3% 4.1%;
+
+    --secondary: 44 100% 45%; /* Sophisticated Gold for Icons/Highlights */
+    --secondary-foreground: 20 14.3% 4.1%;
+
+    --muted: 24 9.8% 10%;
+    --muted-foreground: 24 5% 65%;
+
+    --accent: 24 9.8% 12%; 
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 24 9.8% 12%;
+    --input: 24 9.8% 12%;
+    --ring: 0 0% 100%;
+
+    /* Semantic Mappings for Stone & Alabaster */
+    --surface: 20 14.3% 3%; 
+    --on-surface: 0 0% 100%;
+    --surface-variant: 24 9.8% 8%;
+    --on-surface-variant: 44 100% 45%;
+
+    --surface-container-lowest: #0c0a09; 
+    --surface-container-low: #141210;    
+    --surface-container: #1c1917;        
+    --surface-container-high: #292524;
+    --surface-container-highest: #44403c;
+
+    --outline: #57534e;
+    --outline-variant: #1c1917;
+
+    --success: 142 70% 45%;
+    --on-success: 0 0% 100%;
+    --info: 199 89% 48%;
+    --on-info: 0 0% 100%;
+    --warning: 45 92% 50%;
+    --on-warning: 0 0% 100%;
   }
 
   body {
-    @apply font-body bg-surface text-on-surface;
+    @apply font-body bg-background text-foreground;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -113,18 +142,15 @@
 @layer components {
   /* Glassmorphism Utilities */
   .glass-nav {
-    @apply backdrop-blur-md bg-white/80;
-    -webkit-backdrop-filter: blur(12px);
+    @apply backdrop-blur-md bg-background/80 border-b border-border/50;
   }
 
   .glass-header {
-    background: rgba(243, 250, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    @apply backdrop-blur-xl bg-background/80;
   }
 
   /* Editorial Shadows */
   .editorial-shadow {
-    box-shadow: 0 24px 48px -12px rgba(0, 6, 102, 0.04);
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.1);
   }
 }

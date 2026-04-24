@@ -1,27 +1,43 @@
 <script setup lang="ts">
-import { Head, useForm, usePage } from '@inertiajs/vue3'
+import { Head, useForm, usePage, router } from '@inertiajs/vue3'
 import { ref, h, watch, computed } from 'vue'
+import { debounce } from 'lodash-es'
 import DataTable from '~/components/DataTable.vue'
+import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import type { ColumnDef } from '@tanstack/vue-table'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 
 const props = defineProps<{
-  users: any[]
+  users: {
+    data: any[]
+    meta: any
+  }
+  search?: string
 }>()
 
 const page = usePage()
-const userData = ref(props.users)
+const userData = computed(() => props.users.data)
 
-watch(() => props.users, (newData) => {
-  userData.value = newData
-}, { deep: true })
+const searchQuery = ref(props.search || '')
 
-const searchQuery = ref('')
+const handleSearch = debounce((query: string) => {
+  router.get('/admin/users', { search: query }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true
+  })
+}, 300)
 
-const filteredUsers = computed(() => {
-  return userData.value.filter(u =>
-    u.fullName?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+watch(searchQuery, (newVal) => {
+  handleSearch(newVal)
 })
 
 const isEditModalOpen = ref(false)
@@ -69,10 +85,21 @@ const submitUpdate = () => {
   })
 }
 
-const deleteUser = (id: number) => {
-  if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
-    form.delete(`/admin/users/${id}`)
-  }
+const isDeleteModalOpen = ref(false)
+const userToDelete = ref<any>(null)
+
+const confirmDelete = (user: any) => {
+  userToDelete.value = user
+  isDeleteModalOpen.value = true
+}
+
+const submitDelete = () => {
+  form.delete(`/admin/users/${userToDelete.value.id}`, {
+    onSuccess: () => {
+      isDeleteModalOpen.value = false
+      userToDelete.value = null
+    }
+  })
 }
 
 const columns: ColumnDef<any>[] = [
@@ -99,7 +126,7 @@ const columns: ColumnDef<any>[] = [
     cell: ({ row }) => h('span', {
       class: [
         'px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest',
-        row.original.role === 'super_admin' ? 'bg-primary text-white' : row.original.role === 'admin' ? 'bg-secondary/10 text-secondary border border-secondary/20' : 'bg-surface-container-high text-outline'
+        row.original.role === 'super_admin' ? 'bg-primary text-primary-foreground' : row.original.role === 'admin' ? 'bg-secondary/10 text-secondary border border-secondary/20' : 'bg-surface-container-high text-outline'
       ]
     }, row.original.role?.replace('_', ' ')),
   },
@@ -116,15 +143,15 @@ const columns: ColumnDef<any>[] = [
     id: 'actions',
     header: 'Aksi',
     meta: { headerClass: 'justify-end', cellClass: 'text-right' },
-    cell: ({ row }) => h('div', { class: 'flex justify-end gap-2' }, [
+    cell: ({ row }) => h('div', { class: 'flex justify-end gap-3' }, [
       h('button', {
         onClick: () => openEditModal(row.original),
-        class: 'p-2 text-primary hover:bg-primary/10 rounded-lg transition-all'
+        class: 'w-10 h-10 rounded-xl bg-surface-container-high text-primary hover:bg-primary/10 transition-all flex items-center justify-center'
       }, [h('span', { class: 'material-symbols-outlined text-xl' }, 'edit')]),
 
       row.original.id !== page.props.user?.id ? h('button', {
-        onClick: () => deleteUser(row.original.id),
-        class: 'p-2 text-error hover:bg-error/10 rounded-lg transition-all'
+        onClick: () => confirmDelete(row.original),
+        class: 'w-10 h-10 rounded-xl bg-surface-container-high text-error hover:bg-error/10 transition-all flex items-center justify-center'
       }, [h('span', { class: 'material-symbols-outlined text-xl' }, 'delete')]) : null,
     ]),
   },
@@ -144,7 +171,7 @@ const columns: ColumnDef<any>[] = [
           (RBAC) pada sistem.</p>
       </div>
       <button @click="openCreateModal"
-        class="px-6 py-3 bg-primary text-white font-bold rounded-2xl flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20 font-body">
+        class="px-6 py-3 bg-primary text-primary-foreground font-bold rounded-2xl flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20 font-body">
         <span class="material-symbols-outlined">person_add</span>
         Tambah Pengguna
       </button>
@@ -153,15 +180,57 @@ const columns: ColumnDef<any>[] = [
     <!-- Search Bar -->
     <div class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/30 flex gap-4 items-center">
       <div
-        class="grow flex items-center gap-3 bg-white px-5 py-3 rounded-xl border border-outline-variant/20 shadow-sm min-w-[250px]">
-        <span class="material-symbols-outlined text-outline">search</span>
+        class="grow flex items-center gap-3 bg-background px-5 py-3 rounded-xl border border-outline-variant/20 shadow-sm min-w-[250px]">
+        <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-outline">
+          <span class="material-symbols-outlined">search</span>
+        </div>
         <input v-model="searchQuery" type="text" placeholder="Cari nama atau email pengguna..."
-          class="grow bg-transparent border-none outline-none font-body text-sm text-primary" />
+          class="grow bg-transparent border-none outline-none font-body text-sm text-on-surface" />
       </div>
     </div>
 
     <div class="bg-surface rounded-[32px] border border-outline-variant/30 overflow-hidden shadow-sm">
-      <DataTable :columns="columns" :data="filteredUsers" />
+      <DataTable :columns="columns" :data="userData" />
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between mt-8 px-2">
+      <div class="text-xs text-outline font-bold uppercase tracking-[0.1em]">
+        Menampilkan 
+        <span class="text-primary">{{ ((props.users.meta.currentPage - 1) * props.users.meta.perPage) + 1 }}</span> - 
+        <span class="text-primary">{{ Math.min(props.users.meta.currentPage * props.users.meta.perPage, props.users.meta.total) }}</span> 
+        dari <span class="text-primary">{{ props.users.meta.total }}</span> data
+      </div>
+      
+      <Pagination 
+        :total="props.users.meta.total" 
+        :sibling-count="1" 
+        :show-edges="true" 
+        :page="props.users.meta.currentPage"
+        :items-per-page="props.users.meta.perPage"
+        @update:page="(p) => router.get('/admin/users', { 
+          page: p,
+          search: searchQuery
+        }, { preserveScroll: true, preserveState: true })"
+      >
+        <PaginationContent v-slot="{ items }" class="flex items-center gap-1">
+          <PaginationPrevious />
+
+          <template v-for="(item, index) in items">
+            <PaginationItem 
+              v-if="item.type === 'page'" 
+              :key="index" 
+              :value="item.value"
+              :is-active="item.value === props.users.meta.currentPage"
+            >
+              {{ item.value }}
+            </PaginationItem>
+            <PaginationEllipsis v-else :key="item.type" :index="index" />
+          </template>
+
+          <PaginationNext />
+        </PaginationContent>
+      </Pagination>
     </div>
 
     <!-- Create Modal -->
@@ -214,7 +283,7 @@ const columns: ColumnDef<any>[] = [
                   Batal
                 </button>
                 <button type="submit" :disabled="form.processing"
-                  class="flex-1 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 font-headline tracking-widest disabled:opacity-50">
+                  class="flex-1 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 font-headline tracking-widest disabled:opacity-50">
                   Simpan
                 </button>
               </div>
@@ -274,7 +343,7 @@ const columns: ColumnDef<any>[] = [
                   BATAL
                 </button>
                 <button type="submit" :disabled="form.processing"
-                  class="flex-1 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 font-headline tracking-widest disabled:opacity-50">
+                  class="flex-1 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 font-headline tracking-widest disabled:opacity-50">
                   UPDATE
                 </button>
               </div>
@@ -283,6 +352,16 @@ const columns: ColumnDef<any>[] = [
         </div>
       </div>
     </Teleport>
+
+    <ConfirmDeleteModal 
+      :show="isDeleteModalOpen" 
+      title="Hapus Akun Pengguna?" 
+      description="Akun ini akan dihapus secara permanen dari sistem. Tindakan ini tidak dapat dibatalkan." 
+      :item-name="userToDelete?.fullName" 
+      :processing="form.processing"
+      @close="isDeleteModalOpen = false" 
+      @confirm="submitDelete" 
+    />
   </div>
 </template>
 <style scoped>

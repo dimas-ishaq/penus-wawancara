@@ -13,7 +13,13 @@ export default class extends BaseSeeder {
       name: 'Desain Komunikasi Visual',
     })
     await Major.updateOrCreate({ code: 'PKM' }, {
-      name: 'Perkantoran',
+      name: 'Perbankan dan Keuangan Mikro',
+    })
+    await Major.updateOrCreate({ code: 'TOI' }, {
+      name: 'Teknik Otomotif dan Industri',
+    })
+    await Major.updateOrCreate({ code: 'MPLB' }, {
+      name: 'Manajemen Perkantoran dan Layanan Bisnis',
     })
   }
 }

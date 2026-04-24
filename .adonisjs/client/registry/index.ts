@@ -108,6 +108,12 @@ const routes = {
     tokens: [{"old":"/admin/interviews/export","type":0,"val":"admin","end":""},{"old":"/admin/interviews/export","type":0,"val":"interviews","end":""},{"old":"/admin/interviews/export","type":0,"val":"export","end":""}],
     types: placeholder as Registry['admin.interviews.export']['types'],
   },
+  'admin.interviews.import': {
+    methods: ["POST"],
+    pattern: '/admin/interviews/import',
+    tokens: [{"old":"/admin/interviews/import","type":0,"val":"admin","end":""},{"old":"/admin/interviews/import","type":0,"val":"interviews","end":""},{"old":"/admin/interviews/import","type":0,"val":"import","end":""}],
+    types: placeholder as Registry['admin.interviews.import']['types'],
+  },
   'admin.interviews.destroy': {
     methods: ["DELETE"],
     pattern: '/admin/interviews/:id',
@@ -215,6 +221,36 @@ const routes = {
     pattern: '/admin/majors/:id',
     tokens: [{"old":"/admin/majors/:id","type":0,"val":"admin","end":""},{"old":"/admin/majors/:id","type":0,"val":"majors","end":""},{"old":"/admin/majors/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.majors.destroy']['types'],
+  },
+  'admin.classes': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/classes',
+    tokens: [{"old":"/admin/classes","type":0,"val":"admin","end":""},{"old":"/admin/classes","type":0,"val":"classes","end":""}],
+    types: placeholder as Registry['admin.classes']['types'],
+  },
+  'admin.classes.store': {
+    methods: ["POST"],
+    pattern: '/admin/classes',
+    tokens: [{"old":"/admin/classes","type":0,"val":"admin","end":""},{"old":"/admin/classes","type":0,"val":"classes","end":""}],
+    types: placeholder as Registry['admin.classes.store']['types'],
+  },
+  'admin.classes.update': {
+    methods: ["PUT"],
+    pattern: '/admin/classes/:id',
+    tokens: [{"old":"/admin/classes/:id","type":0,"val":"admin","end":""},{"old":"/admin/classes/:id","type":0,"val":"classes","end":""},{"old":"/admin/classes/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.classes.update']['types'],
+  },
+  'admin.classes.destroy': {
+    methods: ["DELETE"],
+    pattern: '/admin/classes/:id',
+    tokens: [{"old":"/admin/classes/:id","type":0,"val":"admin","end":""},{"old":"/admin/classes/:id","type":0,"val":"classes","end":""},{"old":"/admin/classes/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.classes.destroy']['types'],
+  },
+  'admin.audit_logs': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/audit-logs',
+    tokens: [{"old":"/admin/audit-logs","type":0,"val":"admin","end":""},{"old":"/admin/audit-logs","type":0,"val":"audit-logs","end":""}],
+    types: placeholder as Registry['admin.audit_logs']['types'],
   },
   'graduation.check': {
     methods: ["POST"],

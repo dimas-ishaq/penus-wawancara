@@ -25,6 +25,7 @@ export interface ApiDefinition {
       recap: typeof routes['admin.interviews.recap']
       pdf: typeof routes['admin.interviews.pdf']
       export: typeof routes['admin.interviews.export']
+      import: typeof routes['admin.interviews.import']
       destroy: typeof routes['admin.interviews.destroy']
     }
     users: typeof routes['admin.users'] & {
@@ -48,6 +49,12 @@ export interface ApiDefinition {
       update: typeof routes['admin.majors.update']
       destroy: typeof routes['admin.majors.destroy']
     }
+    classes: typeof routes['admin.classes'] & {
+      store: typeof routes['admin.classes.store']
+      update: typeof routes['admin.classes.update']
+      destroy: typeof routes['admin.classes.destroy']
+    }
+    auditLogs: typeof routes['admin.audit_logs']
   }
   graduation: {
     check: typeof routes['graduation.check']

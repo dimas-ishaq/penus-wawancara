@@ -10,11 +10,13 @@ export default class SettingsController {
    */
   async index({ inertia }: HttpContext) {
     const logo = await Setting.get('logo_path')
+    const brandName = await Setting.get('brand_name', 'SMK PLUS PN')
     const academicYear = await Setting.get('academic_year', '2024/2025')
     
     return inertia.render('admin/settings', {
       logo: logo || undefined,
       academicYear: academicYear || undefined,
+      brandName: brandName || undefined,
     })
   }
 
@@ -23,13 +25,15 @@ export default class SettingsController {
    */
   async updateGeneral({ request, response, session }: HttpContext) {
     const academicYear = request.input('academicYear')
+    const brandName = request.input('brandName')
 
-    if (!academicYear) {
-      session.flash('error', 'Tahun ajaran tidak boleh kosong')
+    if (!academicYear || !brandName) {
+      session.flash('error', 'Tahun ajaran dan Nama Brand tidak boleh kosong')
       return response.redirect().back()
     }
 
     await Setting.set('academic_year', academicYear)
+    await Setting.set('brand_name', brandName)
 
     session.flash('success', 'Pengaturan umum berhasil diperbarui')
     return response.redirect().back()

@@ -46,7 +46,6 @@ export default {
         'on-primary': '#ffffff',
         'inverse-surface': '#1e333c',
         'tertiary-fixed-dim': '#94d3c1',
-        'success': '#10b981',
         'on-success': '#ffffff',
         'success-container': '#d1fae5',
         'on-success-container': '#065f46',
@@ -59,6 +58,25 @@ export default {
         'error': '#ba1a1a',
         'on-tertiary-container': '#65a393',
         'on-error-container': '#93000a',
+        'destructive': {
+          DEFAULT: '#ef4444',
+          foreground: '#ffffff',
+        },
+        'success': {
+          DEFAULT: '#10b981',
+          foreground: '#ffffff',
+        },
+        'muted': {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        'accent': {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        'border': 'hsl(var(--border))',
+        'input': 'hsl(var(--input))',
+        'ring': 'hsl(var(--ring))',
       },
       borderRadius: {
         DEFAULT: '0.125rem',

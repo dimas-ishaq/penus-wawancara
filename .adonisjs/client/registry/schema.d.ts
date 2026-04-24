@@ -123,8 +123,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/dashboard_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/dashboard_controller').default['index']>>>
     }
   }
   'admin.interviews': {
@@ -179,12 +179,12 @@ export interface Registry {
     methods: ["PUT"]
     pattern: '/admin/interviews/:id/recap'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/interview').updateRecapValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/interview').updateRecapValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['updateRecap']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['updateRecap']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['updateRecap']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.interviews.pdf': {
@@ -209,6 +209,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['export']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['export']>>>
+    }
+  }
+  'admin.interviews.import': {
+    methods: ["POST"]
+    pattern: '/admin/interviews/import'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['importInterviews']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['importInterviews']>>>
     }
   }
   'admin.interviews.destroy': {
@@ -425,6 +437,66 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/majors_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/majors_controller').default['destroy']>>>
+    }
+  }
+  'admin.classes': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/classes'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['index']>>>
+    }
+  }
+  'admin.classes.store': {
+    methods: ["POST"]
+    pattern: '/admin/classes'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['store']>>>
+    }
+  }
+  'admin.classes.update': {
+    methods: ["PUT"]
+    pattern: '/admin/classes/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['update']>>>
+    }
+  }
+  'admin.classes.destroy': {
+    methods: ["DELETE"]
+    pattern: '/admin/classes/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/classes_controller').default['destroy']>>>
+    }
+  }
+  'admin.audit_logs': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/audit-logs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/audit_logs_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/audit_logs_controller').default['index']>>>
     }
   }
   'graduation.check': {

@@ -10,9 +10,16 @@ const hashConfig = defineConfig({
   /**
    * Default hasher used by the application.
    */
-  default: 'scrypt',
+  default: 'bcrypt',
 
   list: {
+    /**
+     * Bcrypt is a widely used hashing algorithm.
+     */
+    bcrypt: drivers.bcrypt({
+      rounds: 10,
+    }),
+
     /**
      * Scrypt is memory-hard, which makes brute-force attacks more expensive.
      */

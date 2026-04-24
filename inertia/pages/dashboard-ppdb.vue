@@ -5,7 +5,7 @@ const registrationSteps = [
   { id: 1, name: 'Pendaftaran Online', status: 'completed', description: 'Data diri telah diverifikasi' },
   { id: 2, name: 'Unggah Dokumen', status: 'current', description: '3 dari 5 dokumen diverifikasi' },
   { id: 3, name: 'Ujian Seleksi & Wawancara', status: 'upcoming', description: 'Menunggu jadwal resmi' },
-  { id: 4, name: 'Pengumuman Hasil', status: 'upcoming', description: 'Akan diumumkan Juli 2024' },
+  { id: 4, name: 'Pengumuman Hasil', status: 'upcoming', description: 'Akan diumumkan Juli 2026' },
   { id: 5, name: 'Daftar Ulang', status: 'upcoming', description: 'Tahap akhir administrasi' },
 ]
 
@@ -27,7 +27,7 @@ const documents = [
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div class="space-y-2">
           <div class="flex items-center gap-2">
-            <span class="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full tracking-wider uppercase">Tahun Ajaran 2024/2025</span>
+            <span class="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full tracking-wider uppercase">Tahun Ajaran 2026/2027</span>
             <span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-xs font-bold rounded-full tracking-wider uppercase">ID: PN240891</span>
           </div>
           <h1 class="text-5xl font-black text-primary tracking-tighter font-headline">Portal Calon Siswa Baru</h1>
@@ -148,7 +148,7 @@ const documents = [
             <div class="space-y-4">
               <div>
                 <span class="text-[10px] font-bold text-outline uppercase tracking-widest block mb-1">JADWAL WAWANCARA TERSELEKSI</span>
-                <p class="text-lg font-black text-primary font-headline">Kamis, 15 Juni 2024</p>
+                <p class="text-lg font-black text-primary font-headline">Kamis, 15 Juni 2026</p>
               </div>
               <div class="flex items-center gap-6">
                 <div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { Link, useForm } from '@inertiajs/vue3'
 
 const form = useForm({
@@ -7,6 +8,9 @@ const form = useForm({
   password: '',
   passwordConfirmation: '',
 })
+
+const showPassword = ref(false)
+const showPasswordConfirmation = ref(false)
 
 const submit = () => {
   form.post('/signup', {
@@ -113,12 +117,21 @@ const authBg = '/assets/auth_bg.png'
               <input
                 id="password"
                 v-model="form.password"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 required
                 class="w-full px-5 py-3.5 bg-white border-2 border-outline-variant rounded-2xl outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-on-surface"
                 placeholder="Minimal 8 karakter"
                 :class="{ 'border-error ring-error/10': form.errors.password }"
               />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-4 top-3 text-on-surface-variant hover:text-primary transition-colors p-1"
+              >
+                <span class="material-symbols-outlined text-xl">
+                  {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
               <div v-if="form.errors.password" class="text-error text-xs font-bold mt-1 flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">error</span>
                 {{ form.errors.password }}
@@ -135,12 +148,21 @@ const authBg = '/assets/auth_bg.png'
               <input
                 id="passwordConfirmation"
                 v-model="form.passwordConfirmation"
-                type="password"
+                :type="showPasswordConfirmation ? 'text' : 'password'"
                 required
                 class="w-full px-5 py-3.5 bg-white border-2 border-outline-variant rounded-2xl outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-on-surface"
                 placeholder="Ulangi password"
                 :class="{ 'border-error ring-error/10': form.errors.passwordConfirmation }"
               />
+              <button
+                type="button"
+                @click="showPasswordConfirmation = !showPasswordConfirmation"
+                class="absolute right-4 top-3 text-on-surface-variant hover:text-primary transition-colors p-1"
+              >
+                <span class="material-symbols-outlined text-xl">
+                  {{ showPasswordConfirmation ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
               <div v-if="form.errors.passwordConfirmation" class="text-error text-xs font-bold mt-1 flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">error</span>
                 {{ form.errors.passwordConfirmation }}

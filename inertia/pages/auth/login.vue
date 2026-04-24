@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 
 const form = useForm({
   email: '',
   password: '',
   remember: false,
 })
+
+const showPassword = ref(false)
 
 const submit = () => {
   form.post('/login', {
@@ -96,13 +99,22 @@ const authBg = '/assets/auth_bg.png'
               <input
                 id="password"
                 v-model="form.password"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 required
                 autocomplete="current-password"
                 class="w-full px-5 py-4 bg-white border-2 border-outline-variant rounded-2xl outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-on-surface"
                 placeholder="••••••••"
                 :class="{ 'border-error ring-error/10': form.errors.password }"
               />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-4 top-4 text-on-surface-variant hover:text-primary transition-colors p-1"
+              >
+                <span class="material-symbols-outlined text-xl">
+                  {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
               <div v-if="form.errors.password" class="text-error text-xs font-bold mt-1 flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">error</span>
                 {{ form.errors.password }}

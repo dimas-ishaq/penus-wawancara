@@ -1,43 +1,126 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, useForm, router } from '@inertiajs/vue3'
 import { ref, computed, h, watch } from 'vue'
 import { utils, write, read } from 'xlsx'
+import { debounce } from 'lodash-es'
 import { toast } from 'vue-sonner'
 import DataTable from '~/components/DataTable.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 
+// Shadcn UI Components
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { 
+  Download, 
+  Upload, 
+  FileSpreadsheet, 
+  FileText, 
+  CheckCircle2, 
+  Search,
+  Clock,
+  Trash2,
+  Filter,
+  ChevronDownIcon
+} from 'lucide-vue-next'
+import { 
+  getLocalTimeZone, 
+  today, 
+  parseDate, 
+  type DateValue 
+} from '@internationalized/date'
+import { Label } from '@/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+
 const props = defineProps<{
   announcementDate?: string
-  students: any[]
+  students: {
+    data: any[]
+    meta: any
+  }
+  stats: {
+    total: number
+    lulus: number
+    tidakLulus: number
+  }
+  uniqueClasses: string[]
+  search?: string
 }>()
 
 const settingsForm = useForm({
   announcementAt: props.announcementDate || '',
 })
 
+const datePart = ref<DateValue>(props.announcementDate ? parseDate(props.announcementDate.split('T')[0]) : today(getLocalTimeZone()))
+const timePart = ref(props.announcementDate?.includes('T') ? props.announcementDate.split('T')[1].substring(0, 5) : '00:00')
+const isDatePopoverOpen = ref(false)
+
+watch([datePart, timePart], ([newDate, newTime]) => {
+  settingsForm.announcementAt = `${newDate.toString()}T${newTime}`
+}, { immediate: true })
+
 const submitSettings = () => {
-  settingsForm.post('/admin/graduation/settings')
+  settingsForm.post('/admin/graduation/settings', {
+    onSuccess: () => toast.success('Waktu pengumuman berhasil disimpan')
+  })
 }
 
-// Student Data using ref for local filtering, but synced with props
-const students = ref([...props.students])
-watch(() => props.students, (newData) => {
-  students.value = [...newData]
-}, { deep: true })
+const students = computed(() => props.students.data)
+const searchQuery = ref(props.search || '')
+const selectedClass = ref('all')
 
-const searchQuery = ref('')
+const handleSearch = debounce((query: string) => {
+  router.get('/admin/graduation', { search: query, class: selectedClass.value !== 'all' ? selectedClass.value : undefined }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true
+  })
+}, 300)
 
-const filteredStudents = computed(() => {
-  if (searchQuery.value.length > 0 && searchQuery.value.length < 3) return students.value
-
-  return students.value.filter(s =>
-    s.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    s.nisn.includes(searchQuery.value)
-  )
+watch(searchQuery, (newVal) => {
+  handleSearch(newVal)
 })
 
-const updateStatus = (student, newStatus) => {
+watch(selectedClass, (newVal) => {
+  router.get('/admin/graduation', { search: searchQuery.value, class: newVal !== 'all' ? newVal : undefined }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true
+  })
+})
+
+const uniqueClasses = computed(() => props.uniqueClasses)
+
+const updateStatus = (student: any, newStatus: string) => {
   const form = useForm({ status: newStatus })
   form.put(`/admin/graduation/students/${student.id}/status`, {
     preserveScroll: true,
@@ -45,7 +128,7 @@ const updateStatus = (student, newStatus) => {
   })
 }
 
-const batchUpdate = (status) => {
+const batchUpdate = (status: string) => {
   const form = useForm({ status })
   form.post('/admin/graduation/students/batch-update', {
     preserveScroll: true,
@@ -53,14 +136,10 @@ const batchUpdate = (status) => {
   })
 }
 
-// Import Logic
+// Import/Export Logic (Keeping existing logic but integrating into UI)
 const fileInput = ref<HTMLInputElement | null>(null)
 const previewData = ref<any[]>([])
 const showPreview = ref(false)
-
-const triggerFileInput = () => {
-  fileInput.value?.click()
-}
 
 const handleFileUpload = (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -82,7 +161,7 @@ const handleFileUpload = (event: Event) => {
       }
 
       previewData.value = json.map((row: any) => ({
-        nisn: String(row.NISN || row.nisn || ''),
+        nisn: String(row.NIS || row.nis || row.NISN || row.nisn || ''),
         name: row.Nama || row.Nama_Siswa || row.nama || '',
         class: row.Kelas || row.kelas || '',
         majorCode: row.Jurusan || row.Kode_Jurusan || row.majorCode || '',
@@ -90,25 +169,13 @@ const handleFileUpload = (event: Event) => {
       }))
       showPreview.value = true
     } catch (err) {
-      console.error('Import error:', err)
       toast.error('Gagal membaca file excel')
     }
   }
   reader.readAsArrayBuffer(file)
-  target.value = '' // Reset input
+  target.value = ''
 }
 
-const applyImport = () => {
-  const form = useForm({ students: previewData.value })
-  form.post('/admin/graduation/students/import', {
-    onSuccess: () => {
-      showPreview.value = false
-      toast.success('Data berhasil diimpor ke database')
-    }
-  })
-}
-
-// Helper: String to ArrayBuffer
 const s2ab = (s: string) => {
   const buf = new ArrayBuffer(s.length)
   const view = new Uint8Array(buf)
@@ -117,103 +184,49 @@ const s2ab = (s: string) => {
 }
 
 const downloadTemplate = () => {
-  console.log('Attempting binary string conversion download...')
-  try {
-    const ws = utils.json_to_sheet([
-      { NISN: '0061112223', Nama: 'Contoh Nama', Kelas: 'XII RPL 1', Jurusan: 'RPL', Status: 'Lulus' },
-      { NISN: '0064445556', Nama: 'Siswa Lain', Kelas: 'XII TKJ 2', Jurusan: 'TKJ', Status: 'Pending' }
-    ])
-    const wb = utils.book_new()
-    utils.book_append_sheet(wb, ws, 'Template Import')
-
-    // 1. Generate Excel data as a binary string (Legacy approach)
-    const wbout = write(wb, { bookType: 'xlsx', type: 'binary' })
-
-    // 2. Create a Blob using the ArrayBuffer conversion
-    const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
-
-    // 3. Create a download link and fully enforce the filename
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.setAttribute('download', 'template_import_kelulusan.xlsx')
-    document.body.appendChild(a)
-
-    // Trigger the download
-    a.click()
-
-    // Cleanup
-    setTimeout(() => {
-      document.body.removeChild(a)
-      window.URL.revokeObjectURL(url)
-    }, 100)
-
-    console.log('Manual binary template download triggered successfully')
-    toast.success('Template berhasil diunduh (Pasti .xlsx)')
-  } catch (error) {
-    console.error('Error generating template:', error)
-    toast.error('Gagal menghasilkan template: ' + (error as Error).message)
-  }
+  const ws = utils.json_to_sheet([
+    { NIS: '0061112223', Nama: 'Contoh Nama', Kelas: 'XII RPL 1', Jurusan: 'RPL', Status: 'Lulus' }
+  ])
+  const wb = utils.book_new()
+  utils.book_append_sheet(wb, ws, 'Template')
+  const wbout = write(wb, { bookType: 'xlsx', type: 'binary' })
+  const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.setAttribute('download', 'template_import.xlsx')
+  a.click()
 }
 
 const exportToExcel = () => {
-  try {
-    const dataToExport = filteredStudents.value.map(s => ({
-      'NISN': s.nisn,
-      'Nama Siswa': s.name,
-      'Kelas': s.class,
-      'Jurusan': s.majorCode,
-      'Status Kelulusan': s.status
-    }))
-
-    const ws = utils.json_to_sheet(dataToExport)
-    const wb = utils.book_new()
-    utils.book_append_sheet(wb, ws, 'Data Kelulusan')
-
-    // Generate binary string
-    const wbout = write(wb, { bookType: 'xlsx', type: 'binary' })
-
-    // Create Blob
-    const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
-
-    // Download
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.setAttribute('download', `data_kelulusan_filtered_${new Date().getTime()}.xlsx`)
-    document.body.appendChild(a)
-    a.click()
-
-    setTimeout(() => {
-      document.body.removeChild(a)
-      window.URL.revokeObjectURL(url)
-    }, 100)
-
-    toast.success(`Berhasil mengekspor ${dataToExport.length} data`)
-  } catch (error) {
-    console.error('Export error:', error)
-    toast.error('Gagal mengekspor data: ' + (error as Error).message)
-  }
+  const ws = utils.json_to_sheet(students.value.map(s => ({
+    'NIS': s.nisn, 'Nama': s.name, 'Kelas': s.class, 'Jurusan': s.majorCode, 'Status': s.status
+  })))
+  const wb = utils.book_new()
+  utils.book_append_sheet(wb, ws, 'Data Kelulusan')
+  const wbout = write(wb, { bookType: 'xlsx', type: 'binary' })
+  const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.setAttribute('download', 'data_kelulusan.xlsx')
+  a.click()
 }
 
 const showDeleteModal = ref(false)
 const studentToDelete = ref<any>(null)
 
-const deleteStudent = (student) => {
+const deleteStudent = (student: any) => {
   studentToDelete.value = student
   showDeleteModal.value = true
 }
 
 const confirmDeleteStudent = () => {
-  if (!studentToDelete.value) return
-
   const form = useForm({})
   form.delete(`/admin/graduation/students/${studentToDelete.value.id}`, {
-    preserveScroll: true,
     onSuccess: () => {
-      toast.success(`Data siswa ${studentToDelete.value.name} berhasil dihapus`)
+      toast.success(`Data siswa ${studentToDelete.value.name} dihapus`)
       showDeleteModal.value = false
-      studentToDelete.value = null
     }
   })
 }
@@ -221,348 +234,318 @@ const confirmDeleteStudent = () => {
 const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'nisn',
-    header: 'NISN / ID',
-    cell: ({ row }) => h('div', {}, [
-      h('div', { class: 'font-headline font-black text-primary' }, row.original.nisn),
-      h('div', { class: 'text-[9px] text-outline font-bold mt-1 tracking-widest' }, row.original.id),
-    ]),
+    header: 'NIS',
+    cell: ({ row }) => h('div', { class: 'font-mono text-sm font-bold' }, row.original.nisn),
   },
   {
     accessorKey: 'name',
     header: 'Nama Siswa',
-    cell: ({ row }) => h('div', { class: 'font-bold text-primary' }, row.original.name),
-  },
-  {
-    accessorKey: 'majorCode',
-    header: 'Jurusan',
-    cell: ({ row }) => h('span', {
-      class: 'px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-[10px] font-black text-primary uppercase tracking-widest'
-    }, row.original.majorCode || '-'),
+    cell: ({ row }) => h('div', { class: 'font-medium' }, row.original.name),
   },
   {
     accessorKey: 'class',
     header: 'Kelas',
-    cell: ({ row }) => h('span', {
-      class: 'px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-bold text-on-surface-variant italic'
-    }, row.original.class),
+    cell: ({ row }) => h('Badge', { variant: 'outline' }, row.original.class),
   },
   {
     accessorKey: 'status',
-    header: 'Status Akhir',
-    cell: ({ row }) => h('div', { class: 'flex items-center gap-2' }, [
-      h('div', {
+    header: 'Status',
+    cell: ({ row }) => {
+      const status = row.original.status?.toLowerCase().trim()
+      const variant = status === 'lulus' ? 'success' : (status === 'tidak lulus' ? 'destructive' : 'secondary')
+      return h(Badge, {
+        variant,
         class: [
-          'w-2 h-2 rounded-full',
-          row.original.status === 'Lulus' ? 'bg-green-500 animate-pulse' : row.original.status === 'Tidak Lulus' ? 'bg-error' : 'bg-outline-variant'
+          'uppercase px-3 py-1 text-[10px] tracking-wider font-bold',
+          status === 'tidak lulus' ? 'bg-red-600 text-white border-transparent' : '',
+          status === 'lulus' ? 'bg-emerald-500 text-white border-transparent' : '',
+          status !== 'lulus' && status !== 'tidak lulus' ? 'bg-muted text-muted-foreground border-transparent' : ''
         ]
-      }),
-      h('span', {
-        class: [
-          'text-[11px] font-black uppercase tracking-tighter',
-          row.original.status === 'Lulus' ? 'text-green-600' : row.original.status === 'Tidak Lulus' ? 'text-error' : 'text-outline'
-        ]
-      }, row.original.status),
-    ]),
+      }, () => row.original.status)
+    },
   },
   {
     id: 'actions',
-    header: 'Manajemen Status',
-    meta: { headerClass: 'justify-end', cellClass: 'text-right' },
-    cell: ({ row }) => h('div', { class: 'flex justify-end gap-2 text-center items-center' }, [
-      h('button', {
-        onClick: () => updateStatus(row.original, 'Lulus'),
+    header: 'Aksi',
+    cell: ({ row }) => h('div', { class: 'flex gap-2' }, [
+      h(Button, { 
+        size: 'sm', 
         class: [
-          'px-4 py-2 rounded-xl text-[10px] font-black transition-all border',
-          row.original.status === 'Lulus' ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-600/20' : 'border-outline-variant text-outline hover:border-green-600 hover:text-green-600'
-        ]
-      }, 'LULUS'),
-      h('button', {
-        onClick: () => updateStatus(row.original, 'Tidak Lulus'),
+          'font-bold transition-all',
+          row.original.status === 'Lulus' 
+            ? 'bg-emerald-500 text-white hover:bg-emerald-600 border-transparent shadow-sm' 
+            : 'bg-background text-primary border border-outline-variant/30 hover:bg-surface-container-low'
+        ],
+        onClick: () => updateStatus(row.original, 'Lulus') 
+      }, () => 'Lulus'),
+      h(Button, { 
+        size: 'sm', 
         class: [
-          'px-4 py-2 rounded-xl text-[10px] font-black transition-all border',
-          row.original.status === 'Tidak Lulus' ? 'bg-error text-white border-error shadow-lg shadow-error/20' : 'border-outline-variant text-outline hover:border-error hover:text-error'
-        ]
-      }, 'TIDAK LULUS'),
-      h('button', {
-        onClick: () => deleteStudent(row.original),
-        class: 'w-8 h-8 flex items-center justify-center rounded-xl bg-error/10 text-error hover:bg-error hover:text-white transition-all border border-error/20 ml-2'
-      }, [
-        h('span', { class: 'material-symbols-outlined text-[18px]' }, 'delete')
-      ])
+          'font-bold transition-all',
+          row.original.status === 'Tidak Lulus' 
+            ? 'bg-red-600 text-white hover:bg-red-700 border-transparent shadow-sm' 
+            : 'bg-white text-primary border border-outline-variant/30 hover:bg-surface-container-low'
+        ],
+        onClick: () => updateStatus(row.original, 'Tidak lulus') 
+      }, () => 'Tidak lulus'),
+      h(Button, { 
+        size: 'sm', 
+        variant: 'ghost', 
+        class: 'text-destructive',
+        onClick: () => deleteStudent(row.original) 
+      }, () => h(Trash2, { class: 'w-4 h-4' })),
     ]),
   },
 ]
-
-const exportToPdf = () => {
-  window.print()
-}
 </script>
 
 <template>
+  <Head title="Siswa & Kelulusan" />
 
-  <Head title="Manajemen Kelulusan" />
-
-  <div class="space-y-8 no-print">
-    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+  <div class="space-y-6 no-print">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-3xl font-black text-primary tracking-tighter font-headline mb-2">Manajemen Kelulusan</h1>
-        <p class="text-on-surface-variant font-body text-sm">Penetapan status kelulusan akhir siswa kelas XII SMK Plus Pelita
-          Nusantara.</p>
+        <h1 class="text-3xl font-bold tracking-tight">Siswa & Kelulusan</h1>
+        <p class="text-muted-foreground mt-1">Manajemen data siswa dan penetapan status kelulusan akhir.</p>
       </div>
-      <div class="flex flex-wrap gap-2">
-        <button @click="downloadTemplate"
-          class="px-4 py-2.5 border border-outline-variant/30 text-outline font-bold rounded-xl hover:bg-surface-container-low transition-all font-body text-[10px] flex items-center gap-2">
-          <span class="material-symbols-outlined text-sm">download</span>
-          TEMPLATE
-        </button>
-        <button @click="triggerFileInput"
-          class="px-4 py-2.5 bg-secondary text-on-secondary font-bold rounded-xl hover:scale-105 transition-all font-body text-[10px] shadow-lg shadow-secondary/10 flex items-center gap-2">
-          <span class="material-symbols-outlined text-sm">upload_file</span>
-          IMPORT EXCEL
-        </button>
-        <button @click="exportToExcel"
-          class="px-4 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:scale-105 transition-all font-body text-[10px] shadow-lg shadow-green-600/10 flex items-center gap-2">
-          <span class="material-symbols-outlined text-sm">table_view</span>
-          EKSPOR HASIL
-        </button>
-        <button @click="exportToPdf"
-          class="px-4 py-2.5 bg-surface-container-high text-primary font-bold rounded-xl hover:scale-105 transition-all font-body text-[10px] shadow-lg shadow-primary/20 flex items-center gap-2">
-          <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
-          PDF
-        </button>
-        <button @click="batchUpdate('Lulus')"
-          class="px-4 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all font-body text-[10px]">
-          SET LULUS MASAL
-        </button>
+      <div class="inline-flex items-center -space-x-px shadow-sm rounded-xl overflow-hidden">
+        <Button variant="outline" class="rounded-none px-4" @click="downloadTemplate">
+          <Download class="w-4 h-4 mr-2" /> Template
+        </Button>
+        <Button variant="outline" class="rounded-none px-4" @click="fileInput?.click()">
+          <Upload class="w-4 h-4 mr-2" /> Import
+        </Button>
+        <Button variant="outline" class="rounded-none px-4" @click="exportToExcel">
+          <FileSpreadsheet class="w-4 h-4 mr-2" /> Ekspor
+        </Button>
+        <Button variant="secondary" class="rounded-none px-5 border-l-0" @click="batchUpdate('Lulus')">
+          <CheckCircle2 class="w-4 h-4 mr-2" /> Lulus Masal
+        </Button>
       </div>
-    </header>
+    </div>
 
-    <!-- Announcement Settings -->
-    <section
-      class="bg-primary/5 rounded-[2rem] p-8 border border-primary/10 flex flex-col md:flex-row gap-8 items-center justify-between">
-      <div class="space-y-2">
-        <h2 class="text-xl font-black text-primary font-headline flex items-center gap-2">
-          <span class="material-symbols-outlined">schedule</span>
-          Pengaturan Waktu Pengumuman
-        </h2>
-        <p class="text-sm text-on-surface-variant font-body">Tentukan kapan hasil kelulusan dapat diakses secara publik
-          oleh siswa.</p>
-      </div>
-
-      <form @submit.prevent="submitSettings" class="flex flex-wrap items-center gap-4 w-full md:w-auto">
-        <div class="relative grow md:grow-0">
-          <input v-model="settingsForm.announcementAt" type="datetime-local"
-            class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-5 py-3 font-bold text-primary focus:ring-2 focus:ring-primary outline-none transition-all w-full" />
+    <!-- Announcement Card -->
+    <Card class="bg-primary/5 border-primary/20">
+      <CardHeader>
+        <div class="flex items-center gap-2">
+          <Clock class="w-5 h-5 text-primary" />
+          <CardTitle>Waktu Pengumuman</CardTitle>
         </div>
-        <button type="submit" :disabled="settingsForm.processing"
-          class="px-8 py-3 bg-primary text-white font-black rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50">
-          Simpan
-        </button>
-      </form>
-    </section>
+        <CardDescription>Atur kapan hasil kelulusan dapat diakses secara publik oleh siswa.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form @submit.prevent="submitSettings" class="flex flex-col md:flex-row md:items-end gap-6 max-w-2xl">
+          <div class="flex gap-4">
+            <div class="flex flex-col gap-3">
+              <Label for="date-picker" class="px-1 text-xs font-bold text-outline-variant uppercase">Tanggal</Label>
+              <Popover v-model:open="isDatePopoverOpen">
+                <PopoverTrigger as-child>
+                  <Button
+                    id="date-picker"
+                    variant="outline"
+                    class="w-48 justify-between font-bold text-primary h-12 rounded-2xl bg-background border-outline-variant/20 shadow-sm"
+                  >
+                    {{ datePart ? datePart.toDate(getLocalTimeZone()).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Pilih Tanggal" }}
+                    <ChevronDownIcon class="w-4 h-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent class="w-auto overflow-hidden p-0 rounded-2xl border-outline-variant/30 shadow-xl" align="start">
+                  <Calendar
+                    :model-value="datePart"
+                    @update:model-value="(value) => {
+                      if (value) {
+                        datePart = value
+                        isDatePopoverOpen = false
+                      }
+                    }"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div class="flex flex-col gap-3">
+              <Label for="time-picker" class="px-1 text-xs font-bold text-outline-variant uppercase">Waktu</Label>
+              <Input
+                id="time-picker"
+                v-model="timePart"
+                type="time"
+                class="bg-background h-12 rounded-2xl border-outline-variant/20 shadow-sm font-bold text-primary w-32 px-4"
+              />
+            </div>
+          </div>
+          <Button type="submit" :disabled="settingsForm.processing" class="h-12 px-8 rounded-2xl shadow-lg shadow-primary/20">
+            Simpan Waktu Pengumuman
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
 
-    <!-- Hidden File Input -->
-    <input type="file" ref="fileInput" class="hidden" accept=".xlsx, .xls, .csv" @change="handleFileUpload" />
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-body">
+      <!-- Total Siswa -->
+      <Card class="bg-card border-outline-variant/20 shadow-sm overflow-hidden group">
+        <CardContent class="p-8">
+          <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-sm">
+              <span class="material-symbols-outlined text-2xl">groups</span>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-outline uppercase tracking-[0.2em] mb-1">Total Siswa</p>
+              <h3 class="text-2xl font-black text-on-surface font-headline tracking-tighter">{{ stats.total }}</h3>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-    <!-- Stats Summary -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 font-body">
-      <div class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/10 shadow-sm">
-        <p class="text-[10px] font-black text-outline uppercase tracking-widest mb-1">Total Siswa XII</p>
-        <p class="text-3xl font-black text-primary font-headline">{{ students.length }}</p>
-      </div>
-      <div class="bg-green-50 p-6 rounded-3xl border border-green-200 shadow-sm">
-        <p class="text-[10px] font-black text-green-700 uppercase tracking-widest mb-1">Dinyatakan Lulus</p>
-        <p class="text-3xl font-black text-green-600 font-headline">{{students.filter(s => s.status === 'Lulus').length
-          }}</p>
-      </div>
-      <div class="bg-error/10 p-6 rounded-3xl border border-error/20 shadow-sm">
-        <p class="text-[10px] font-black text-error uppercase tracking-widest mb-1">Terdeteksi Bermasalah</p>
-        <p class="text-3xl font-black text-error font-headline">{{ students.filter(s => s.status === 'Tidak Lulus').length }}</p>
-      </div>
+      <!-- Siswa Lulus -->
+      <Card class="bg-card border-outline-variant/20 shadow-sm overflow-hidden group">
+        <CardContent class="p-8">
+          <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-sm">
+              <span class="material-symbols-outlined text-2xl">verified</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <p class="text-[10px] font-black text-outline uppercase tracking-[0.2em]">Siswa Lulus</p>
+                <Badge class="bg-emerald-500 text-white text-[8px] font-black px-2 py-0 h-4 border-transparent uppercase tracking-widest">LULUS</Badge>
+              </div>
+              <h3 class="text-2xl font-black text-emerald-500 font-headline tracking-tighter">{{ stats.lulus }}</h3>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <!-- Siswa Tidak Lulus -->
+      <Card class="bg-card border-outline-variant/20 shadow-sm overflow-hidden group">
+        <CardContent class="p-8">
+          <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-2xl bg-red-600/10 flex items-center justify-center text-red-600 shadow-sm">
+              <span class="material-symbols-outlined text-2xl">cancel</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <p class="text-[10px] font-black text-outline uppercase tracking-[0.2em]">Tidak Lulus</p>
+                <Badge class="bg-red-600 text-white text-[8px] font-black px-2 py-0 h-4 border-transparent uppercase tracking-widest">GAGAL</Badge>
+              </div>
+              <h3 class="text-2xl font-black text-red-600 font-headline tracking-tighter">{{ stats.tidakLulus }}</h3>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
 
-    <!-- Search & Filter -->
-    <div class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/30 flex gap-4 items-center">
-      <div
-        class="grow flex items-center gap-3 bg-surface-container-lowest px-5 py-3 rounded-xl border border-outline-variant/20 shadow-sm min-w-[250px]">
-        <span class="material-symbols-outlined text-outline">search</span>
-        <input v-model="searchQuery" type="text" placeholder="Cari nama atau NISN (min. 3 huruf)..."
-          class="grow bg-transparent border-none outline-none font-body text-sm text-primary" />
-      </div>
-      <select
-        class="bg-surface-container-lowest px-5 py-3 rounded-xl border border-outline-variant/20 shadow-sm font-body text-sm font-bold text-primary outline-none">
-        <option>Semua Kelas</option>
-        <option>XII RPL 1</option>
-        <option>XII TKJ 1</option>
-      </select>
-    </div>
+    <Card>
+      <CardHeader>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-4 flex-grow">
+            <div class="grow flex items-center gap-3 bg-background px-4 py-2 rounded-xl border border-outline-variant/20 shadow-sm min-w-[250px]">
+              <div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-outline shrink-0">
+                <Search class="h-4 w-4" />
+              </div>
+              <Input v-model="searchQuery" placeholder="Cari nama atau NIS..." class="border-none bg-transparent h-10 shadow-none focus-visible:ring-0 px-0" />
+            </div>
+            <Select v-model="selectedClass">
+              <SelectTrigger class="w-40">
+                <SelectValue placeholder="Semua Kelas" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="c in uniqueClasses" :key="c" :value="c">
+                  {{ c === 'all' ? 'Semua Kelas' : c }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div class="flex items-center gap-2">
+            <Button variant="outline" size="icon" @click="window.print()">
+              <FileText class="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <DataTable :columns="columns" :data="students" />
 
-    <!-- Graduation Table -->
-    <DataTable :columns="columns" :data="filteredStudents" />
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-8 px-2">
+          <div class="text-xs text-outline font-bold uppercase tracking-[0.1em]">
+            Menampilkan 
+            <span class="text-primary">{{ ((props.students.meta.currentPage - 1) * props.students.meta.perPage) + 1 }}</span> - 
+            <span class="text-primary">{{ Math.min(props.students.meta.currentPage * props.students.meta.perPage, props.students.meta.total) }}</span> 
+            dari <span class="text-primary">{{ props.students.meta.total }}</span> data
+          </div>
+          
+          <Pagination 
+            :total="props.students.meta.total" 
+            :sibling-count="1" 
+            :show-edges="true" 
+            :page="props.students.meta.currentPage"
+            :items-per-page="props.students.meta.perPage"
+            @update:page="(p) => router.get('/admin/graduation', { 
+              page: p,
+              search: searchQuery,
+              class: selectedClass !== 'all' ? selectedClass : undefined
+            }, { preserveScroll: true, preserveState: true })"
+          >
+            <PaginationContent v-slot="{ items }" class="flex items-center gap-1">
+              <PaginationPrevious />
 
-    <!-- Custom Delete Confirmation -->
+              <template v-for="(item, index) in items">
+                <PaginationItem 
+                  v-if="item.type === 'page'" 
+                  :key="index" 
+                  :value="item.value"
+                  :is-active="item.value === props.students.meta.currentPage"
+                >
+                  {{ item.value }}
+                </PaginationItem>
+                <PaginationEllipsis v-else :key="item.type" :index="index" />
+              </template>
+
+              <PaginationNext />
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </CardContent>
+    </Card>
+
+    <input type="file" ref="fileInput" class="hidden" @change="handleFileUpload" />
+
     <ConfirmDeleteModal
       :show="showDeleteModal"
-      title="Hapus Data Kelulusan"
-      description="Apakah Anda yakin ingin menghapus data kelulusan siswa ini? Tindakan ini tidak dapat dibatalkan dan data akan hilang permanen."
+      title="Hapus Data Kelulusan?"
+      description="Data siswa ini akan dihapus permanen. Siswa tersebut tidak akan bisa mengecek hasil kelulusan lagi."
       :item-name="studentToDelete?.name"
       @close="showDeleteModal = false"
       @confirm="confirmDeleteStudent"
     />
-
-    <!-- Import Preview Modal -->
-    <Teleport to="body">
-      <div v-if="showPreview" class="fixed inset-0 z-[100] flex items-center justify-center p-8">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl animate-fade-in" @click="showPreview = false"></div>
-        <div
-          class="relative bg-white w-full max-w-4xl max-h-[80vh] rounded-[2.5rem] shadow-2xl border border-outline-variant/30 overflow-hidden flex flex-col">
-          <div class="bg-surface-container-high p-8 flex justify-between items-center shrink-0">
-            <div>
-              <h3 class="text-2xl font-black text-primary font-headline tracking-tight text-center">Preview Data Import
-              </h3>
-              <p class="text-xs text-on-surface-variant font-body font-bold mt-1 uppercase tracking-widest">Ditemukan {{
-                previewData.length }} baris data siap diproses</p>
-            </div>
-            <button @click="showPreview = false"
-              class="w-10 h-10 rounded-full hover:bg-white transition-colors flex items-center justify-center text-outline">
-              <span class="material-symbols-outlined">close</span>
-            </button>
-          </div>
-
-          <div class="p-8 overflow-y-auto grow">
-            <table class="w-full text-left font-body text-xs">
-              <thead class="sticky top-0 bg-surface-container-lowest">
-                <tr class="border-b border-outline-variant/30 bg-surface-container-lowest">
-                  <th class="p-4 font-black uppercase tracking-widest text-outline">NISN</th>
-                  <th class="p-4 font-black uppercase tracking-widest text-outline">Nama</th>
-                  <th class="p-4 font-black uppercase tracking-widest text-outline">Kelas</th>
-                  <th class="p-4 font-black uppercase tracking-widest text-outline">Jurusan</th>
-                  <th class="p-4 font-black uppercase tracking-widest text-outline">Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-outline-variant/10">
-                <tr v-for="(row, idx) in previewData" :key="idx" class="hover:bg-primary/5">
-                  <td class="p-4 font-headline font-bold text-primary">{{ row.nisn }}</td>
-                  <td class="p-4 font-bold">{{ row.name }}</td>
-                  <td class="p-4 text-on-surface-variant italic">{{ row.class }}</td>
-                  <td class="p-4 font-black text-primary">{{ row.majorCode || '-' }}</td>
-                  <td class="p-4">
-                    <span :class="[
-                      'px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest',
-                      row.status === 'Lulus' ? 'bg-green-100 text-green-700' : 'bg-outline-variant/20 text-outline'
-                    ]">
-                      {{ row.status }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="p-8 bg-surface-container-low border-t border-outline-variant/20 flex gap-4 shrink-0">
-            <button @click="applyImport"
-              class="grow py-5 bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.01] transition-transform">
-              KONFIRMASI & IMPORT SEKARANG
-            </button>
-            <button @click="showPreview = false"
-              class="px-8 py-5 border border-outline-variant/30 text-outline font-bold rounded-2xl hover:bg-white">
-              BATAL
-            </button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
   </div>
 
-  <!-- Print Template (Visible only when printing) -->
-  <div class="only-print p-12 font-body text-primary">
-    <div class="border-b-4 border-primary pb-8 mb-8 flex justify-between items-end">
-      <div>
-        <h1 class="text-4xl font-black font-headline tracking-tighter uppercase">DAFTAR KELULUSAN SISWA</h1>
-        <p class="text-sm font-bold uppercase tracking-widest mt-2">SMK Plus Pelita Nusantara • TA 2024/2025</p>
-      </div>
-      <div class="text-right">
-        <p class="text-xs font-bold text-outline uppercase">Tanggal Cetak</p>
-        <p class="text-lg font-black italic">{{ new Date().toLocaleDateString('id-ID') }}</p>
-      </div>
-    </div>
-
-    <table class="w-full border-collapse border border-outline-variant/30 mb-12">
+  <!-- Print Template -->
+  <div class="only-print p-8">
+    <h1 class="text-2xl font-bold text-center mb-8">DAFTAR KELULUSAN SISWA</h1>
+    <table class="w-full border-collapse border">
       <thead>
-        <tr class="bg-surface-container-high font-bold uppercase text-[10px]">
-          <th class="border border-outline-variant/30 p-4 text-left">NISN</th>
-          <th class="border border-outline-variant/30 p-4 text-left">Nama Siswa</th>
-          <th class="border border-outline-variant/30 p-4 text-left">Jurusan</th>
-          <th class="border border-outline-variant/30 p-4 text-left">Kelas</th>
-          <th class="border border-outline-variant/30 p-4 text-center">Status Kelulusan</th>
+        <tr class="bg-muted">
+          <th class="border p-2">NIS</th>
+          <th class="border p-2">Nama</th>
+          <th class="border p-2">Kelas</th>
+          <th class="border p-2">Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="student in students" :key="student.id">
-          <td class="border border-outline-variant/30 p-4 font-headline font-bold">{{ student.nisn }}</td>
-          <td class="border border-outline-variant/30 p-4 font-bold">{{ student.name }}</td>
-          <td class="border border-outline-variant/30 p-4">{{ student.majorCode }}</td>
-          <td class="border border-outline-variant/30 p-4 italic">{{ student.class }}</td>
-          <td class="border border-outline-variant/30 p-4 text-center">
-            <span class="font-black uppercase tracking-tighter" :class="student.status === 'Lulus' ? 'text-green-600' : 'text-error'">
-              {{ student.status }}
-            </span>
-          </td>
+        <tr v-for="s in students" :key="s.id">
+          <td class="border p-2 font-mono">{{ s.nisn }}</td>
+          <td class="border p-2">{{ s.name }}</td>
+          <td class="border p-2 text-center">{{ s.class }}</td>
+          <td class="border p-2 text-center font-bold">{{ s.status }}</td>
         </tr>
       </tbody>
     </table>
-
-    <div class="flex justify-between pt-20">
-      <div class="text-center w-64">
-        <p class="text-[10px] font-bold uppercase mb-20 text-outline">Mengetahui, Kepala Sekolah</p>
-        <div class="border-b-2 border-primary mx-auto w-48 mb-2"></div>
-        <p class="font-bold">Irman J. Darmawan, S.Kom., M.M.</p>
-      </div>
-      <div class="text-center w-64">
-        <p class="text-[10px] font-bold uppercase mb-20 text-outline">Petugas Kurikulum</p>
-        <div class="border-b-2 border-primary mx-auto w-48 mb-2"></div>
-        <p class="font-bold">______________________</p>
-      </div>
-    </div>
   </div>
 </template>
 
 <style>
-@media screen {
-  .only-print {
-    display: none;
-  }
-}
-
+@media screen { .only-print { display: none; } }
 @media print {
-  .no-print {
-    display: none;
-  }
-
-  .only-print {
-    display: block;
-  }
-
-  body {
-    background: white !important;
-  }
-
-  @page {
-    margin: 2cm;
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  .no-print { display: none; }
+  .only-print { display: block; }
 }
 </style>

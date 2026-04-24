@@ -49,7 +49,7 @@ import { Link } from '@adonisjs/inertia/vue'
       </div>
     </div>
     <div class="flex flex-col md:flex-row justify-between items-center px-12 py-10 border-t border-slate-200 w-full max-w-7xl mx-auto">
-      <span class="text-slate-500 text-xs">© 2024 SMK Plus Pelita Nusantara. Unggul dalam Teknologi, Berakar pada Tradisi.</span>
+      <span class="text-slate-500 text-xs">© 2026 SMK Plus Pelita Nusantara. Success By Character.</span>
       <div class="flex gap-6 mt-4 md:mt-0">
         <a class="text-slate-400 text-xs hover:text-indigo-900 transition-colors" href="#">Kebijakan Privasi</a>
         <a class="text-slate-400 text-xs hover:text-indigo-900 transition-colors" href="#">Syarat & Ketentuan</a>

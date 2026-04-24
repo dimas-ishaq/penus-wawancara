@@ -3,6 +3,8 @@ import { Head, useForm } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
 import { toast } from 'vue-sonner'
 
+import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
+
 const props = defineProps<{
   majors: any[]
 }>()
@@ -10,6 +12,8 @@ const props = defineProps<{
 const isModalOpen = ref(false)
 const isEditMode = ref(false)
 const selectedMajorId = ref<number | null>(null)
+const isDeleteModalOpen = ref(false)
+const majorToDelete = ref<any>(null)
 
 const form = useForm({
   name: '',
@@ -51,12 +55,18 @@ const submit = () => {
   }
 }
 
-const confirmDelete = (major: any) => {
-  if (confirm(`Apakah Anda yakin ingin menghapus jurusan ${major.name}?`)) {
-    form.delete(`/admin/majors/${major.id}`, {
-      onSuccess: () => toast.success('Jurusan berhasil dihapus')
-    })
-  }
+const openDeleteModal = (major: any) => {
+  majorToDelete.value = major
+  isDeleteModalOpen.value = true
+}
+
+const confirmDelete = () => {
+  form.delete(`/admin/majors/${majorToDelete.value.id}`, {
+    onSuccess: () => {
+      isDeleteModalOpen.value = false
+      toast.success('Jurusan berhasil dihapus')
+    }
+  })
 }
 
 const searchQuery = ref('')
@@ -80,7 +90,7 @@ const filteredMajors = computed(() => {
           Nusantara.</p>
       </div>
       <button @click="openCreateModal"
-        class="px-8 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center gap-3">
+        class="px-8 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center gap-3">
         <span class="material-symbols-outlined">add_circle</span>
         Tambah Jurusan
       </button>
@@ -89,17 +99,19 @@ const filteredMajors = computed(() => {
     <!-- Search Bar -->
     <div class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/30 flex gap-4 items-center">
       <div
-        class="grow flex items-center gap-3 bg-white px-6 py-4 rounded-2xl border border-outline-variant/20 shadow-sm">
-        <span class="material-symbols-outlined text-outline">search</span>
+        class="grow flex items-center gap-3 bg-surface-container-lowest px-6 py-4 rounded-2xl border border-outline-variant/20 shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-outline shrink-0">
+          <span class="material-symbols-outlined">search</span>
+        </div>
         <input v-model="searchQuery" type="text" placeholder="Cari nama atau kode jurusan..."
-          class="grow bg-transparent border-none outline-none font-body text-sm text-primary" />
+          class="grow bg-transparent border-none outline-none font-body text-sm text-on-surface placeholder:text-outline/50" />
       </div>
     </div>
 
     <!-- Majors Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="major in filteredMajors" :key="major.id"
-        class="bg-white p-8 rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group relative overflow-hidden">
+        class="bg-card p-8 rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group relative overflow-hidden">
         <div class="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
           <span class="material-symbols-outlined text-8xl">account_tree</span>
         </div>
@@ -110,11 +122,11 @@ const filteredMajors = computed(() => {
               class="px-4 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/10">
               {{ major.code }}
             </span>
-            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button @click="openEditModal(major)" class="p-2 text-outline hover:text-primary transition-colors">
+            <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button @click="openEditModal(major)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-primary hover:bg-primary/10 transition-all flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">edit</span>
               </button>
-              <button @click="confirmDelete(major)" class="p-2 text-outline hover:text-error transition-colors">
+              <button @click="openDeleteModal(major)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-primary hover:bg-primary/10 transition-all flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">delete</span>
               </button>
             </div>
@@ -151,7 +163,7 @@ const filteredMajors = computed(() => {
         <div class="absolute inset-0 bg-black/90 backdrop-blur-xl animate-fade-in" @click="isModalOpen = false"></div>
 
         <div
-          class="relative bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden animate-zoom-in">
+          class="relative bg-card w-full max-w-md rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden animate-zoom-in">
           <div class="bg-surface-container-high p-8 flex justify-between items-center">
             <h3 class="text-2xl font-black text-primary font-headline tracking-tighter uppercase">
               {{ isEditMode ? 'Edit Jurusan' : 'Tambah Jurusan' }}
@@ -162,25 +174,25 @@ const filteredMajors = computed(() => {
           </div>
 
           <form @submit.prevent="submit" class="p-8 space-y-6 font-body">
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Nama Jurusan</label>
-              <input v-model="form.name" type="text" placeholder="Contoh: Rekayasa Perangkat Lunak"
-                class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl px-6 py-4 text-primary font-bold focus:border-primary focus:bg-white transition-all outline-none"
-                required />
+              <div class="space-y-2">
+                <label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Nama Jurusan</label>
+                <input v-model="form.name" type="text" placeholder="Contoh: Rekayasa Perangkat Lunak"
+                  class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl px-6 py-4 text-primary font-bold focus:border-primary focus:bg-background transition-all outline-none"
+                  required />
               <p v-if="form.errors.name" class="text-xs text-error font-bold ml-1">{{ form.errors.name }}</p>
             </div>
 
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Kode Singkatan</label>
-              <input v-model="form.code" type="text" placeholder="Contoh: RPL"
-                class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl px-6 py-4 text-primary font-bold focus:border-primary focus:bg-white transition-all outline-none uppercase"
-                required />
+              <div class="space-y-2">
+                <label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Kode Singkatan</label>
+                <input v-model="form.code" type="text" placeholder="Contoh: RPL"
+                  class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl px-6 py-4 text-primary font-bold focus:border-primary focus:bg-background transition-all outline-none uppercase"
+                  required />
               <p v-if="form.errors.code" class="text-xs text-error font-bold ml-1">{{ form.errors.code }}</p>
             </div>
 
             <div class="pt-4">
               <button type="submit" :disabled="form.processing"
-                class="w-full py-5 bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest text-sm">
+                class="w-full py-5 bg-primary text-primary-foreground font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest text-sm">
                 {{ isEditMode ? 'SIMPAN PERUBAHAN' : 'TAMBAH SEKARANG' }}
               </button>
             </div>
@@ -188,6 +200,16 @@ const filteredMajors = computed(() => {
         </div>
       </div>
     </Teleport>
+
+    <ConfirmDeleteModal 
+      :show="isDeleteModalOpen" 
+      title="Hapus Data Jurusan?" 
+      description="Menghapus jurusan akan berdampak pada seluruh kelas dan data siswa yang terikat pada jurusan ini. Tindakan ini sangat berisiko." 
+      :item-name="majorToDelete?.name" 
+      :processing="form.processing"
+      @close="isDeleteModalOpen = false" 
+      @confirm="confirmDelete" 
+    />
   </div>
 </template>
 

@@ -274,6 +274,10 @@
                     <span class="info-label">Pewawancara</span>
                     <span class="info-value">{{ interview.interviewer || '-' }}</span>
                 </div>
+                <div class="info-item">
+                    <span class="info-label">Kontak Darurat</span>
+                    <span class="info-value">{{ interview.emergencyContact || '-' }} ({{ interview.emergencyContactPhone || '-' }})</span>
+                </div>
             </div>
         </div>
 
@@ -287,13 +291,17 @@
                     <span class="info-label">Sumber Informasi Sekolah</span>
                     <span class="info-value">{{ interview.infoSource || '-' }}</span>
                 </div>
-                <div class="info-item">
+                <div class="info-item full-width">
                     <span class="info-label">Alasan Memilih Sekolah</span>
                     <span class="info-value text-sm">{{ interview.reasonChoosingSchool || '-' }}</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Pilihan Jurusan & Alasan</span>
-                    <span class="info-value text-sm">{{ interview.majorChoice || '-' }}</span>
+                <div class="info-item full-width">
+                    <span class="info-label">Pilihan Jurusan</span>
+                    <span class="info-value text-sm">{{ interview.majorName || '-' }}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="info-label">Alasan Memilih Jurusan</span>
+                    <span class="info-value text-sm">{{ interview.majorReason || '-' }}</span>
                 </div>
                 <div class="info-item full-width">
                     <span class="info-label">Cita-cita & Harapan Jangka Panjang</span>
@@ -310,7 +318,7 @@
             <div class="info-grid">
                 <div class="info-item">
                     <span class="info-label">Jarak Rumah ke Sekolah</span>
-                    <span class="info-value">{{ interview.characterAnswers?.homeDistance || '-' }}</span>
+                    <span class="info-value">{{ interview.characterAnswers?.homeDistance ? interview.characterAnswers.homeDistance + ' KM' : '-' }}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Metode Berangkat Sekolah</span>
@@ -336,16 +344,73 @@
                                 <span class="{{ interview.characterAnswers.disciplineCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.characterAnswers.disciplineCommitment ? '✔' : '✘' }}</span>
                                 <span>Siap menjalankan disiplin sesuai aturan sekolah.</span>
                             </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.characterAnswers.cleanlinessCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.characterAnswers.cleanlinessCommitment ? '✔' : '✘' }}</span>
+                                <span>Siap aktif menjaga kebersihan (seperti piket).</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.characterAnswers.allActivityCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.characterAnswers.allActivityCommitment ? '✔' : '✘' }}</span>
+                                <span>Aktif mengikuti seluruh kegiatan sekolah.</span>
+                            </div>
                         @else
                             <p class="text-sm italic">Data tidak tersedia</p>
                         @endif
                     </div>
                 </div>
                 <div class="info-item full-width">
-                    <span class="info-label">Pernyataan Pelanggaran Luar Biasa</span>
-                    <div class="commitment-item" style="margin-top: 4px;">
+                    <span class="info-label">Komitmen Kurikulum</span>
+                    <div class="commitment-list" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <div class="commitment-item">
+                            <span class="{{ interview.skillCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.skillCommitment ? '✔' : '✘' }}</span>
+                            <span>Softskill & Hardskill</span>
+                        </div>
+                        <div class="commitment-item">
+                            <span class="{{ interview.entrepreneurCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.entrepreneurCommitment ? '✔' : '✘' }}</span>
+                            <span>Entrepreneurship</span>
+                        </div>
+                        <div class="commitment-item">
+                            <span class="{{ interview.religiousCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.religiousCommitment ? '✔' : '✘' }}</span>
+                            <span>Religious Program</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item full-width">
+                    <span class="info-label">Komitmen Pelanggaran Luar Biasa</span>
+                    <div class="commitment-list" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 5px;">
+                        @if(interview.violationDetails)
+                            <div class="commitment-item">
+                                <span class="{{ interview.violationDetails.tauran ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationDetails.tauran ? '✔' : '✘' }}</span>
+                                <span class="text-[10px] uppercase font-bold">Tauran / Perkelahian</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.violationDetails.asusila ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationDetails.asusila ? '✔' : '✘' }}</span>
+                                <span class="text-[10px] uppercase font-bold">Asusila / Seks Bebas</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.violationDetails.narkoba ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationDetails.narkoba ? '✔' : '✘' }}</span>
+                                <span class="text-[10px] uppercase font-bold">Narkoba / Miras</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.violationDetails.kriminal ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationDetails.kriminal ? '✔' : '✘' }}</span>
+                                <span class="text-[10px] uppercase font-bold">Tindakan Kriminal</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.violationDetails.bullying ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationDetails.bullying ? '✔' : '✘' }}</span>
+                                <span class="text-[10px] uppercase font-bold">Perundungan / Bullying</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.violationDetails.kekerasanGuru ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationDetails.kekerasanGuru ? '✔' : '✘' }}</span>
+                                <span class="text-[10px] uppercase font-bold">Kekerasan Fisik Guru</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.violationDetails.menikah ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationDetails.menikah ? '✔' : '✘' }}</span>
+                                <span class="text-[10px] uppercase font-bold">Menikah Status Murid</span>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="commitment-item" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--border); border-radius: 8px; background: white;">
                         <span class="{{ interview.violationAgreement ? 'check-icon' : 'uncheck-icon' }}">{{ interview.violationAgreement ? '✔' : '✘' }}</span>
-                        <span class="font-bold">Memahami & setuju dengan konsekuensi pelanggaran luar biasa.</span>
+                        <span class="font-bold text-[10px] uppercase">MEMAHAMI & SETUJU DENGAN KONSEKUENSI PELANGGARAN LUAR BIASA.</span>
                     </div>
                 </div>
             </div>
@@ -372,6 +437,18 @@
                                 <span class="{{ interview.parentCommitments.pklConsent ? 'check-icon' : 'uncheck-icon' }}">{{ interview.parentCommitments.pklConsent ? '✔' : '✘' }}</span>
                                 <span>Bersedia bila PKL dilakukan di tempat yang jauh.</span>
                             </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.parentCommitments.deviceCheckConsent ? 'check-icon' : 'uncheck-icon' }}">{{ interview.parentCommitments.deviceCheckConsent ? '✔' : '✘' }}</span>
+                                <span>Bersedia diperiksa HP/Laptop bila ada penyelidikan kasus.</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.parentCommitments.relationshipCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.parentCommitments.relationshipCommitment ? '✔' : '✘' }}</span>
+                                <span>Bersedia menjalin hubungan baik dengan sekolah.</span>
+                            </div>
+                            <div class="commitment-item">
+                                <span class="{{ interview.parentCommitments.financialCommitment ? 'check-icon' : 'uncheck-icon' }}">{{ interview.parentCommitments.financialCommitment ? '✔' : '✘' }}</span>
+                                <span class="font-bold">BERSEDIA MEMENUHI KEWAJIBAN PEMBIAYAAN SAMPAI LULUS.</span>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -386,6 +463,10 @@
                 <div class="info-item">
                     <span class="info-label">Pekerjaan</span>
                     <span class="info-value">{{ interview.billingDetails?.job || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Telepon / WA</span>
+                    <span class="info-value">{{ interview.billingDetails?.phone || '-' }}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Sumber Dana Lain</span>

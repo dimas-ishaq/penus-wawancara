@@ -7,8 +7,44 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class AuditLogSchema extends BaseModel {
+  static $columns = ['action', 'createdAt', 'details', 'id', 'resource', 'resourceId', 'updatedAt', 'userId'] as const
+  $columns = AuditLogSchema.$columns
+  @column()
+  declare action: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare details: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare resource: string
+  @column()
+  declare resourceId: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number | null
+}
+
+export class ClassSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'majorId', 'name', 'updatedAt'] as const
+  $columns = ClassSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare majorId: number | null
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class InterviewSchema extends BaseModel {
-  static $columns = ['academicScore', 'accompaniment', 'attitudeScore', 'billingDetails', 'characterAnswers', 'createdAt', 'emergencyContact', 'id', 'infoSource', 'interviewDate', 'interviewer', 'livingWith', 'longTermGoals', 'majorChoice', 'notes', 'parentCommitments', 'reasonChoosingSchool', 'schoolOrigin', 'specialActivities', 'status', 'studentName', 'technicalScore', 'totalScore', 'updatedAt', 'userId', 'violationAgreement'] as const
+  static $columns = ['academicScore', 'accompaniment', 'attitudeScore', 'billingDetails', 'characterAnswers', 'createdAt', 'emergencyContact', 'emergencyContactPhone', 'entrepreneurCommitment', 'id', 'infoSource', 'infoSourceOther', 'interviewDate', 'interviewer', 'livingWith', 'longTermGoals', 'majorChoice', 'majorReason', 'notes', 'parentCommitments', 'reasonChoosingSchool', 'religiousCommitment', 'schoolOrigin', 'skillCommitment', 'specialActivities', 'status', 'studentName', 'technicalScore', 'totalScore', 'updatedAt', 'userId', 'violationAgreement', 'violationDetails'] as const
   $columns = InterviewSchema.$columns
   @column()
   declare academicScore: number | null
@@ -24,10 +60,16 @@ export class InterviewSchema extends BaseModel {
   declare createdAt: DateTime | null
   @column()
   declare emergencyContact: string | null
+  @column()
+  declare emergencyContactPhone: string | null
+  @column()
+  declare entrepreneurCommitment: boolean | null
   @column({ isPrimary: true })
   declare id: string
   @column()
   declare infoSource: string | null
+  @column()
+  declare infoSourceOther: string | null
   @column.dateTime()
   declare interviewDate: DateTime | null
   @column()
@@ -39,13 +81,19 @@ export class InterviewSchema extends BaseModel {
   @column()
   declare majorChoice: string | null
   @column()
+  declare majorReason: string | null
+  @column()
   declare notes: string | null
   @column()
   declare parentCommitments: any | null
   @column()
   declare reasonChoosingSchool: string | null
   @column()
+  declare religiousCommitment: boolean | null
+  @column()
   declare schoolOrigin: string
+  @column()
+  declare skillCommitment: boolean | null
   @column()
   declare specialActivities: string | null
   @column()
@@ -62,6 +110,8 @@ export class InterviewSchema extends BaseModel {
   declare userId: number | null
   @column()
   declare violationAgreement: boolean | null
+  @column()
+  declare violationDetails: any | null
 }
 
 export class MajorSchema extends BaseModel {
@@ -113,6 +163,17 @@ export class StudentSchema extends BaseModel {
   declare updatedAt: DateTime | null
   @column()
   declare userId: number | null
+}
+
+export class UpdateInterviewsForSkillSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'updatedAt'] as const
+  $columns = UpdateInterviewsForSkillSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
 }
 
 export class UserSchema extends BaseModel {

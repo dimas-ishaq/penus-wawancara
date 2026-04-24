@@ -29,21 +29,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-surface flex text-on-surface selection:bg-primary/10 selection:text-primary">
+  <div class="min-h-screen bg-background flex text-on-surface selection:bg-primary/10 selection:text-primary transition-colors duration-300">
     <Sidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <!-- Main Content -->
     <div class="flex-grow flex flex-col min-h-screen relative overflow-x-hidden">
       <!-- Top Header -->
-      <header class="h-20 border-b border-outline-variant/30 flex items-center justify-between px-8 bg-surface/80 backdrop-blur-md sticky top-0 z-40">
+      <header class="h-20 border-b border-outline-variant/30 flex items-center justify-between px-8 bg-background/80 backdrop-blur-md sticky top-0 z-40">
         <div class="flex items-center gap-4">
           <button @click="isSidebarOpen = true" class="lg:hidden text-primary w-10 h-10 rounded-full hover:bg-primary/5 flex items-center justify-center transition-colors">
             <span class="material-symbols-outlined">menu</span>
           </button>
-          <div class="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-3 border border-outline-variant/20 group focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-            <span class="material-symbols-outlined text-outline text-xl group-focus-within:text-primary transition-colors">search</span>
-            <input type="text" placeholder="Cari data siswa..." class="bg-transparent border-none outline-none text-sm font-body text-primary placeholder:text-outline-variant w-48 sm:w-64" />
-          </div>
         </div>
         
         <div class="flex items-center gap-6">
@@ -60,7 +56,7 @@ onMounted(() => {
           <div class="h-8 w-px bg-outline-variant/30"></div>
           <div class="text-right flex flex-col justify-center">
             <span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest leading-none mb-1">Current Session</span>
-            <span class="text-xs font-bold text-primary leading-none uppercase">TA {{ page.props.academicYear || '2024/2025' }}</span>
+            <span class="text-xs font-bold text-primary leading-none uppercase">TA {{ page.props.academicYear || '2026/2027' }}</span>
           </div>
         </div>
       </header>

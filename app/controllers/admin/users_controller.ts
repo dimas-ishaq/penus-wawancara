@@ -7,10 +7,32 @@ export default class UsersController {
   /**
    * List all users
    */
-  async index({ inertia }: HttpContext) {
-    const users = await User.all()
+  async index({ inertia, request }: HttpContext) {
+    const page = request.input('page', 1)
+    const search = request.input('search', '')?.toLowerCase()
+    const perPage = 20
+
+    let query = User.query()
+
+    if (search) {
+      query = query.where((q) => {
+        q.whereRaw('LOWER(full_name) LIKE ?', [`%${search}%`])
+          .orWhereRaw('LOWER(email) LIKE ?', [`%${search}%`])
+      })
+    }
+
+    const users = await query
+      .orderBy('fullName', 'asc')
+      .paginate(page, perPage)
+
+    users.baseUrl('/admin/users').queryString(request.qs())
+
     return inertia.render('admin/users', {
-      users: UserTransformer.transform(users),
+      users: {
+        data: UserTransformer.transform(users.all()),
+        meta: users.serialize().meta,
+      },
+      search,
     })
   }
 

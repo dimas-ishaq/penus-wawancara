@@ -28,7 +28,7 @@ const submitForm = () => {
       </div>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] shadow-xl border border-outline-variant/30 overflow-hidden">
+    <div class="bg-card rounded-[2.5rem] shadow-xl border border-outline-variant/30 overflow-hidden">
       <div class="bg-surface-container-high p-8">
         <h3 class="text-xl font-bold text-primary font-headline tracking-tighter uppercase">Formulir Pendaftaran</h3>
       </div>
@@ -37,14 +37,14 @@ const submitForm = () => {
         <div class="space-y-3">
           <label class="text-[10px] font-black text-outline uppercase tracking-widest block">Nama Lengkap Siswa</label>
           <input v-model="form.studentName" type="text" placeholder="Masukkan nama lengkap..." required
-            class="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl p-4 font-bold text-primary focus:ring-2 ring-primary outline-none transition-all" />
+            class="w-full bg-background border border-outline-variant/20 rounded-2xl p-4 font-bold text-on-surface focus:ring-2 ring-primary outline-none transition-all" />
           <div v-if="form.errors.studentName" class="text-error text-xs font-bold">{{ form.errors.studentName }}</div>
         </div>
 
         <div class="space-y-3">
           <label class="text-[10px] font-black text-outline uppercase tracking-widest block">Asal Sekolah (SMP/MTs)</label>
           <input v-model="form.schoolOrigin" type="text" placeholder="Masukkan asal sekolah..." required
-            class="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl p-4 font-bold text-primary focus:ring-2 ring-primary outline-none transition-all" />
+            class="w-full bg-background border border-outline-variant/20 rounded-2xl p-4 font-bold text-on-surface focus:ring-2 ring-primary outline-none transition-all" />
           <div v-if="form.errors.schoolOrigin" class="text-error text-xs font-bold">{{ form.errors.schoolOrigin }}</div>
         </div>
 
@@ -53,7 +53,7 @@ const submitForm = () => {
             BATAL
           </Link>
           <button type="submit" :disabled="form.processing"
-            class="grow-[2] py-5 bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform disabled:opacity-50">
+            class="grow-[2] py-5 bg-primary text-primary-foreground font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform disabled:opacity-50">
             {{ form.processing ? 'MEMPROSES...' : 'DAFTARKAN SEKARANG' }}
           </button>
         </div>

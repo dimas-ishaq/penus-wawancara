@@ -31,7 +31,8 @@ router
 const InterviewsController = () => import('#controllers/admin/interviews_controller')
 
 router.group(() => {
-  router.on('/admin/dashboard').renderInertia('admin/dashboard', {}).as('admin.dashboard')
+  const DashboardController = () => import('#controllers/admin/dashboard_controller')
+  router.get('/admin/dashboard', [DashboardController, 'index']).as('admin.dashboard')
   router.get('/admin/interviews', [InterviewsController, 'index']).as('admin.interviews')
   router.get('/admin/interviews/create', [InterviewsController, 'create']).as('admin.interviews.create')
   router.post('/admin/interviews', [InterviewsController, 'store']).as('admin.interviews.store')
@@ -39,6 +40,7 @@ router.group(() => {
   router.put('/admin/interviews/:id/recap', [InterviewsController, 'updateRecap']).as('admin.interviews.recap')
   router.get('/admin/interviews/:id/pdf', [InterviewsController, 'pdf']).as('admin.interviews.pdf')
   router.get('/admin/interviews/export', [InterviewsController, 'export']).as('admin.interviews.export')
+  router.post('/admin/interviews/import', [InterviewsController, 'importInterviews']).as('admin.interviews.import')
   router.delete('/admin/interviews/:id', [InterviewsController, 'destroy']).as('admin.interviews.destroy')
 
   // User Management - Super Admin & Admin
@@ -103,6 +105,27 @@ router.group(() => {
   router.delete('/admin/majors/:id', [MajorsController, 'destroy'])
     .as('admin.majors.destroy')
     .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+
+  // Classes Management
+  const ClassesController = () => import('#controllers/admin/classes_controller')
+  router.get('/admin/classes', [ClassesController, 'index'])
+    .as('admin.classes')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+  router.post('/admin/classes', [ClassesController, 'store'])
+    .as('admin.classes.store')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+  router.put('/admin/classes/:id', [ClassesController, 'update'])
+    .as('admin.classes.update')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+  router.delete('/admin/classes/:id', [ClassesController, 'destroy'])
+    .as('admin.classes.destroy')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+
+  // Audit Logs - Super Admin Only
+  const AuditLogsController = () => import('#controllers/admin/audit_logs_controller')
+  router.get('/admin/audit-logs', [AuditLogsController, 'index'])
+    .as('admin.audit_logs')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
 }).use(middleware.auth())
 
 router.post('/pengumuman-kelulusan/check', [() => import('#controllers/graduation_check_controller'), 'check'])

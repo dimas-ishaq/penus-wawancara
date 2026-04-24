@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { toast, Toaster } from 'vue-sonner'
 import type { Data } from '@generated/data'
@@ -25,6 +25,10 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(() => {
+  document.documentElement.classList.remove('dark')
+})
 </script>
 
 <template>

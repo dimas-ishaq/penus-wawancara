@@ -26,11 +26,13 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
     let logo: string | undefined = undefined
     let academicYear: string | undefined = undefined
     let announcementDate: string | undefined = undefined
+    let brandName: string = 'SMK PLUS PN'
 
     try {
       logo = (await Setting.get('logo_path')) ?? undefined
       academicYear = (await Setting.get('academic_year', '2024/2025')) ?? undefined
       announcementDate = (await Setting.get('graduation_announcement_at')) ?? undefined
+      brandName = (await Setting.get('brand_name', 'SMK PLUS PN')) ?? 'SMK PLUS PN'
     } catch (e) {
       // Database might not be ready or table might not exist yet
     }
@@ -49,6 +51,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       logo: ctx.inertia.always(logo || undefined),
       academicYear: ctx.inertia.always(academicYear || undefined),
       announcementDate: ctx.inertia.always(announcementDate || undefined),
+      brandName: ctx.inertia.always(brandName),
     }
   }
 

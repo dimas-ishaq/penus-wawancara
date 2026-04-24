@@ -12,8 +12,8 @@ import { Head } from '@inertiajs/vue3'
         <div class="lg:col-span-7 z-10">
           <span class="inline-block px-4 py-1 mb-6 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold tracking-widest text-sm font-body">SMK UNGGULAN INDONESIA</span>
           <h1 class="text-6xl md:text-8xl font-headline font-black text-primary leading-none tracking-tighter mb-8 italic">
-            Berakar pada Tradisi,<br/>
-            <span class="text-secondary">Unggul dalam Teknologi.</span>
+            Success<br/>
+            <span class="text-secondary">By Character.</span>
           </h1>
           <p class="text-xl text-on-surface-variant max-w-xl leading-relaxed font-light font-body">
             Membangun generasi emas yang kompeten secara teknis dan kokoh secara karakter. SMK Plus Pelita Nusantara adalah pusat keunggulan pendidikan vokasi modern.

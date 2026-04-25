@@ -6,6 +6,7 @@
 export const controllers = {
   admin: {
     AuditLogs: () => import('#controllers/admin/audit_logs_controller'),
+    Backups: () => import('#controllers/admin/backups_controller'),
     Classes: () => import('#controllers/admin/classes_controller'),
     Dashboard: () => import('#controllers/admin/dashboard_controller'),
     Graduation: () => import('#controllers/admin/graduation_controller'),

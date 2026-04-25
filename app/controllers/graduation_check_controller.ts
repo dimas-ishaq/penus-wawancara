@@ -56,6 +56,7 @@ export default class GraduationCheckController {
       class: student.class,
       majorName: major ? major.name : (student.majorCode || '-'),
       status: student.status,
+      skl: student.skl,
       letter,
       academicYear: announcementDateStr ? new Date(announcementDateStr).getFullYear() : 2026
     })

@@ -126,6 +126,21 @@ router.group(() => {
   router.get('/admin/audit-logs', [AuditLogsController, 'index'])
     .as('admin.audit_logs')
     .use(middleware.role({ allowedRoles: ['super_admin'] }))
+
+  // Backups - Super Admin Only
+  const BackupsController = () => import('#controllers/admin/backups_controller')
+  router.get('/admin/backups', [BackupsController, 'index'])
+    .as('admin.backups')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+  router.post('/admin/backups', [BackupsController, 'store'])
+    .as('admin.backups.store')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+  router.get('/admin/backups/download/:name', [BackupsController, 'download'])
+    .as('admin.backups.download')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+  router.delete('/admin/backups/:name', [BackupsController, 'destroy'])
+    .as('admin.backups.destroy')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
 }).use(middleware.auth())
 
 router.post('/pengumuman-kelulusan/check', [() => import('#controllers/graduation_check_controller'), 'check'])

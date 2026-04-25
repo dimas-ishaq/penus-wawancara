@@ -55,6 +55,11 @@ export interface ApiDefinition {
       destroy: typeof routes['admin.classes.destroy']
     }
     auditLogs: typeof routes['admin.audit_logs']
+    backups: typeof routes['admin.backups'] & {
+      store: typeof routes['admin.backups.store']
+      download: typeof routes['admin.backups.download']
+      destroy: typeof routes['admin.backups.destroy']
+    }
   }
   graduation: {
     check: typeof routes['graduation.check']

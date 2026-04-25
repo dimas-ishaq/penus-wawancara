@@ -33,6 +33,7 @@ const systemLinks = computed(() => {
   const links = [
     { name: 'Akun & Hak Akses (RBAC)', href: '/admin/users', icon: 'manage_accounts', roles: ['super_admin', 'admin'] },
     { name: 'Audit Logs', href: '/admin/audit-logs', icon: 'history', roles: ['super_admin'] },
+    { name: 'Pencadangan Data', href: '/admin/backups', icon: 'backup', roles: ['super_admin'] },
     { name: 'Pengaturan', href: '/admin/settings', icon: 'settings', roles: ['super_admin'] },
   ]
   return links.filter(l => l.roles.includes(page.props.user?.role))

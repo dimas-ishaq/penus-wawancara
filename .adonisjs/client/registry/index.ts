@@ -252,6 +252,30 @@ const routes = {
     tokens: [{"old":"/admin/audit-logs","type":0,"val":"admin","end":""},{"old":"/admin/audit-logs","type":0,"val":"audit-logs","end":""}],
     types: placeholder as Registry['admin.audit_logs']['types'],
   },
+  'admin.backups': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/backups',
+    tokens: [{"old":"/admin/backups","type":0,"val":"admin","end":""},{"old":"/admin/backups","type":0,"val":"backups","end":""}],
+    types: placeholder as Registry['admin.backups']['types'],
+  },
+  'admin.backups.store': {
+    methods: ["POST"],
+    pattern: '/admin/backups',
+    tokens: [{"old":"/admin/backups","type":0,"val":"admin","end":""},{"old":"/admin/backups","type":0,"val":"backups","end":""}],
+    types: placeholder as Registry['admin.backups.store']['types'],
+  },
+  'admin.backups.download': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/backups/download/:name',
+    tokens: [{"old":"/admin/backups/download/:name","type":0,"val":"admin","end":""},{"old":"/admin/backups/download/:name","type":0,"val":"backups","end":""},{"old":"/admin/backups/download/:name","type":0,"val":"download","end":""},{"old":"/admin/backups/download/:name","type":1,"val":"name","end":""}],
+    types: placeholder as Registry['admin.backups.download']['types'],
+  },
+  'admin.backups.destroy': {
+    methods: ["DELETE"],
+    pattern: '/admin/backups/:name',
+    tokens: [{"old":"/admin/backups/:name","type":0,"val":"admin","end":""},{"old":"/admin/backups/:name","type":0,"val":"backups","end":""},{"old":"/admin/backups/:name","type":1,"val":"name","end":""}],
+    types: placeholder as Registry['admin.backups.destroy']['types'],
+  },
   'graduation.check': {
     methods: ["POST"],
     pattern: '/pengumuman-kelulusan/check',

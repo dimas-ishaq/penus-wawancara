@@ -45,6 +45,10 @@ export type ScannedRoutes = {
     'admin.classes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.classes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.audit_logs': { paramsTuple?: []; params?: {} }
+    'admin.backups': { paramsTuple?: []; params?: {} }
+    'admin.backups.store': { paramsTuple?: []; params?: {} }
+    'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
+    'admin.backups.destroy': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
     'graduation.check': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
   }
@@ -68,6 +72,8 @@ export type ScannedRoutes = {
     'admin.majors': { paramsTuple?: []; params?: {} }
     'admin.classes': { paramsTuple?: []; params?: {} }
     'admin.audit_logs': { paramsTuple?: []; params?: {} }
+    'admin.backups': { paramsTuple?: []; params?: {} }
+    'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
@@ -89,6 +95,8 @@ export type ScannedRoutes = {
     'admin.majors': { paramsTuple?: []; params?: {} }
     'admin.classes': { paramsTuple?: []; params?: {} }
     'admin.audit_logs': { paramsTuple?: []; params?: {} }
+    'admin.backups': { paramsTuple?: []; params?: {} }
+    'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
   POST: {
     'new_account.store': { paramsTuple?: []; params?: {} }
@@ -103,6 +111,7 @@ export type ScannedRoutes = {
     'admin.graduation.batch': { paramsTuple?: []; params?: {} }
     'admin.majors.store': { paramsTuple?: []; params?: {} }
     'admin.classes.store': { paramsTuple?: []; params?: {} }
+    'admin.backups.store': { paramsTuple?: []; params?: {} }
     'graduation.check': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
   }
@@ -119,6 +128,7 @@ export type ScannedRoutes = {
     'admin.graduation.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.majors.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.classes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.backups.destroy': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

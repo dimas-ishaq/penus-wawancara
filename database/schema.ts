@@ -143,7 +143,7 @@ export class SettingSchema extends BaseModel {
 }
 
 export class StudentSchema extends BaseModel {
-  static $columns = ['class', 'createdAt', 'id', 'majorCode', 'name', 'nisn', 'status', 'updatedAt', 'userId'] as const
+  static $columns = ['class', 'createdAt', 'id', 'majorCode', 'name', 'nisn', 'skl', 'status', 'updatedAt', 'userId'] as const
   $columns = StudentSchema.$columns
   @column()
   declare class: string
@@ -157,6 +157,8 @@ export class StudentSchema extends BaseModel {
   declare name: string
   @column()
   declare nisn: string
+  @column()
+  declare skl: string | null
   @column()
   declare status: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })

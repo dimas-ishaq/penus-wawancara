@@ -114,6 +114,7 @@ export default class GraduationController {
           class: data.class,
           majorCode: data.majorCode || data.jurusan || null,
           status: data.status || 'Pending',
+          skl: data.skl || data.SKL || null,
           userId: user.id
         }
       )

@@ -165,7 +165,8 @@ const handleFileUpload = (event: Event) => {
         name: row.Nama || row.Nama_Siswa || row.nama || '',
         class: row.Kelas || row.kelas || '',
         majorCode: row.Jurusan || row.Kode_Jurusan || row.majorCode || '',
-        status: row.Status || row.status || 'Pending'
+        status: row.Status || row.status || 'Pending',
+        skl: row.SKL || row.skl || ''
       }))
       showPreview.value = true
     } catch (err) {
@@ -185,7 +186,7 @@ const s2ab = (s: string) => {
 
 const downloadTemplate = () => {
   const ws = utils.json_to_sheet([
-    { NIS: '0061112223', Nama: 'Contoh Nama', Kelas: 'XII RPL 1', Jurusan: 'RPL', Status: 'Lulus' }
+    { NIS: '0061112223', Nama: 'Contoh Nama', Kelas: 'XII RPL 1', Jurusan: 'RPL', Status: 'Lulus', SKL: 'https://drive.google.com/...' }
   ])
   const wb = utils.book_new()
   utils.book_append_sheet(wb, ws, 'Template')
@@ -200,7 +201,7 @@ const downloadTemplate = () => {
 
 const exportToExcel = () => {
   const ws = utils.json_to_sheet(students.value.map(s => ({
-    'NIS': s.nisn, 'Nama': s.name, 'Kelas': s.class, 'Jurusan': s.majorCode, 'Status': s.status
+    'NIS': s.nisn, 'Nama': s.name, 'Kelas': s.class, 'Jurusan': s.majorCode, 'Status': s.status, 'SKL': s.skl
   })))
   const wb = utils.book_new()
   utils.book_append_sheet(wb, ws, 'Data Kelulusan')
@@ -235,17 +236,17 @@ const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'nisn',
     header: 'NIS',
-    cell: ({ row }) => h('div', { class: 'font-mono text-sm font-bold' }, row.original.nisn),
+    cell: ({ row }) => h('div', { class: 'font-mono text-xs font-bold' }, row.original.nisn),
   },
   {
     accessorKey: 'name',
     header: 'Nama Siswa',
-    cell: ({ row }) => h('div', { class: 'font-medium' }, row.original.name),
+    cell: ({ row }) => h('div', { class: 'font-medium text-sm' }, row.original.name),
   },
   {
     accessorKey: 'class',
     header: 'Kelas',
-    cell: ({ row }) => h('Badge', { variant: 'outline' }, row.original.class),
+    cell: ({ row }) => h(Badge, { variant: 'outline', class: 'text-[10px] px-2 py-0' }, () => row.original.class),
   },
   {
     accessorKey: 'status',
@@ -256,12 +257,28 @@ const columns: ColumnDef<any>[] = [
       return h(Badge, {
         variant,
         class: [
-          'uppercase px-3 py-1 text-[10px] tracking-wider font-bold',
-          status === 'tidak lulus' ? 'bg-red-600 text-white border-transparent' : '',
-          status === 'lulus' ? 'bg-emerald-500 text-white border-transparent' : '',
+          'uppercase px-3 py-1 text-[10px] tracking-wider font-black',
+          status === 'tidak lulus' ? 'bg-red-600 text-white border-transparent shadow-sm' : '',
+          status === 'lulus' ? 'bg-emerald-500 text-white border-transparent shadow-sm' : '',
           status !== 'lulus' && status !== 'tidak lulus' ? 'bg-muted text-muted-foreground border-transparent' : ''
         ]
       }, () => row.original.status)
+    },
+  },
+  {
+    accessorKey: 'skl',
+    header: 'SKL (Link)',
+    cell: ({ row }) => {
+      const skl = row.original.skl
+      if (!skl) return h('span', { class: 'text-muted-foreground text-[10px]' }, '-')
+      return h('a', { 
+        href: skl, 
+        target: '_blank', 
+        class: 'text-[10px] text-primary hover:underline flex items-center gap-1 font-medium truncate max-w-[150px]' 
+      }, [
+        h('span', { class: 'material-symbols-outlined text-[12px]' }, 'link'),
+        'Buka Link'
+      ])
     },
   },
   {
@@ -271,7 +288,7 @@ const columns: ColumnDef<any>[] = [
       h(Button, { 
         size: 'sm', 
         class: [
-          'font-bold transition-all',
+          'h-8 px-4 text-xs font-black transition-all',
           row.original.status === 'Lulus' 
             ? 'bg-emerald-500 text-white hover:bg-emerald-600 border-transparent shadow-sm' 
             : 'bg-background text-primary border border-outline-variant/30 hover:bg-surface-container-low'
@@ -281,7 +298,7 @@ const columns: ColumnDef<any>[] = [
       h(Button, { 
         size: 'sm', 
         class: [
-          'font-bold transition-all',
+          'h-8 px-4 text-xs font-black transition-all',
           row.original.status === 'Tidak Lulus' 
             ? 'bg-red-600 text-white hover:bg-red-700 border-transparent shadow-sm' 
             : 'bg-white text-primary border border-outline-variant/30 hover:bg-surface-container-low'
@@ -291,7 +308,7 @@ const columns: ColumnDef<any>[] = [
       h(Button, { 
         size: 'sm', 
         variant: 'ghost', 
-        class: 'text-destructive',
+        class: 'h-8 w-8 p-0 text-destructive',
         onClick: () => deleteStudent(row.original) 
       }, () => h(Trash2, { class: 'w-4 h-4' })),
     ]),

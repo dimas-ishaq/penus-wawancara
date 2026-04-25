@@ -264,6 +264,11 @@ const handleSearch = async () => {
               <h3 class="font-headline font-bold text-primary tracking-tight">Surat Keterangan Kelulusan Digital</h3>
             </div>
             <div class="flex gap-4">
+              <a v-if="result.skl" :href="result.skl" target="_blank"
+                class="flex items-center gap-2 px-6 py-3 bg-emerald-500 text-white font-bold rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20">
+                <span class="material-symbols-outlined">download</span>
+                UNDUH SKL
+              </a>
               <button @click="showResultModal = false"
                 class="p-3 hover:bg-surface-variant/50 rounded-2xl transition-colors">
                 <span class="material-symbols-outlined">close</span>

@@ -499,6 +499,54 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/audit_logs_controller').default['index']>>>
     }
   }
+  'admin.backups': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/backups'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['index']>>>
+    }
+  }
+  'admin.backups.store': {
+    methods: ["POST"]
+    pattern: '/admin/backups'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['store']>>>
+    }
+  }
+  'admin.backups.download': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/backups/download/:name'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { name: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['download']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['download']>>>
+    }
+  }
+  'admin.backups.destroy': {
+    methods: ["DELETE"]
+    pattern: '/admin/backups/:name'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { name: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['destroy']>>>
+    }
+  }
   'graduation.check': {
     methods: ["POST"]
     pattern: '/pengumuman-kelulusan/check'

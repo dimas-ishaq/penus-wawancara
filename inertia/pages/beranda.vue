@@ -78,9 +78,9 @@ const ppdbSteps = [
             </div>
           </div>
 
-          <Link :href="user ? '/admin/dashboard' : '/signup'"
+          <Link :href="user ? '/admin/dashboard' : '/login'"
             class="inline-flex px-10 py-5 bg-secondary text-on-secondary font-black rounded-2xl text-lg hover:scale-105 transition-transform font-headline shadow-xl shadow-secondary/20 uppercase">
-            {{ user ? 'Masuk Dashboard' : 'Mulai Sekarang' }}
+            {{ user ? 'Masuk Dashboard' : 'Masuk ke Akun' }}
           </Link>
         </div>
 

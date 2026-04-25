@@ -20,8 +20,8 @@ router.on('/profil-sekolah').renderInertia('profil-sekolah', {}).as('profil-seko
 
 router
   .group(() => {
-    router.get('signup', [controllers.NewAccount, 'create'])
-    router.post('signup', [controllers.NewAccount, 'store'])
+// router.get('signup', [controllers.NewAccount, 'create'])
+// router.post('signup', [controllers.NewAccount, 'store'])
 
     router.get('login', [controllers.Session, 'create'])
     router.post('login', [controllers.Session, 'store'])

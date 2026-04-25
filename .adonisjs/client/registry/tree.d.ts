@@ -7,10 +7,6 @@ export interface ApiDefinition {
   dashboardPpdb: typeof routes['dashboard-ppdb']
   pengumumanKelulusan: typeof routes['pengumuman-kelulusan']
   profilSekolah: typeof routes['profil-sekolah']
-  newAccount: {
-    create: typeof routes['new_account.create']
-    store: typeof routes['new_account.store']
-  }
   session: {
     create: typeof routes['session.create']
     store: typeof routes['session.store']

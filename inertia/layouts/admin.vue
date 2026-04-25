@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { usePage } from '@inertiajs/vue3'
+import { usePage, Link } from '@inertiajs/vue3'
 import { Toaster } from 'vue-sonner'
 import Sidebar from '../components/Sidebar.vue'
 
@@ -40,6 +40,11 @@ onMounted(() => {
           <button @click="isSidebarOpen = true" class="lg:hidden text-primary w-10 h-10 rounded-full hover:bg-primary/5 flex items-center justify-center transition-colors">
             <span class="material-symbols-outlined">menu</span>
           </button>
+          
+          <Link href="/" class="hidden md:flex items-center gap-2 px-4 py-2 bg-surface-container-high rounded-xl text-primary hover:bg-primary hover:text-white transition-all text-xs font-bold shadow-sm group">
+            <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">home</span>
+            Beranda
+          </Link>
         </div>
         
         <div class="flex items-center gap-6">

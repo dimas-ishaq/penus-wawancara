@@ -16,7 +16,7 @@ export default class extends BaseSeeder {
       name: 'Perbankan dan Keuangan Mikro',
     })
     await Major.updateOrCreate({ code: 'TOI' }, {
-      name: 'Teknik Otomotif dan Industri',
+      name: 'Teknik Otomasi Industri',
     })
     await Major.updateOrCreate({ code: 'MPLB' }, {
       name: 'Manajemen Perkantoran dan Layanan Bisnis',

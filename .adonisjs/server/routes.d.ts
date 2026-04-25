@@ -9,8 +9,6 @@ export type ScannedRoutes = {
     'dashboard-ppdb': { paramsTuple?: []; params?: {} }
     'pengumuman-kelulusan': { paramsTuple?: []; params?: {} }
     'profil-sekolah': { paramsTuple?: []; params?: {} }
-    'new_account.create': { paramsTuple?: []; params?: {} }
-    'new_account.store': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'admin.dashboard': { paramsTuple?: []; params?: {} }
@@ -58,7 +56,6 @@ export type ScannedRoutes = {
     'dashboard-ppdb': { paramsTuple?: []; params?: {} }
     'pengumuman-kelulusan': { paramsTuple?: []; params?: {} }
     'profil-sekolah': { paramsTuple?: []; params?: {} }
-    'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'admin.dashboard': { paramsTuple?: []; params?: {} }
     'admin.interviews': { paramsTuple?: []; params?: {} }
@@ -81,7 +78,6 @@ export type ScannedRoutes = {
     'dashboard-ppdb': { paramsTuple?: []; params?: {} }
     'pengumuman-kelulusan': { paramsTuple?: []; params?: {} }
     'profil-sekolah': { paramsTuple?: []; params?: {} }
-    'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'admin.dashboard': { paramsTuple?: []; params?: {} }
     'admin.interviews': { paramsTuple?: []; params?: {} }
@@ -99,7 +95,6 @@ export type ScannedRoutes = {
     'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
   POST: {
-    'new_account.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'admin.interviews.store': { paramsTuple?: []; params?: {} }
     'admin.interviews.import': { paramsTuple?: []; params?: {} }

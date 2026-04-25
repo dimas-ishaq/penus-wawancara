@@ -9,7 +9,8 @@
       "~/*": ["./*"],
       "@/*": ["./*"],
       "@generated/*": ["../.adonisjs/client/*"]
-    }
+    },
+    "moduleResolution": "bundler"
   },
   "include": [
     "./**/*.ts",

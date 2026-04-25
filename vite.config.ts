@@ -4,7 +4,7 @@ import adonisjs from '@adonisjs/vite/client'
 import inertia from '@adonisjs/inertia/vite'
 
 export default defineConfig({
-  base: '/_vite/',
+  base: '/assets/',
   plugins: [
     vue(),
     inertia({ ssr: { enabled: false, entrypoint: 'inertia/ssr.ts' } }),

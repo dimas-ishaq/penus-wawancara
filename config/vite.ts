@@ -18,7 +18,7 @@ const viteBackendConfig = defineConfig({
    * Feel free to change the value of the "assetsUrl" to
    * point to a CDN in production.
    */
-  assetsUrl: '/_vite',
+  assetsUrl: '/assets',
 
   /**
    * HTML attributes added to generated script tags.

@@ -22,11 +22,13 @@ export default class GraduationCheckController {
       return response.status(400).json({ error: 'NIS harus diisi.' })
     }
 
+    console.log('Checking NISN:', nisn)
     const student = await Student.findBy('nisn', nisn)
+    console.log('Student found:', !!student)
 
     if (!student) {
       return response.status(404).json({ 
-        error: 'Data siswa tidak ditemukan. Pastikan NIS yang Anda masukkan benar.' 
+        error: `Data siswa dengan NISN ${nisn} tidak ditemukan. Pastikan NIS yang Anda masukkan benar.` 
       })
     }
 

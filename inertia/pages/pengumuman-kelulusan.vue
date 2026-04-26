@@ -114,16 +114,16 @@ const handleSearch = async () => {
 
   <div class="min-h-screen bg-surface-container-lowest font-body">
     <!-- Header Section -->
-    <header class="py-20 bg-primary text-white overflow-hidden relative">
-      <div class="max-w-7xl mx-auto px-8 relative z-10">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-          <div class="text-center md:text-left space-y-4">
-            <span class="text-secondary font-bold tracking-[0.3em] uppercase text-xs block">Success By Character.</span>
-            <h1 class="text-5xl md:text-7xl font-black font-headline tracking-tighter leading-none">
+    <header class="py-12 md:py-24 bg-primary text-white overflow-hidden relative">
+      <div class="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+          <div class="text-center md:text-left space-y-6">
+            <span class="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs block">Success By Character.</span>
+            <h1 class="text-4xl md:text-7xl font-black font-headline tracking-tighter leading-[0.9]">
               Pengumuman <br/>
               <span class="text-secondary italic">Hasil Akhir.</span>
             </h1>
-            <p class="text-white/70 max-w-lg leading-relaxed">
+            <p class="text-white/70 max-w-lg leading-relaxed text-sm md:text-base">
               Selamat datang di sistem informasi kelulusan SMK Plus Pelita Nusantara. Masukkan NIS Anda untuk memvalidasi status kelulusan tahun ajaran {{ page.props.academicYear }}.
             </p>
           </div>
@@ -151,14 +151,14 @@ const handleSearch = async () => {
             </div>
 
             <div class="space-y-6">
-              <div class="bg-surface-container p-2 rounded-[2rem] flex flex-col md:flex-row items-center gap-2 group-focus-within:ring-4 ring-primary/10 transition-all">
-                <div class="flex items-center gap-4 px-8 py-4 grow w-full">
+              <div class="bg-surface-container p-2 rounded-[2rem] flex flex-col md:flex-row items-stretch md:items-center gap-2 group-focus-within:ring-4 ring-primary/10 transition-all">
+                <div class="flex items-center gap-3 md:gap-4 px-6 md:px-8 py-4 grow w-full">
                   <span class="material-symbols-outlined text-primary text-2xl">fingerprint</span>
                   <input 
                     v-model="nisnQuery" 
                     type="text" 
                     placeholder="Masukkan NIS Anda..."
-                    class="grow bg-transparent border-none outline-none text-xl font-bold text-primary placeholder:text-outline-variant/50"
+                    class="grow bg-transparent border-none outline-none text-lg md:text-xl font-bold text-primary placeholder:text-outline-variant/50 w-full"
                     @keyup.enter="handleSearch"
                   />
                 </div>
@@ -258,29 +258,29 @@ const handleSearch = async () => {
         <div
           class="relative bg-white w-full max-w-[850px] rounded-3xl shadow-2xl overflow-hidden animate-zoom-in flex flex-col max-h-[98vh] border border-white/20">
           <!-- Header Actions -->
-          <div class="flex items-center justify-between px-8 py-5 border-b bg-surface-container-low/50 backdrop-blur-md">
+          <div class="flex flex-col sm:flex-row items-center justify-between px-6 md:px-8 py-4 md:py-5 border-b bg-surface-container-low/50 backdrop-blur-md gap-4">
             <div class="flex items-center gap-3">
               <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-              <h3 class="font-headline font-bold text-primary tracking-tight">Surat Keterangan Kelulusan Digital</h3>
+              <h3 class="font-headline font-bold text-primary tracking-tight text-sm md:text-base">Surat Keterangan Kelulusan Digital</h3>
             </div>
-            <div class="flex gap-4">
+            <div class="flex items-center gap-2 md:gap-4 w-full sm:w-auto">
               <a v-if="result.skl" :href="result.skl" target="_blank"
-                class="flex items-center gap-2 px-6 py-3 bg-emerald-500 text-white font-bold rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20">
-                <span class="material-symbols-outlined">download</span>
+                class="flex-grow sm:flex-grow-0 flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-emerald-500 text-white font-bold text-xs md:text-sm rounded-xl md:rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20">
+                <span class="material-symbols-outlined text-lg">download</span>
                 UNDUH SKL
               </a>
               <button @click="showResultModal = false"
-                class="p-3 hover:bg-surface-variant/50 rounded-2xl transition-colors">
+                class="p-2.5 md:p-3 hover:bg-surface-variant/50 rounded-xl md:rounded-2xl transition-colors">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
           </div>
 
           <!-- Scrollable Certificate Container -->
-          <div class="overflow-auto bg-surface-variant/10 flex justify-center p-8 lg:p-12">
+          <div class="overflow-auto bg-surface-variant/10 flex justify-center p-4 md:p-8 lg:p-12">
             <!-- The Certificate Card -->
             <div id="skl-certificate"
-              class="relative bg-white w-full max-w-[800px] min-h-[400px] md:min-h-0 md:aspect-[1.414/1] p-6 md:p-12 flex flex-col items-center justify-between border-[10px] md:border-[16px] border-surface-container shadow-2xl transition-transform duration-700"
+              class="relative bg-white w-full max-w-[800px] min-h-[400px] md:min-h-0 md:aspect-[1.414/1] p-6 md:p-12 flex flex-col items-center justify-between border-[6px] md:border-[16px] border-surface-container shadow-2xl transition-transform duration-700"
               style="font-family: 'Public Sans', sans-serif; color: #1C1B1F;">
 
               <!-- Certificate Watermark -->

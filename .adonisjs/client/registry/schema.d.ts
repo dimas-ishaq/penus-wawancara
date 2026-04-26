@@ -331,6 +331,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['importStudents']>>>
     }
   }
+  'admin.graduation.students.store': {
+    methods: ["POST"]
+    pattern: '/admin/graduation/students'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['store']>>>
+    }
+  }
   'admin.graduation.batch': {
     methods: ["POST"]
     pattern: '/admin/graduation/students/batch-update'

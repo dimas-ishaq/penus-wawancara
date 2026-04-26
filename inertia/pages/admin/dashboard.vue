@@ -107,13 +107,13 @@ const infoSourceOptions = computed(() => ({
 <template>
   <Head title="Admin Dashboard" />
 
-  <div class="space-y-10">
-    <header class="flex justify-between items-end">
+  <div class="space-y-6 sm:space-y-10">
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
       <div>
-        <h1 class="text-3xl font-black text-primary tracking-tighter font-headline mb-2">Overview Dashboard</h1>
-        <p class="text-on-surface-variant font-body text-sm">Selamat datang kembali di panel administrasi. Berikut ringkasan data terbaru hari ini.</p>
+        <h1 class="text-2xl sm:text-3xl font-black text-primary tracking-tighter font-headline mb-1 sm:mb-2">Overview Dashboard</h1>
+        <p class="text-on-surface-variant font-body text-xs sm:text-sm">Selamat datang kembali di panel administrasi. Berikut ringkasan data terbaru hari ini.</p>
       </div>
-      <div class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-2xl border border-outline-variant/10 shadow-sm">
+      <div class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-2xl border border-outline-variant/10 shadow-sm shrink-0">
         <span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
         <span class="text-[10px] font-black text-primary uppercase tracking-widest">Live Updates</span>
       </div>
@@ -139,17 +139,17 @@ const infoSourceOptions = computed(() => ({
     <!-- Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Area Chart -->
-      <div class="lg:col-span-8 bg-surface-container-lowest p-8 rounded-[2rem] border border-outline-variant/10 shadow-sm">
-        <div class="flex justify-between items-center mb-6">
+      <div class="lg:col-span-8 bg-surface-container-lowest p-4 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 shadow-sm">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h2 class="text-xl font-bold text-primary font-headline">Tren Pendaftaran</h2>
-            <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">7 Hari Terakhir</p>
+            <h2 class="text-lg sm:text-xl font-bold text-primary font-headline">Tren Pendaftaran</h2>
+            <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">7 Hari Terakhir</p>
           </div>
           <div class="flex gap-2">
             <span class="px-3 py-1 bg-primary/5 text-primary text-[10px] font-black rounded-full">Automated Refresh</span>
           </div>
         </div>
-        <div class="h-[300px]">
+        <div class="h-[250px] sm:h-[300px]">
           <ApexChart
             type="area"
             height="100%"
@@ -160,9 +160,9 @@ const infoSourceOptions = computed(() => ({
       </div>
 
       <!-- Donut Chart -->
-      <div class="lg:col-span-4 bg-surface-container-lowest p-8 rounded-[2rem] border border-outline-variant/10 shadow-sm">
-        <h2 class="text-xl font-bold text-primary font-headline mb-6 text-center">Distribusi Wawancara</h2>
-        <div class="h-[300px] flex items-center justify-center">
+      <div class="lg:col-span-4 bg-surface-container-lowest p-4 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 shadow-sm">
+        <h2 class="text-lg sm:text-xl font-bold text-primary font-headline mb-6 text-center">Distribusi Wawancara</h2>
+        <div class="h-[250px] sm:h-[300px] flex items-center justify-center">
           <ApexChart
             type="donut"
             height="100%"
@@ -176,28 +176,28 @@ const infoSourceOptions = computed(() => ({
     <!-- Main Section: Recent Activity & Analysis -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Recent Activity -->
-      <div class="lg:col-span-7 bg-surface-container-lowest p-8 rounded-[2rem] border border-outline-variant/10 shadow-sm">
+      <div class="lg:col-span-7 bg-surface-container-lowest p-4 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 shadow-sm">
         <div class="flex justify-between items-center mb-8">
-          <h2 class="text-xl font-bold text-primary font-headline flex items-center gap-3">
+          <h2 class="text-lg sm:text-xl font-bold text-primary font-headline flex items-center gap-3">
             <span class="material-symbols-outlined text-secondary">history</span>
-            Log Aktivitas Terbaru
+            Log Aktivitas
           </h2>
-          <button class="text-xs font-bold text-primary hover:underline">LIHAT SEMUA</button>
+          <button class="text-[10px] sm:text-xs font-bold text-primary hover:underline">LIHAT SEMUA</button>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-4 sm:space-y-6">
           <div v-for="activity in props.recentActivities" :key="activity.id"
-            class="flex items-center gap-6 p-4 rounded-2xl hover:bg-surface-container-low transition-colors group">
-            <div class="w-10 h-10 rounded-xl bg-surface-container-low group-hover:bg-primary/10 flex items-center justify-center text-primary border border-outline-variant/20 transition-all">
-              <span class="material-symbols-outlined text-xl">person</span>
+            class="flex items-center gap-3 sm:gap-6 p-3 sm:p-4 rounded-2xl hover:bg-surface-container-low transition-colors group">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-surface-container-low group-hover:bg-primary/10 flex items-center justify-center text-primary border border-outline-variant/20 transition-all shrink-0">
+              <span class="material-symbols-outlined text-lg sm:text-xl">person</span>
             </div>
-            <div class="grow font-body">
-              <p class="text-sm font-bold text-primary">
+            <div class="grow font-body min-w-0">
+              <p class="text-xs sm:text-sm font-bold text-primary truncate sm:whitespace-normal">
                 {{ activity.user }} <span class="font-normal text-on-surface-variant">{{ activity.action }}</span> {{ activity.student }}
               </p>
-              <p class="text-[10px] text-outline font-bold uppercase tracking-tighter">{{ activity.time }}</p>
+              <p class="text-[9px] sm:text-[10px] text-outline font-bold uppercase tracking-tighter">{{ activity.time }}</p>
             </div>
-            <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+            <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors shrink-0">chevron_right</span>
           </div>
           <div v-if="props.recentActivities.length === 0" class="text-center py-8 text-on-surface-variant font-body text-sm italic">
             Belum ada aktivitas terbaru.
@@ -206,12 +206,12 @@ const infoSourceOptions = computed(() => ({
       </div>
 
       <!-- Information Source Analysis -->
-      <div class="lg:col-span-5 bg-surface-container-lowest p-8 rounded-[2rem] border border-outline-variant/10 shadow-sm">
+      <div class="lg:col-span-5 bg-surface-container-lowest p-4 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 shadow-sm">
         <div class="mb-6 text-center">
-          <h2 class="text-xl font-bold text-primary font-headline">Analisis Sumber Informasi</h2>
-          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">Efetivitas Pemasaran</p>
+          <h2 class="text-lg sm:text-xl font-bold text-primary font-headline">Analisis Sumber Informasi</h2>
+          <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Efetivitas Pemasaran</p>
         </div>
-        <div class="h-[350px]">
+        <div class="h-[300px] sm:h-[350px]">
           <ApexChart
             type="bar"
             height="100%"
@@ -223,18 +223,18 @@ const infoSourceOptions = computed(() => ({
     </div>
 
     <!-- Session Info Card -->
-    <div class="bg-surface-container-high p-8 rounded-[2rem] border border-outline-variant/10 flex justify-between items-center">
-      <div class="flex items-center gap-6">
-        <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+    <div class="bg-surface-container-high p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div class="flex items-center gap-4 sm:gap-6">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
           <span class="material-symbols-outlined">analytics</span>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-primary font-headline">Informasi Sesi & Sistem</h3>
-          <p class="text-sm text-on-surface-variant font-body">Status database dan server saat ini dalam kondisi optimal.</p>
+          <h3 class="text-base sm:text-lg font-bold text-primary font-headline">Informasi Sesi & Sistem</h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant font-body">Status database dan server saat ini dalam kondisi optimal.</p>
         </div>
       </div>
-      <div class="flex gap-8 font-body">
-        <div class="text-right">
+      <div class="flex gap-6 sm:gap-8 font-body w-full md:w-auto justify-between md:justify-end border-t border-outline-variant/10 pt-4 md:border-0 md:pt-0">
+        <div class="text-left md:text-right">
           <span class="block text-[10px] text-outline font-bold uppercase tracking-widest">Waktu Server</span>
           <span class="text-sm font-bold text-primary">22:05 WIB</span>
         </div>

@@ -83,56 +83,55 @@ const filteredMajors = computed(() => {
   <Head title="Manajemen Jurusan" />
 
   <div class="space-y-8">
-    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
       <div>
-        <h1 class="text-3xl font-black text-primary tracking-tighter font-headline mb-2">Manajemen Jurusan</h1>
-        <p class="text-on-surface-variant font-body text-sm">Kelola daftar program keahlian atau jurusan di SMK Plus Pelita
-          Nusantara.</p>
+        <h1 class="text-2xl sm:text-3xl font-black text-primary tracking-tighter font-headline mb-1 sm:mb-2 uppercase">Manajemen Jurusan</h1>
+        <p class="text-on-surface-variant font-body text-xs sm:text-sm">Kelola daftar program keahlian atau jurusan di SMK Plus Pelita Nusantara.</p>
       </div>
       <button @click="openCreateModal"
-        class="px-8 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center gap-3">
+        class="w-full lg:w-auto px-8 py-4 sm:py-3 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/95 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3">
         <span class="material-symbols-outlined">add_circle</span>
         Tambah Jurusan
       </button>
     </header>
 
     <!-- Search Bar -->
-    <div class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/30 flex gap-4 items-center">
+    <div class="bg-surface-container-low p-4 sm:p-6 rounded-3xl border border-outline-variant/30 flex gap-4 items-center">
       <div
-        class="grow flex items-center gap-3 bg-surface-container-lowest px-6 py-4 rounded-2xl border border-outline-variant/20 shadow-sm">
+        class="grow flex items-center gap-3 bg-surface-container-lowest px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-outline-variant/20 shadow-sm min-w-0">
         <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-outline shrink-0">
           <span class="material-symbols-outlined">search</span>
         </div>
         <input v-model="searchQuery" type="text" placeholder="Cari nama atau kode jurusan..."
-          class="grow bg-transparent border-none outline-none font-body text-sm text-on-surface placeholder:text-outline/50" />
+          class="grow bg-transparent border-none outline-none font-body text-sm text-on-surface placeholder:text-outline/50 min-w-0" />
       </div>
     </div>
 
     <!-- Majors Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="major in filteredMajors" :key="major.id"
-        class="bg-card p-8 rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group relative overflow-hidden">
+        class="bg-card p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group relative overflow-hidden">
         <div class="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
-          <span class="material-symbols-outlined text-8xl">account_tree</span>
+          <span class="material-symbols-outlined text-7xl sm:text-8xl">account_tree</span>
         </div>
 
-        <div class="relative z-10 space-y-6">
+        <div class="relative z-10 space-y-4 sm:space-y-6">
           <div class="flex justify-between items-start">
             <span
               class="px-4 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/10">
               {{ major.code }}
             </span>
-            <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
               <button @click="openEditModal(major)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-primary hover:bg-primary/10 transition-all flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">edit</span>
               </button>
-              <button @click="openDeleteModal(major)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-primary hover:bg-primary/10 transition-all flex items-center justify-center">
+              <button @click="openDeleteModal(major)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-error hover:bg-error/10 transition-all flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">delete</span>
               </button>
             </div>
           </div>
 
-          <h3 class="text-xl font-black text-primary font-headline leading-tight tracking-tight min-h-[3rem]">
+          <h3 class="text-lg sm:text-xl font-black text-primary font-headline leading-tight tracking-tight min-h-0 sm:min-h-[3rem]">
             {{ major.name }}
           </h3>
 
@@ -164,8 +163,8 @@ const filteredMajors = computed(() => {
 
         <div
           class="relative bg-card w-full max-w-md rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden animate-zoom-in">
-          <div class="bg-surface-container-high p-8 flex justify-between items-center">
-            <h3 class="text-2xl font-black text-primary font-headline tracking-tighter uppercase">
+          <div class="bg-surface-container-high p-6 sm:p-8 flex justify-between items-center">
+            <h3 class="text-xl sm:text-2xl font-black text-primary font-headline tracking-tighter uppercase">
               {{ isEditMode ? 'Edit Jurusan' : 'Tambah Jurusan' }}
             </h3>
             <button @click="isModalOpen = false" class="text-outline hover:text-primary transition-colors">
@@ -173,7 +172,7 @@ const filteredMajors = computed(() => {
             </button>
           </div>
 
-          <form @submit.prevent="submit" class="p-8 space-y-6 font-body">
+          <form @submit.prevent="submit" class="p-6 sm:p-8 space-y-6 font-body">
               <div class="space-y-2">
                 <label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Nama Jurusan</label>
                 <input v-model="form.name" type="text" placeholder="Contoh: Rekayasa Perangkat Lunak"

@@ -168,6 +168,12 @@ const routes = {
     tokens: [{"old":"/admin/graduation/students/import","type":0,"val":"admin","end":""},{"old":"/admin/graduation/students/import","type":0,"val":"graduation","end":""},{"old":"/admin/graduation/students/import","type":0,"val":"students","end":""},{"old":"/admin/graduation/students/import","type":0,"val":"import","end":""}],
     types: placeholder as Registry['admin.graduation.import']['types'],
   },
+  'admin.graduation.students.store': {
+    methods: ["POST"],
+    pattern: '/admin/graduation/students',
+    tokens: [{"old":"/admin/graduation/students","type":0,"val":"admin","end":""},{"old":"/admin/graduation/students","type":0,"val":"graduation","end":""},{"old":"/admin/graduation/students","type":0,"val":"students","end":""}],
+    types: placeholder as Registry['admin.graduation.students.store']['types'],
+  },
   'admin.graduation.batch': {
     methods: ["POST"],
     pattern: '/admin/graduation/students/batch-update',

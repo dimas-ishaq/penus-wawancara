@@ -254,24 +254,24 @@ const confirmImport = () => {
   <Head title="Manajemen Wawancara" />
 
   <div class="space-y-6 no-print">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
       <div>
-        <h1 class="text-3xl font-bold tracking-tight">Manajemen Wawancara</h1>
-        <p class="text-muted-foreground mt-1">Kelola hasil seleksi wawancara dan rekapitulasi calon siswa.</p>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-primary">Manajemen Wawancara</h1>
+        <p class="text-muted-foreground mt-1 text-sm">Kelola hasil seleksi wawancara dan rekapitulasi calon siswa.</p>
       </div>
-      <div class="inline-flex items-center -space-x-px shadow-sm rounded-xl overflow-hidden">
-        <Button variant="outline" class="rounded-none px-4" @click="downloadTemplate">
-          <Download class="w-4 h-4 mr-2" /> Template
+      <div class="flex flex-wrap items-center gap-2 sm:gap-0 sm:inline-flex shadow-sm rounded-xl overflow-hidden">
+        <Button variant="outline" class="rounded-xl sm:rounded-none px-3 sm:px-4 h-10 text-xs" @click="downloadTemplate">
+          <Download class="w-3.5 h-3.5 mr-2" /> Template
         </Button>
-        <Button variant="outline" class="rounded-none px-4" @click="fileInput?.click()">
-          <Upload class="w-4 h-4 mr-2" /> Import
+        <Button variant="outline" class="rounded-xl sm:rounded-none px-3 sm:px-4 h-10 text-xs border-l sm:border-l-0" @click="fileInput?.click()">
+          <Upload class="w-3.5 h-3.5 mr-2" /> Import
         </Button>
-        <Button variant="outline" class="rounded-none px-4" @click="exportToExcel">
-          <FileSpreadsheet class="w-4 h-4 mr-2" /> Excel
+        <Button variant="outline" class="rounded-xl sm:rounded-none px-3 sm:px-4 h-10 text-xs border-l sm:border-l-0" @click="exportToExcel">
+          <FileSpreadsheet class="w-3.5 h-3.5 mr-2" /> Excel
         </Button>
-        <Link href="/admin/interviews/create">
-          <Button class="rounded-none px-5 gap-2 border-l-0">
-            <UserPlus class="w-4 h-4" /> Tambah Pendaftar
+        <Link href="/admin/interviews/create" class="w-full sm:w-auto">
+          <Button class="rounded-xl sm:rounded-none px-5 h-10 gap-2 border-l sm:border-l-0 w-full">
+            <UserPlus class="w-3.5 h-3.5" /> Tambah Pendaftar
           </Button>
         </Link>
       </div>
@@ -280,24 +280,24 @@ const confirmImport = () => {
     <!-- Filters -->
     <Card>
       <CardHeader class="pb-3">
-        <div class="flex flex-col lg:flex-row lg:items-center gap-4">
-          <div class="relative flex-grow max-w-md">
-            <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input v-model="searchQuery" placeholder="Cari nama atau nomor pendaftaran..." class="pl-8" />
+        <div class="flex flex-col xl:flex-row xl:items-center gap-4">
+          <div class="relative flex-grow max-w-full xl:max-w-md">
+            <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input v-model="searchQuery" placeholder="Cari nama atau nomor pendaftaran..." class="pl-10 h-11 sm:h-10 rounded-xl" />
           </div>
 
-          <div class="flex flex-wrap items-center bg-background border border-outline-variant/20 rounded-xl shadow-sm overflow-hidden -space-x-px">
-            <div class="flex items-center px-4 h-9 border-r border-outline-variant/20 bg-muted/30">
+          <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center bg-background border border-outline-variant/20 rounded-xl sm:rounded-2xl shadow-sm overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-outline-variant/20">
+            <div class="flex items-center px-4 h-10 bg-muted/30">
               <span class="text-[10px] font-black text-outline uppercase tracking-widest">Filter:</span>
             </div>
             
-            <div class="flex items-center">
-              <DatePicker v-model="startDate" class="h-9 w-36 text-xs rounded-none border-0 border-r border-outline-variant/20 shadow-none focus:ring-0" placeholder="Mulai" />
-              <DatePicker v-model="endDate" class="h-9 w-36 text-xs rounded-none border-0 border-r border-outline-variant/20 shadow-none focus:ring-0" placeholder="Selesai" />
+            <div class="flex items-center divide-x divide-outline-variant/20">
+              <DatePicker v-model="startDate" class="h-10 w-full sm:w-32 text-xs rounded-none border-0 shadow-none focus:ring-0" placeholder="Mulai" />
+              <DatePicker v-model="endDate" class="h-10 w-full sm:w-32 text-xs rounded-none border-0 shadow-none focus:ring-0" placeholder="Selesai" />
             </div>
 
             <Select v-model="statusFilter">
-              <SelectTrigger class="w-36 h-9 rounded-none border-0 border-r border-outline-variant/20 shadow-none focus:ring-0">
+              <SelectTrigger class="w-full sm:w-36 h-10 rounded-none border-0 shadow-none focus:ring-0">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -307,10 +307,10 @@ const confirmImport = () => {
               </SelectContent>
             </Select>
 
-            <div class="flex items-center px-3 h-9 bg-muted/10">
-              <span class="text-[10px] font-black text-outline uppercase tracking-widest mr-2">Limit:</span>
+            <div class="flex items-center px-4 h-10 bg-muted/10">
+              <span class="text-[10px] font-black text-outline uppercase tracking-widest mr-3">Limit:</span>
               <Select v-model="perPage">
-                <SelectTrigger class="w-20 h-7 text-xs rounded-lg border border-outline-variant/20 shadow-none focus:ring-0">
+                <SelectTrigger class="w-20 h-7 text-xs rounded-lg border border-outline-variant/30 shadow-none focus:ring-0 bg-background">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -328,8 +328,8 @@ const confirmImport = () => {
         <DataTable :columns="columns" :data="students" />
 
         <!-- Pagination -->
-        <div class="flex items-center justify-between mt-8 px-2">
-          <div class="text-xs text-outline font-bold uppercase tracking-[0.1em]">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mt-8 px-2">
+          <div class="text-[10px] sm:text-xs text-outline font-bold uppercase tracking-[0.1em] text-center sm:text-left">
             Menampilkan 
             <span class="text-primary">{{ ((props.interviews.meta.currentPage - 1) * props.interviews.meta.perPage) + 1 }}</span> - 
             <span class="text-primary">{{ Math.min(props.interviews.meta.currentPage * props.interviews.meta.perPage, props.interviews.meta.total) }}</span> 

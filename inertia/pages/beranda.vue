@@ -32,14 +32,14 @@ const ppdbSteps = [
         <p class="text-on-surface-variant text-lg md:text-xl max-w-xl leading-relaxed font-body">
           Selamat datang di portal resmi SMK Plus Pelita Nusantara. Platform informasi terintegrasi untuk proses seleksi, wawancara, dan pengembangan potensi siswa.
         </p>
-        <div class="flex flex-wrap gap-4 pt-4">
-          <a href="#wawancara" class="px-8 py-4 bg-primary text-white font-bold rounded-2xl flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 group font-body">
-            Mulai Seleksi
-            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-          </a>
-          <Link href="/pengumuman-kelulusan" class="px-8 py-4 bg-surface-container-high text-primary font-bold rounded-2xl hover:bg-surface-container-highest transition-all font-body">
+        <div class="flex flex-wrap gap-4 pt-4 items-center">
+          <Link href="/pengumuman-kelulusan" class="px-8 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 flex items-center gap-2 group font-body">
             Cek Kelulusan
+            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </Link>
+          <div class="px-6 py-3 bg-error/10 border border-error/20 rounded-xl">
+             <p class="text-error text-xs font-bold uppercase tracking-widest italic animate-pulse">Pendaftaran Ditutup Sementara</p>
+          </div>
         </div>
       </div>
       <div class="lg:col-span-5 relative">

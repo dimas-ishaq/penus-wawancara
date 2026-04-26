@@ -75,14 +75,14 @@ const getActionVariant = (action: string) => {
 <template>
   <Head title="Audit Logs - Aktivitas Sistem" />
 
-  <div class="space-y-6 p-2">
-    <div class="flex items-center justify-between">
+  <div class="space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
-        <h1 class="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <History class="w-8 h-8 text-primary" />
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2">
+          <History class="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
           Audit Logs
         </h1>
-        <p class="text-muted-foreground mt-1">
+        <p class="text-muted-foreground mt-1 text-sm">
           Pantau seluruh aktivitas staff dan perubahan data pada sistem secara real-time.
         </p>
       </div>
@@ -90,24 +90,25 @@ const getActionVariant = (action: string) => {
 
     <Card>
       <CardHeader>
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div class="space-y-1">
             <CardTitle>Log Aktivitas</CardTitle>
-            <CardDescription>Menampilkan 100 aktivitas terbaru.</CardDescription>
+            <CardDescription class="text-xs sm:text-sm">Menampilkan 100 aktivitas terbaru.</CardDescription>
           </div>
-          <div class="relative w-full md:w-72">
-            <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <div class="relative w-full lg:w-72">
+            <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               v-model="searchQuery"
               type="search"
               placeholder="Cari aktivitas..."
-              class="pl-8"
+              class="pl-10 h-11 sm:h-10 rounded-xl"
             />
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div class="rounded-md border">
+        <div class="rounded-md border overflow-x-auto">
+          <div class="min-w-[800px]">
           <Table>
             <TableHeader>
               <TableRow>
@@ -151,10 +152,11 @@ const getActionVariant = (action: string) => {
             </TableBody>
           </Table>
         </div>
+      </div>
 
         <!-- Pagination -->
-        <div class="flex items-center justify-between mt-8 px-2">
-          <div class="text-xs text-outline font-bold uppercase tracking-[0.1em]">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mt-8 px-2">
+          <div class="text-[10px] sm:text-xs text-outline font-bold uppercase tracking-[0.1em] text-center sm:text-left">
             Menampilkan 
             <span class="text-primary">{{ ((props.logs.meta.currentPage - 1) * props.logs.meta.perPage) + 1 }}</span> - 
             <span class="text-primary">{{ Math.min(props.logs.meta.currentPage * props.logs.meta.perPage, props.logs.meta.total) }}</span> 

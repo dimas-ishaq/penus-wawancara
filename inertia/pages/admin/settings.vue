@@ -60,41 +60,40 @@ const submitGeneral = () => {
   <Head title="Pengaturan Aplikasi" />
 
   <div class="max-w-6xl space-y-10">
-    <header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
       <div>
-        <h1 class="text-3xl font-black text-primary tracking-tighter font-headline mb-2">Konfigurasi Portal</h1>
-        <p class="text-on-surface-variant font-body text-sm">Kelola identitas visual dan pengaturan umum sistem.</p>
+        <h1 class="text-2xl sm:text-3xl font-black text-primary tracking-tighter font-headline mb-1 sm:mb-2">Konfigurasi Portal</h1>
+        <p class="text-on-surface-variant font-body text-xs sm:text-sm">Kelola identitas visual dan pengaturan umum sistem.</p>
       </div>
     </header>
 
     <!-- Branding Tab -->
-    <div class="space-y-12 animate-fade-in">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+    <div class="space-y-8 sm:space-y-12 animate-fade-in">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
         <div class="lg:col-span-1">
-          <h3 class="text-xl font-black text-primary font-headline mb-3 flex items-center gap-2">
+          <h3 class="text-lg sm:text-xl font-black text-primary font-headline mb-2 sm:mb-3 flex items-center gap-2">
             <span class="material-symbols-outlined text-secondary">deployed_code</span>
             Visual & Logo
           </h3>
-          <p class="text-sm text-on-surface-variant font-body leading-relaxed">Logo aplikasi ini akan digunakan di
-            navigasi utama, footer, dan favicon sistem.</p>
+          <p class="text-xs sm:text-sm text-on-surface-variant font-body leading-relaxed">Logo aplikasi ini akan digunakan di navigasi utama, footer, dan favicon sistem.</p>
         </div>
 
         <div class="lg:col-span-2">
-          <div class="bg-card rounded-[32px] border border-outline-variant/30 p-10 shadow-sm">
-            <div class="flex flex-col items-center gap-8">
+          <div class="bg-card rounded-3xl sm:rounded-[32px] border border-outline-variant/30 p-6 sm:p-10 shadow-sm">
+            <div class="flex flex-col items-center gap-6 sm:gap-8">
               <!-- Preview -->
               <div
-                class="w-full h-64 bg-surface-container-lowest rounded-3xl border-2 border-dashed border-outline-variant/50 flex items-center justify-center overflow-hidden group relative">
-                <img v-if="logoPreview" :src="logoPreview" class="max-h-full max-w-full object-contain p-8" />
+                class="w-full h-48 sm:h-64 bg-surface-container-lowest rounded-2xl sm:rounded-3xl border-2 border-dashed border-outline-variant/50 flex items-center justify-center overflow-hidden group relative">
+                <img v-if="logoPreview" :src="logoPreview" class="max-h-full max-w-full object-contain p-6 sm:p-8" />
                 <div v-else class="flex flex-col items-center gap-3 text-outline-variant">
-                  <span class="material-symbols-outlined text-7xl">image</span>
-                  <p class="font-black text-sm uppercase tracking-widest">Belum ada logo</p>
+                  <span class="material-symbols-outlined text-5xl sm:text-7xl">image</span>
+                  <p class="font-black text-xs uppercase tracking-widest">Belum ada logo</p>
                 </div>
 
                 <div
-                  class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                  class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm p-4">
                   <label for="logo-upload"
-                    class="cursor-pointer px-10 py-4 bg-background text-primary font-black rounded-2xl shadow-2xl hover:scale-105 transition-transform">
+                    class="cursor-pointer px-6 sm:px-10 py-3 sm:py-4 bg-background text-primary text-xs sm:text-sm font-black rounded-xl sm:rounded-2xl shadow-2xl hover:scale-105 transition-transform text-center">
                     UNGGAH LOGO BARU
                   </label>
                 </div>
@@ -102,10 +101,10 @@ const submitGeneral = () => {
 
               <form @submit.prevent="submitLogo" class="w-full space-y-6">
                 <input id="logo-upload" type="file" @change="onFileChange" accept="image/*" class="hidden" />
-                <div class="flex justify-end pt-4">
+                <div class="flex justify-center sm:justify-end">
                   <button type="submit" :disabled="!logoForm.logo || logoForm.processing"
-                    class="px-12 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 tracking-widest disabled:opacity-50">
-                    Simpan Perubahan
+                    class="w-full sm:w-auto px-8 sm:px-12 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 tracking-widest disabled:opacity-50 text-xs sm:text-sm">
+                    SIMPAN LOGO
                   </button>
                 </div>
               </form>
@@ -114,36 +113,35 @@ const submitGeneral = () => {
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-12 border-t border-outline-variant/10">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 pt-8 sm:pt-12 border-t border-outline-variant/10">
         <div class="lg:col-span-1">
-          <h3 class="text-xl font-black text-primary font-headline mb-3 flex items-center gap-2">
+          <h3 class="text-lg sm:text-xl font-black text-primary font-headline mb-2 sm:mb-3 flex items-center gap-2">
             <span class="material-symbols-outlined text-secondary">date_range</span>
             Periode Aktif
           </h3>
-          <p class="text-sm text-on-surface-variant font-body leading-relaxed">Atur tahun ajaran yang sedang berjalan
-            untuk sinkronisasi data siswa.</p>
+          <p class="text-xs sm:text-sm text-on-surface-variant font-body leading-relaxed">Atur tahun ajaran yang sedang berjalan untuk sinkronisasi data siswa.</p>
         </div>
 
         <div class="lg:col-span-2">
-          <div class="bg-card rounded-[32px] border border-outline-variant/30 p-10 shadow-sm">
-            <form @submit.prevent="submitGeneral" class="space-y-8">
+          <div class="bg-card rounded-3xl sm:rounded-[32px] border border-outline-variant/30 p-6 sm:p-10 shadow-sm">
+            <form @submit.prevent="submitGeneral" class="space-y-6 sm:space-y-8">
               <div class="space-y-3">
                 <label class="text-[10px] font-black text-outline-variant uppercase tracking-[0.2em] block ml-1">Nama Brand / Sekolah</label>
                 <input v-model="generalForm.brandName" type="text" placeholder="Contoh: SMK PLUS PN" required
-                  class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 font-black text-primary focus:ring-2 ring-primary outline-none transition-all" />
+                  class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl p-4 sm:p-6 font-black text-primary focus:ring-2 ring-primary outline-none transition-all text-sm sm:text-base" />
               </div>
               <div class="space-y-3">
                 <label class="text-[10px] font-black text-outline-variant uppercase tracking-[0.2em] block ml-1">Tahun
                   Ajaran</label>
                 <select v-model="generalForm.academicYear" required
-                  class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 font-black text-primary focus:ring-2 ring-primary outline-none transition-all appearance-none">
+                  class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl p-4 sm:p-6 font-black text-primary focus:ring-2 ring-primary outline-none transition-all appearance-none text-sm sm:text-base">
                   <option v-for="year in academicYears" :key="year" :value="year">{{ year }}</option>
                 </select>
               </div>
-              <div class="flex justify-end">
+              <div class="flex justify-center sm:justify-end pt-4">
                 <button type="submit" :disabled="generalForm.processing"
-                  class="px-12 py-4 bg-secondary text-secondary-foreground font-black rounded-2xl shadow-xl shadow-secondary/20 tracking-widest disabled:opacity-50">
-                  Simpan Perubahan
+                  class="w-full sm:w-auto px-8 sm:px-12 py-4 bg-secondary text-secondary-foreground font-black rounded-2xl shadow-xl shadow-secondary/20 tracking-widest disabled:opacity-50 text-xs sm:text-sm">
+                  SIMPAN PERUBAHAN
                 </button>
               </div>
             </form>

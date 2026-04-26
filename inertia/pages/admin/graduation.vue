@@ -35,7 +35,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { 
+  Plus,
   Download, 
   Upload, 
   FileSpreadsheet, 
@@ -73,6 +82,8 @@ const props = defineProps<{
     tidakLulus: number
   }
   uniqueClasses: string[]
+  allClasses: any[]
+  allMajors: any[]
   search?: string
 }>()
 
@@ -91,6 +102,29 @@ watch([datePart, timePart], ([newDate, newTime]) => {
 const submitSettings = () => {
   settingsForm.post('/admin/graduation/settings', {
     onSuccess: () => toast.success('Waktu pengumuman berhasil disimpan')
+  })
+}
+
+const showAddModal = ref(false)
+const addForm = useForm({
+  nisn: '',
+  name: '',
+  class: '',
+  majorCode: '',
+  status: 'Pending',
+  skl: ''
+})
+
+const submitAddStudent = () => {
+  addForm.post('/admin/graduation/students', {
+    onSuccess: () => {
+      toast.success('Siswa berhasil ditambahkan')
+      showAddModal.value = false
+      addForm.reset()
+    },
+    onError: (errors) => {
+      if (errors.nisn) toast.error(errors.nisn)
+    }
   })
 }
 
@@ -320,47 +354,51 @@ const columns: ColumnDef<any>[] = [
   <Head title="Siswa & Kelulusan" />
 
   <div class="space-y-6 no-print">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
       <div>
-        <h1 class="text-3xl font-bold tracking-tight">Siswa & Kelulusan</h1>
-        <p class="text-muted-foreground mt-1">Manajemen data siswa dan penetapan status kelulusan akhir.</p>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-primary">Siswa & Kelulusan</h1>
+        <p class="text-muted-foreground mt-1 text-sm">Manajemen data siswa dan penetapan status kelulusan akhir.</p>
       </div>
-      <div class="inline-flex items-center -space-x-px shadow-sm rounded-xl overflow-hidden">
-        <Button variant="outline" class="rounded-none px-4" @click="downloadTemplate">
-          <Download class="w-4 h-4 mr-2" /> Template
-        </Button>
-        <Button variant="outline" class="rounded-none px-4" @click="fileInput?.click()">
-          <Upload class="w-4 h-4 mr-2" /> Import
-        </Button>
-        <Button variant="outline" class="rounded-none px-4" @click="exportToExcel">
-          <FileSpreadsheet class="w-4 h-4 mr-2" /> Ekspor
-        </Button>
-        <Button variant="secondary" class="rounded-none px-5 border-l-0" @click="batchUpdate('Lulus')">
-          <CheckCircle2 class="w-4 h-4 mr-2" /> Lulus Masal
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-0 sm:inline-flex shadow-sm rounded-xl overflow-hidden border border-outline-variant/20 sm:border-none">
+          <Button variant="outline" class="flex-1 sm:flex-none rounded-xl sm:rounded-none px-3 sm:px-4 h-10 text-xs" @click="downloadTemplate">
+            <Download class="w-3.5 h-3.5 mr-2" /> Template
+          </Button>
+          <Button variant="outline" class="flex-1 sm:flex-none rounded-xl sm:rounded-none px-3 sm:px-4 h-10 text-xs border-l sm:border-l-0" @click="fileInput?.click()">
+            <Upload class="w-3.5 h-3.5 mr-2" /> Import
+          </Button>
+          <Button variant="outline" class="flex-1 sm:flex-none rounded-xl sm:rounded-none px-3 sm:px-4 h-10 text-xs border-l sm:border-l-0" @click="exportToExcel">
+            <FileSpreadsheet class="w-3.5 h-3.5 mr-2" /> Ekspor
+          </Button>
+          <Button variant="secondary" class="flex-1 sm:flex-none rounded-xl sm:rounded-none px-5 h-10 text-xs border-l sm:border-l-0" @click="batchUpdate('Lulus')">
+            <CheckCircle2 class="w-3.5 h-3.5 mr-2" /> Lulus Masal
+          </Button>
+        </div>
+        <Button class="rounded-xl px-6 h-11 shadow-lg shadow-primary/20 flex items-center justify-center gap-2 font-black w-full sm:w-auto" @click="showAddModal = true">
+          <Plus class="w-5 h-5" /> Tambah Siswa
         </Button>
       </div>
     </div>
 
-    <!-- Announcement Card -->
     <Card class="bg-primary/5 border-primary/20">
       <CardHeader>
         <div class="flex items-center gap-2">
           <Clock class="w-5 h-5 text-primary" />
-          <CardTitle>Waktu Pengumuman</CardTitle>
+          <CardTitle class="text-lg sm:text-xl">Waktu Pengumuman</CardTitle>
         </div>
-        <CardDescription>Atur kapan hasil kelulusan dapat diakses secara publik oleh siswa.</CardDescription>
+        <CardDescription class="text-xs sm:text-sm">Atur kapan hasil kelulusan dapat diakses secara publik oleh siswa.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form @submit.prevent="submitSettings" class="flex flex-col md:flex-row md:items-end gap-6 max-w-2xl">
-          <div class="flex gap-4">
-            <div class="flex flex-col gap-3">
-              <Label for="date-picker" class="px-1 text-xs font-bold text-outline-variant uppercase">Tanggal</Label>
+        <form @submit.prevent="submitSettings" class="flex flex-col xl:flex-row xl:items-end gap-6 max-w-4xl">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex flex-col gap-2">
+              <Label for="date-picker" class="px-1 text-[10px] font-bold text-outline-variant uppercase">Tanggal</Label>
               <Popover v-model:open="isDatePopoverOpen">
                 <PopoverTrigger as-child>
                   <Button
                     id="date-picker"
                     variant="outline"
-                    class="w-48 justify-between font-bold text-primary h-12 rounded-2xl bg-background border-outline-variant/20 shadow-sm"
+                    class="w-full sm:w-56 justify-between font-bold text-primary h-12 rounded-2xl bg-background border-outline-variant/20 shadow-sm"
                   >
                     {{ datePart ? datePart.toDate(getLocalTimeZone()).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Pilih Tanggal" }}
                     <ChevronDownIcon class="w-4 h-4 opacity-50" />
@@ -379,34 +417,34 @@ const columns: ColumnDef<any>[] = [
                 </PopoverContent>
               </Popover>
             </div>
-            <div class="flex flex-col gap-3">
-              <Label for="time-picker" class="px-1 text-xs font-bold text-outline-variant uppercase">Waktu</Label>
+            <div class="flex flex-col gap-2">
+              <Label for="time-picker" class="px-1 text-[10px] font-bold text-outline-variant uppercase">Waktu</Label>
               <Input
                 id="time-picker"
                 v-model="timePart"
                 type="time"
-                class="bg-background h-12 rounded-2xl border-outline-variant/20 shadow-sm font-bold text-primary w-32 px-4"
+                class="bg-background h-12 rounded-2xl border-outline-variant/20 shadow-sm font-bold text-primary w-full sm:w-32 px-4"
               />
             </div>
           </div>
-          <Button type="submit" :disabled="settingsForm.processing" class="h-12 px-8 rounded-2xl shadow-lg shadow-primary/20">
+          <Button type="submit" :disabled="settingsForm.processing" class="h-12 px-8 rounded-2xl shadow-lg shadow-primary/20 w-full xl:w-auto font-black">
             Simpan Waktu Pengumuman
           </Button>
         </form>
       </CardContent>
     </Card>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-body">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 font-body">
       <!-- Total Siswa -->
       <Card class="bg-card border-outline-variant/20 shadow-sm overflow-hidden group">
-        <CardContent class="p-8">
-          <div class="flex items-center gap-6">
-            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-sm">
+        <CardContent class="p-6 sm:p-8">
+          <div class="flex items-center gap-4 sm:gap-6">
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-sm shrink-0">
               <span class="material-symbols-outlined text-2xl">groups</span>
             </div>
             <div>
               <p class="text-[10px] font-black text-outline uppercase tracking-[0.2em] mb-1">Total Siswa</p>
-              <h3 class="text-2xl font-black text-on-surface font-headline tracking-tighter">{{ stats.total }}</h3>
+              <h3 class="text-xl sm:text-2xl font-black text-on-surface font-headline tracking-tighter">{{ stats.total }}</h3>
             </div>
           </div>
         </CardContent>
@@ -414,9 +452,9 @@ const columns: ColumnDef<any>[] = [
 
       <!-- Siswa Lulus -->
       <Card class="bg-card border-outline-variant/20 shadow-sm overflow-hidden group">
-        <CardContent class="p-8">
-          <div class="flex items-center gap-6">
-            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-sm">
+        <CardContent class="p-6 sm:p-8">
+          <div class="flex items-center gap-4 sm:gap-6">
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-sm shrink-0">
               <span class="material-symbols-outlined text-2xl">verified</span>
             </div>
             <div>
@@ -424,17 +462,17 @@ const columns: ColumnDef<any>[] = [
                 <p class="text-[10px] font-black text-outline uppercase tracking-[0.2em]">Siswa Lulus</p>
                 <Badge class="bg-emerald-500 text-white text-[8px] font-black px-2 py-0 h-4 border-transparent uppercase tracking-widest">LULUS</Badge>
               </div>
-              <h3 class="text-2xl font-black text-emerald-500 font-headline tracking-tighter">{{ stats.lulus }}</h3>
+              <h3 class="text-xl sm:text-2xl font-black text-emerald-500 font-headline tracking-tighter">{{ stats.lulus }}</h3>
             </div>
           </div>
         </CardContent>
       </Card>
 
       <!-- Siswa Tidak Lulus -->
-      <Card class="bg-card border-outline-variant/20 shadow-sm overflow-hidden group">
-        <CardContent class="p-8">
-          <div class="flex items-center gap-6">
-            <div class="w-14 h-14 rounded-2xl bg-red-600/10 flex items-center justify-center text-red-600 shadow-sm">
+      <Card class="bg-card border-outline-variant/20 shadow-sm overflow-hidden group sm:col-span-2 lg:col-span-1">
+        <CardContent class="p-6 sm:p-8">
+          <div class="flex items-center gap-4 sm:gap-6">
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-red-600/10 flex items-center justify-center text-red-600 shadow-sm shrink-0">
               <span class="material-symbols-outlined text-2xl">cancel</span>
             </div>
             <div>
@@ -442,7 +480,7 @@ const columns: ColumnDef<any>[] = [
                 <p class="text-[10px] font-black text-outline uppercase tracking-[0.2em]">Tidak Lulus</p>
                 <Badge class="bg-red-600 text-white text-[8px] font-black px-2 py-0 h-4 border-transparent uppercase tracking-widest">GAGAL</Badge>
               </div>
-              <h3 class="text-2xl font-black text-red-600 font-headline tracking-tighter">{{ stats.tidakLulus }}</h3>
+              <h3 class="text-xl sm:text-2xl font-black text-red-600 font-headline tracking-tighter">{{ stats.tidakLulus }}</h3>
             </div>
           </div>
         </CardContent>
@@ -451,16 +489,16 @@ const columns: ColumnDef<any>[] = [
 
     <Card>
       <CardHeader>
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex items-center gap-4 flex-grow">
-            <div class="grow flex items-center gap-3 bg-background px-4 py-2 rounded-xl border border-outline-variant/20 shadow-sm min-w-[250px]">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-grow">
+            <div class="grow flex items-center gap-3 bg-background px-4 py-2 rounded-xl border border-outline-variant/20 shadow-sm min-w-0">
               <div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-outline shrink-0">
                 <Search class="h-4 w-4" />
               </div>
-              <Input v-model="searchQuery" placeholder="Cari nama atau NIS..." class="border-none bg-transparent h-10 shadow-none focus-visible:ring-0 px-0" />
+              <Input v-model="searchQuery" placeholder="Cari nama atau NIS..." class="border-none bg-transparent h-10 shadow-none focus-visible:ring-0 px-0 min-w-0" />
             </div>
             <Select v-model="selectedClass">
-              <SelectTrigger class="w-40">
+              <SelectTrigger class="w-full sm:w-48 h-12 sm:h-10">
                 <SelectValue placeholder="Semua Kelas" />
               </SelectTrigger>
               <SelectContent>
@@ -470,8 +508,8 @@ const columns: ColumnDef<any>[] = [
               </SelectContent>
             </Select>
           </div>
-          <div class="flex items-center gap-2">
-            <Button variant="outline" size="icon" @click="window.print()">
+          <div class="flex items-center gap-2 justify-end">
+            <Button variant="outline" size="icon" class="h-12 w-12 sm:h-10 sm:w-10" @click="window.print()">
               <FileText class="w-4 h-4" />
             </Button>
           </div>
@@ -481,8 +519,8 @@ const columns: ColumnDef<any>[] = [
         <DataTable :columns="columns" :data="students" />
 
         <!-- Pagination -->
-        <div class="flex items-center justify-between mt-8 px-2">
-          <div class="text-xs text-outline font-bold uppercase tracking-[0.1em]">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mt-8 px-2">
+          <div class="text-[10px] sm:text-xs text-outline font-bold uppercase tracking-[0.1em] text-center sm:text-left">
             Menampilkan 
             <span class="text-primary">{{ ((props.students.meta.currentPage - 1) * props.students.meta.perPage) + 1 }}</span> - 
             <span class="text-primary">{{ Math.min(props.students.meta.currentPage * props.students.meta.perPage, props.students.meta.total) }}</span> 
@@ -533,6 +571,86 @@ const columns: ColumnDef<any>[] = [
       @close="showDeleteModal = false"
       @confirm="confirmDeleteStudent"
     />
+
+    <!-- Add Student Modal -->
+    <Dialog v-model:open="showAddModal">
+      <DialogContent class="w-[95%] max-w-[500px] rounded-3xl p-0 overflow-hidden border-none shadow-2xl">
+        <DialogHeader class="p-6 sm:p-8 bg-primary text-white text-left">
+          <DialogTitle class="text-xl sm:text-2xl font-black font-headline">Tambah Siswa Baru</DialogTitle>
+          <DialogDescription class="text-white/80 font-medium text-xs sm:text-sm">
+            Masukkan data siswa untuk pengecekan kelulusan.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <form @submit.prevent="submitAddStudent" class="p-6 sm:p-8 space-y-4 sm:space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="nisn" class="text-[10px] font-black uppercase tracking-widest text-outline">NIS / NISN</Label>
+              <Input id="nisn" v-model="addForm.nisn" placeholder="Contoh: 006111..." required class="h-12 rounded-xl border-outline-variant/30 focus:ring-primary font-bold" />
+            </div>
+            <div class="space-y-2">
+              <Label for="name" class="text-[10px] font-black uppercase tracking-widest text-outline">Nama Lengkap</Label>
+              <Input id="name" v-model="addForm.name" placeholder="Nama Siswa" required class="h-12 rounded-xl border-outline-variant/30 focus:ring-primary font-bold" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="class" class="text-[10px] font-black uppercase tracking-widest text-outline">Kelas</Label>
+              <Select v-model="addForm.class" required>
+                <SelectTrigger class="h-12 rounded-xl border-outline-variant/30 font-bold">
+                  <SelectValue placeholder="Pilih Kelas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="c in props.allClasses" :key="c.id" :value="c.name">
+                    {{ c.name }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="space-y-2">
+              <Label for="major" class="text-[10px] font-black uppercase tracking-widest text-outline">Jurusan</Label>
+              <Select v-model="addForm.majorCode" required>
+                <SelectTrigger class="h-12 rounded-xl border-outline-variant/30 font-bold">
+                  <SelectValue placeholder="Pilih Jurusan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="m in props.allMajors" :key="m.id" :value="m.code">
+                    {{ m.name }} ({{ m.code }})
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <Label for="status" class="text-[10px] font-black uppercase tracking-widest text-outline">Status Awal</Label>
+            <Select v-model="addForm.status">
+              <SelectTrigger class="h-12 rounded-xl border-outline-variant/30 font-bold">
+                <SelectValue placeholder="Pilih Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Pending">Pending</SelectItem>
+                <SelectItem value="Lulus">Lulus</SelectItem>
+                <SelectItem value="Tidak lulus">Tidak lulus</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div class="space-y-2">
+            <Label for="skl" class="text-[10px] font-black uppercase tracking-widest text-outline">Link SKL (Opsional)</Label>
+            <Input id="skl" v-model="addForm.skl" placeholder="https://drive.google.com/..." class="h-12 rounded-xl border-outline-variant/30 focus:ring-primary font-medium text-xs" />
+          </div>
+
+          <DialogFooter class="pt-4">
+            <Button type="button" variant="ghost" class="rounded-xl h-12 px-6 font-bold" @click="showAddModal = false">Batal</Button>
+            <Button type="submit" :disabled="addForm.processing" class="rounded-xl h-12 px-8 font-black shadow-lg shadow-primary/20">
+              Simpan Data Siswa
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   </div>
 
   <!-- Print Template -->

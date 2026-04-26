@@ -59,19 +59,25 @@ watch(() => page.url, () => {
       class="fixed inset-y-0 left-0 w-80 bg-surface border-r border-outline-variant flex flex-col z-[70] transition-transform duration-500 ease-in-out lg:sticky lg:translate-x-0 lg:h-screen shadow-2xl lg:shadow-none"
       :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
     >
-      <div class="p-8 flex-1 flex flex-col min-h-0">
-        <Link href="/admin/dashboard" class="flex items-center gap-3 group mb-12 shrink-0">
-          <div v-if="page.props.logo" class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-primary/20 bg-surface-container-lowest p-1">
-            <img :src="page.props.logo as string" class="w-full h-full object-contain" />
-          </div>
-          <div v-else class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-            <span class="material-symbols-outlined text-white text-2xl">admin_panel_settings</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-primary font-headline font-black text-lg leading-none tracking-tight">ADMIN PANEL</span>
-            <span class="text-on-surface-variant font-body font-bold text-[9px] tracking-[0.2em] uppercase leading-none mt-1 text-secondary">{{ page.props.brandName }}</span>
-          </div>
-        </Link>
+      <div class="p-6 sm:p-8 flex-1 flex flex-col min-h-0">
+        <div class="flex items-center justify-between mb-10 shrink-0">
+          <Link href="/admin/dashboard" class="flex items-center gap-3 group">
+            <div v-if="page.props.logo" class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-primary/20 bg-surface-container-lowest p-1">
+              <img :src="page.props.logo as string" class="w-full h-full object-contain" />
+            </div>
+            <div v-else class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+              <span class="material-symbols-outlined text-white text-2xl">admin_panel_settings</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-primary font-headline font-black text-lg leading-none tracking-tight">ADMIN PANEL</span>
+              <span class="text-on-surface-variant font-body font-bold text-[9px] tracking-[0.2em] uppercase leading-none mt-1 text-secondary">{{ page.props.brandName }}</span>
+            </div>
+          </Link>
+
+          <button @click="emit('close')" class="lg:hidden w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
 
         <nav class="space-y-8 flex-1 overflow-y-auto pr-2 custom-scrollbar">
           <!-- Main Group -->
@@ -141,9 +147,9 @@ watch(() => page.url, () => {
         </nav>
       </div>
 
-      <div class="p-8 border-t border-outline-variant/30 bg-surface-container-lowest/50">
+      <div class="p-6 sm:p-8 border-t border-outline-variant/30 bg-surface-container-lowest/50">
         <div class="flex items-center gap-4">
-          <div class="w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-black uppercase">
+          <div class="w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-black uppercase shrink-0">
             {{ page.props.user?.initials }}
           </div>
           <div class="flex flex-col grow min-w-0">

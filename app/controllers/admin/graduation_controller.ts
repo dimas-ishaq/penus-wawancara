@@ -37,14 +37,22 @@ export default class GraduationController {
     const lulusCount = await statsQuery.clone().where('status', 'Lulus').count('* as total')
     const tidakLulusCount = await statsQuery.clone().where('status', 'Tidak lulus').count('* as total')
 
-    // Fetch unique classes for the filter dropdown
+    // Fetch unique classes for the filter dropdown (from existing students)
     const classesData = await statsQuery.clone().distinct('class').orderBy('class', 'asc')
     const uniqueClasses = ['all', ...classesData.map(c => c.class)].filter(Boolean)
+
+    // Fetch ALL classes and majors for the "Add Student" form
+    const Class = (await import('#models/class')).default
+    const Major = (await import('#models/major')).default
+    const allClasses = await Class.query().orderBy('name', 'asc')
+    const allMajors = await Major.query().orderBy('name', 'asc')
 
     return inertia.render('admin/graduation', {
       students: students.serialize(),
       search,
       uniqueClasses,
+      allClasses: allClasses.map(c => c.serialize()),
+      allMajors: allMajors.map(m => m.serialize()),
       stats: {
         total: (totalCount[0] as any).$extras.total,
         lulus: (lulusCount[0] as any).$extras.total,
@@ -58,6 +66,34 @@ export default class GraduationController {
     await Setting.set('graduation_announcement_at', announcementAt)
     
     session.flash('success', 'Pengaturan waktu pengumuman berhasil diperbarui')
+    return response.redirect().back()
+  }
+
+  async store({ request, response, auth, session }: HttpContext) {
+    const user = auth.user!
+    const data = request.only(['nisn', 'name', 'class', 'majorCode', 'status', 'skl'])
+    
+    // Check if nisn already exists
+    const existing = await Student.findBy('nisn', data.nisn)
+    if (existing) {
+      session.flash('error', `Siswa dengan NISN ${data.nisn} sudah terdaftar`)
+      return response.redirect().back()
+    }
+
+    const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
+    const name = capitalize(data.name.trim().toLowerCase())
+
+    await Student.create({
+      nisn: String(data.nisn),
+      name,
+      class: data.class,
+      majorCode: data.majorCode || null,
+      status: data.status || 'Pending',
+      skl: data.skl || null,
+      userId: user.id
+    })
+
+    session.flash('success', `Berhasil menambahkan siswa ${name}`)
     return response.redirect().back()
   }
 

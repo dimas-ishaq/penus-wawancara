@@ -30,9 +30,9 @@ const submit = () => {
       />
       <div class="absolute inset-0 bg-primary/20 dark:bg-white/5 mix-blend-multiply transition-colors"></div>
       
-      <div class="relative z-10 p-12 text-white dark:text-primary transition-colors">
+      <div class="relative z-10 p-12 text-white dark:text-primary transition-colors duration-500">
         <div class="flex items-center gap-3 mb-8">
-          <div class="w-12 h-12 bg-white dark:bg-primary rounded-xl flex items-center justify-center p-2 shadow-lg transition-colors">
+          <div class="w-12 h-12 bg-white dark:bg-primary rounded-xl flex items-center justify-center p-2 shadow-lg transition-colors duration-500">
             <span class="material-symbols-outlined text-primary dark:text-white text-3xl">school</span>
           </div>
           <span class="text-2xl font-headline font-bold tracking-tight">SMK PLUS PN</span>
@@ -41,11 +41,11 @@ const submit = () => {
           Selamat Datang Kembali <br />
           di Portal Akademik.
         </h1>
-        <p class="text-lg opacity-80 dark:opacity-100 font-medium max-w-md leading-relaxed">
+        <p class="text-lg opacity-90 dark:opacity-100 font-medium max-w-md leading-relaxed">
           Masuk untuk mengakses jadwal wawancara, hasil pengumuman, dan data profil sekolah Anda.
         </p>
       </div>
-      <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary/40 dark:from-surface-container/40 to-transparent opacity-60"></div>
+      <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary/60 dark:from-surface-container/60 to-transparent opacity-60"></div>
     </div>
 
     <!-- Right side: Login Form -->
@@ -152,9 +152,9 @@ const submit = () => {
 
         <!-- Registration disabled temporarily -->
         <div class="pt-8 border-t border-outline-variant/50 flex flex-col items-center gap-4 text-center">
-          <p class="text-on-surface-variant text-sm font-medium italic">
+          <p class="text-on-surface-variant text-sm font-bold italic animate-pulse">
             Registrasi akun baru sedang ditutup sementara. <br/>
-            Silakan hubungi admin sekolah untuk informasi lebih lanjut.
+            Silakan hubungi panitia pendaftaran untuk informasi lebih lanjut.
           </p>
         </div>
       </div>

@@ -163,29 +163,27 @@ const columns: ColumnDef<any>[] = [
   <Head title="Manajemen Akun & Hak Akses (RBAC)" />
 
   <div class="space-y-8">
-    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
       <div>
-        <h1 class="text-3xl font-black text-primary tracking-tighter font-headline mb-2">Manajemen Akun & Hak Akses
-          (RBAC)</h1>
-        <p class="text-on-surface-variant font-body text-sm">Kelola akun pengguna dan konfigurasi Role-Based Access Control
-          (RBAC) pada sistem.</p>
+        <h1 class="text-2xl sm:text-3xl font-black text-primary tracking-tighter font-headline mb-1 sm:mb-2">Manajemen Akun & Hak Akses (RBAC)</h1>
+        <p class="text-on-surface-variant font-body text-xs sm:text-sm">Kelola akun pengguna dan konfigurasi Role-Based Access Control (RBAC) pada sistem.</p>
       </div>
       <button @click="openCreateModal"
-        class="px-6 py-3 bg-primary text-primary-foreground font-bold rounded-2xl flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20 font-body">
+        class="w-full lg:w-auto px-6 py-4 sm:py-3 bg-primary text-primary-foreground font-bold rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all shadow-lg shadow-primary/20 font-body">
         <span class="material-symbols-outlined">person_add</span>
         Tambah Pengguna
       </button>
     </header>
 
     <!-- Search Bar -->
-    <div class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/30 flex gap-4 items-center">
+    <div class="bg-surface-container-low p-4 sm:p-6 rounded-3xl border border-outline-variant/30 flex gap-4 items-center">
       <div
-        class="grow flex items-center gap-3 bg-background px-5 py-3 rounded-xl border border-outline-variant/20 shadow-sm min-w-[250px]">
-        <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-outline">
+        class="grow flex items-center gap-3 bg-background px-4 sm:px-5 py-3 rounded-xl border border-outline-variant/20 shadow-sm min-w-0">
+        <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-outline shrink-0">
           <span class="material-symbols-outlined">search</span>
         </div>
-        <input v-model="searchQuery" type="text" placeholder="Cari nama atau email pengguna..."
-          class="grow bg-transparent border-none outline-none font-body text-sm text-on-surface" />
+        <input v-model="searchQuery" type="text" placeholder="Cari nama atau email..."
+          class="grow bg-transparent border-none outline-none font-body text-sm text-on-surface min-w-0" />
       </div>
     </div>
 
@@ -194,8 +192,8 @@ const columns: ColumnDef<any>[] = [
     </div>
 
     <!-- Pagination -->
-    <div class="flex items-center justify-between mt-8 px-2">
-      <div class="text-xs text-outline font-bold uppercase tracking-[0.1em]">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mt-8 px-2">
+      <div class="text-[10px] sm:text-xs text-outline font-bold uppercase tracking-[0.1em] text-center sm:text-left">
         Menampilkan 
         <span class="text-primary">{{ ((props.users.meta.currentPage - 1) * props.users.meta.perPage) + 1 }}</span> - 
         <span class="text-primary">{{ Math.min(props.users.meta.currentPage * props.users.meta.perPage, props.users.meta.total) }}</span> 

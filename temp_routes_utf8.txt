@@ -1,0 +1,49 @@
+﻿[Scheduler] Background tasks started...
+
+METHOD ROUTE ........................................................... MIDDLEWARE
+GET    / (home) ........................................................           
+GET    /beranda (beranda) ..............................................           
+GET    /dashboard-ppdb (dashboard-ppdb) ................................           
+GET    /pengumuman-kelulusan (pengumuman-kelulusan) ....................           
+GET    /profil-sekolah (profil-sekolah) ................................           
+GET    /login (session.create) .........................................      guest
+POST   /login (session.store) ..........................................      guest
+GET    /admin/dashboard (admin.dashboard) ..............................       auth
+GET    /admin/interviews (admin.interviews) ............................       auth
+GET    /admin/interviews/create (admin.interviews.create) ..............       auth
+POST   /admin/interviews (admin.interviews.store) ......................       auth
+GET    /admin/interviews/:id/recap (admin.interviews.edit_recap) .......       auth
+PUT    /admin/interviews/:id/recap (admin.interviews.recap) ............       auth
+GET    /admin/interviews/:id/pdf (admin.interviews.pdf) ................       auth
+GET    /admin/interviews/export (admin.interviews.export) ..............       auth
+POST   /admin/interviews/import (admin.interviews.import) ..............       auth
+DELETE /admin/interviews/:id (admin.interviews.destroy) ................       auth
+GET    /admin/users (admin.users) ...................................... auth, role
+POST   /admin/users (admin.users.store) ................................ auth, role
+PUT    /admin/users/:id (admin.users.update) ........................... auth, role
+DELETE /admin/users/:id (admin.users.destroy) .......................... auth, role
+GET    /admin/settings (admin.settings) ................................ auth, role
+POST   /admin/settings/logo (admin.settings.logo) ...................... auth, role
+POST   /admin/settings/general (admin.settings.general) ................ auth, role
+GET    /admin/graduation (admin.graduation) ............................ auth, role
+POST   /admin/graduation/settings (admin.graduation.settings) .......... auth, role
+POST   /admin/graduation/students/import (admin.graduation.import) ..... auth, role
+POST   /admin/graduation/students (admin.graduation.students.store) .... auth, role
+POST   /admin/graduation/students/batch-update (admin.graduation.batch)  auth, role
+PUT    /admin/graduation/students/:id/status (admin.graduation.status) . auth, role
+DELETE /admin/graduation/students/:id (admin.graduation.destroy) ....... auth, role
+GET    /admin/majors (admin.majors) .................................... auth, role
+POST   /admin/majors (admin.majors.store) .............................. auth, role
+PUT    /admin/majors/:id (admin.majors.update) ......................... auth, role
+DELETE /admin/majors/:id (admin.majors.destroy) ........................ auth, role
+GET    /admin/classes (admin.classes) .................................. auth, role
+POST   /admin/classes (admin.classes.store) ............................ auth, role
+PUT    /admin/classes/:id (admin.classes.update) ....................... auth, role
+DELETE /admin/classes/:id (admin.classes.destroy) ...................... auth, role
+GET    /admin/audit-logs (admin.audit_logs) ............................ auth, role
+GET    /admin/backups (admin.backups) .................................. auth, role
+POST   /admin/backups (admin.backups.store) ............................ auth, role
+GET    /admin/backups/download/:name (admin.backups.download) .......... auth, role
+DELETE /admin/backups/:name (admin.backups.destroy) .................... auth, role
+POST   /pengumuman-kelulusan/check (graduation.check) ..................           
+POST   /logout (session.destroy) .......................................       auth

@@ -36,6 +36,9 @@ export interface ApiDefinition {
     graduation: typeof routes['admin.graduation'] & {
       settings: typeof routes['admin.graduation.settings']
       import: typeof routes['admin.graduation.import']
+      students: {
+        store: typeof routes['admin.graduation.students.store']
+      }
       batch: typeof routes['admin.graduation.batch']
       status: typeof routes['admin.graduation.status']
       destroy: typeof routes['admin.graduation.destroy']

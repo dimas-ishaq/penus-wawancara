@@ -160,6 +160,44 @@ export default class GraduationController {
     return response.redirect().back()
   }
 
+  async update({ params, request, response, auth, session }: HttpContext) {
+    const user = auth.user!
+    const data = request.only(['nisn', 'name', 'class', 'majorCode', 'status', 'skl'])
+    
+    let query = Student.query().where('id', params.id)
+    if (user.role !== 'super_admin') {
+      query = query.where('userId', user.id)
+    }
+
+    const student = await query.firstOrFail()
+    
+    // Check if nisn changed and if new nisn already exists
+    if (data.nisn && String(data.nisn) !== student.nisn) {
+      const existing = await Student.findBy('nisn', data.nisn)
+      if (existing) {
+        session.flash('error', `Siswa dengan NISN ${data.nisn} sudah terdaftar`)
+        return response.redirect().back()
+      }
+    }
+
+    const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
+    const name = data.name ? capitalize(data.name.trim().toLowerCase()) : student.name
+
+    student.merge({
+      nisn: data.nisn ? String(data.nisn) : student.nisn,
+      name,
+      class: data.class || student.class,
+      majorCode: data.majorCode || student.majorCode,
+      status: data.status || student.status,
+      skl: data.skl !== undefined ? data.skl : student.skl
+    })
+    
+    await student.save()
+
+    session.flash('success', `Berhasil memperbarui data siswa ${name}`)
+    return response.redirect().back()
+  }
+
   async destroy({ params, response, auth, session }: HttpContext) {
     const user = auth.user!
     let query = Student.query().where('id', params.id)

@@ -53,6 +53,7 @@ import {
   Search,
   Clock,
   Trash2,
+  Pencil,
   Filter,
   ChevronDownIcon
 } from 'lucide-vue-next'
@@ -121,6 +122,42 @@ const submitAddStudent = () => {
       toast.success('Siswa berhasil ditambahkan')
       showAddModal.value = false
       addForm.reset()
+    },
+    onError: (errors) => {
+      if (errors.nisn) toast.error(errors.nisn)
+    }
+  })
+}
+
+const showEditModal = ref(false)
+const selectedStudentId = ref<number | null>(null)
+const editForm = useForm({
+  nisn: '',
+  name: '',
+  class: '',
+  majorCode: '',
+  status: 'Pending',
+  skl: ''
+})
+
+const openEditModal = (student: any) => {
+  selectedStudentId.value = student.id
+  editForm.nisn = student.nisn
+  editForm.name = student.name
+  editForm.class = student.class
+  editForm.majorCode = student.majorCode || ''
+  editForm.status = student.status
+  editForm.skl = student.skl || ''
+  showEditModal.value = true
+}
+
+const submitEditStudent = () => {
+  if (!selectedStudentId.value) return
+  editForm.put(`/admin/graduation/students/${selectedStudentId.value}`, {
+    onSuccess: () => {
+      toast.success('Data siswa berhasil diperbarui')
+      showEditModal.value = false
+      editForm.reset()
     },
     onError: (errors) => {
       if (errors.nisn) toast.error(errors.nisn)
@@ -339,6 +376,12 @@ const columns: ColumnDef<any>[] = [
         ],
         onClick: () => updateStatus(row.original, 'Tidak lulus') 
       }, () => 'Tidak lulus'),
+      h(Button, { 
+        size: 'sm', 
+        variant: 'ghost', 
+        class: 'h-8 w-8 p-0 text-primary',
+        onClick: () => openEditModal(row.original) 
+      }, () => h(Pencil, { class: 'w-4 h-4' })),
       h(Button, { 
         size: 'sm', 
         variant: 'ghost', 
@@ -572,6 +615,8 @@ const columns: ColumnDef<any>[] = [
       @confirm="confirmDeleteStudent"
     />
 
+
+
     <!-- Add Student Modal -->
     <Dialog v-model:open="showAddModal">
       <DialogContent class="w-[95%] max-w-[500px] rounded-3xl p-0 overflow-hidden border-none shadow-2xl">
@@ -646,6 +691,86 @@ const columns: ColumnDef<any>[] = [
             <Button type="button" variant="ghost" class="rounded-xl h-12 px-6 font-bold" @click="showAddModal = false">Batal</Button>
             <Button type="submit" :disabled="addForm.processing" class="rounded-xl h-12 px-8 font-black shadow-lg shadow-primary/20">
               Simpan Data Siswa
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+
+    <!-- Edit Student Modal -->
+    <Dialog v-model:open="showEditModal">
+      <DialogContent class="w-[95%] max-w-[500px] rounded-3xl p-0 overflow-hidden border-none shadow-2xl">
+        <DialogHeader class="p-6 sm:p-8 bg-primary text-white text-left">
+          <DialogTitle class="text-xl sm:text-2xl font-black font-headline">Edit Data Siswa</DialogTitle>
+          <DialogDescription class="text-white/80 font-medium text-xs sm:text-sm">
+            Perbarui informasi siswa untuk pengecekan kelulusan.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <form @submit.prevent="submitEditStudent" class="p-6 sm:p-8 space-y-4 sm:space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="edit-nisn" class="text-[10px] font-black uppercase tracking-widest text-outline">NIS / NISN</Label>
+              <Input id="edit-nisn" v-model="editForm.nisn" placeholder="Contoh: 006111..." required class="h-12 rounded-xl border-outline-variant/30 focus:ring-primary font-bold" />
+            </div>
+            <div class="space-y-2">
+              <Label for="edit-name" class="text-[10px] font-black uppercase tracking-widest text-outline">Nama Lengkap</Label>
+              <Input id="edit-name" v-model="editForm.name" placeholder="Nama Siswa" required class="h-12 rounded-xl border-outline-variant/30 focus:ring-primary font-bold" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="edit-class" class="text-[10px] font-black uppercase tracking-widest text-outline">Kelas</Label>
+              <Select v-model="editForm.class" required>
+                <SelectTrigger class="h-12 rounded-xl border-outline-variant/30 font-bold">
+                  <SelectValue placeholder="Pilih Kelas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="c in props.allClasses" :key="c.id" :value="c.name">
+                    {{ c.name }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="space-y-2">
+              <Label for="edit-major" class="text-[10px] font-black uppercase tracking-widest text-outline">Jurusan</Label>
+              <Select v-model="editForm.majorCode" required>
+                <SelectTrigger class="h-12 rounded-xl border-outline-variant/30 font-bold">
+                  <SelectValue placeholder="Pilih Jurusan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="m in props.allMajors" :key="m.id" :value="m.code">
+                    {{ m.name }} ({{ m.code }})
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <Label for="edit-status" class="text-[10px] font-black uppercase tracking-widest text-outline">Status</Label>
+            <Select v-model="editForm.status">
+              <SelectTrigger class="h-12 rounded-xl border-outline-variant/30 font-bold">
+                <SelectValue placeholder="Pilih Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Pending">Pending</SelectItem>
+                <SelectItem value="Lulus">Lulus</SelectItem>
+                <SelectItem value="Tidak lulus">Tidak lulus</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div class="space-y-2">
+            <Label for="edit-skl" class="text-[10px] font-black uppercase tracking-widest text-outline">Link SKL (Opsional)</Label>
+            <Input id="edit-skl" v-model="editForm.skl" placeholder="https://drive.google.com/..." class="h-12 rounded-xl border-outline-variant/30 focus:ring-primary font-medium text-xs" />
+          </div>
+
+          <DialogFooter class="pt-4">
+            <Button type="button" variant="ghost" class="rounded-xl h-12 px-6 font-bold" @click="showEditModal = false">Batal</Button>
+            <Button type="submit" :disabled="editForm.processing" class="rounded-xl h-12 px-8 font-black shadow-lg shadow-primary/20">
+              Simpan Perubahan
             </Button>
           </DialogFooter>
         </form>

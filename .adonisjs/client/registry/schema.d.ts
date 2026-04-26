@@ -367,6 +367,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['updateStudentStatus']>>>
     }
   }
+  'admin.graduation.students.update': {
+    methods: ["PUT"]
+    pattern: '/admin/graduation/students/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['update']>>>
+    }
+  }
   'admin.graduation.destroy': {
     methods: ["DELETE"]
     pattern: '/admin/graduation/students/:id'

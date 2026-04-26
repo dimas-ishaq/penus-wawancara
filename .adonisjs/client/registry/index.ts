@@ -186,6 +186,12 @@ const routes = {
     tokens: [{"old":"/admin/graduation/students/:id/status","type":0,"val":"admin","end":""},{"old":"/admin/graduation/students/:id/status","type":0,"val":"graduation","end":""},{"old":"/admin/graduation/students/:id/status","type":0,"val":"students","end":""},{"old":"/admin/graduation/students/:id/status","type":1,"val":"id","end":""},{"old":"/admin/graduation/students/:id/status","type":0,"val":"status","end":""}],
     types: placeholder as Registry['admin.graduation.status']['types'],
   },
+  'admin.graduation.students.update': {
+    methods: ["PUT"],
+    pattern: '/admin/graduation/students/:id',
+    tokens: [{"old":"/admin/graduation/students/:id","type":0,"val":"admin","end":""},{"old":"/admin/graduation/students/:id","type":0,"val":"graduation","end":""},{"old":"/admin/graduation/students/:id","type":0,"val":"students","end":""},{"old":"/admin/graduation/students/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.graduation.students.update']['types'],
+  },
   'admin.graduation.destroy': {
     methods: ["DELETE"],
     pattern: '/admin/graduation/students/:id',

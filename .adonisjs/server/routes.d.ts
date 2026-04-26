@@ -34,6 +34,7 @@ export type ScannedRoutes = {
     'admin.graduation.students.store': { paramsTuple?: []; params?: {} }
     'admin.graduation.batch': { paramsTuple?: []; params?: {} }
     'admin.graduation.status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.graduation.students.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.graduation.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.majors': { paramsTuple?: []; params?: {} }
     'admin.majors.store': { paramsTuple?: []; params?: {} }
@@ -116,6 +117,7 @@ export type ScannedRoutes = {
     'admin.interviews.recap': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.graduation.status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.graduation.students.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.majors.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.classes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }

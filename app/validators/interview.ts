@@ -2,7 +2,10 @@ import vine from '@vinejs/vine'
 
 export const updateRecapValidator = vine.compile(
   vine.object({
+    studentName: vine.string().minLength(3),
+    schoolOrigin: vine.string().minLength(3),
     interviewDate: vine.string(),
+    interviewer: vine.string(),
     accompaniment: vine.string().nullable(),
     infoSource: vine.string(),
     reasonChoosingSchool: vine.string(),

@@ -26,13 +26,17 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
     let logo: string | undefined = undefined
     let academicYear: string | undefined = undefined
     let announcementDate: string | undefined = undefined
-    let brandName: string = 'SMK PLUS PN'
+    let brandName: string = 'SMK PLUS PELITA NUSANTARA'
+    let majors: any[] = []
 
     try {
-      logo = (await Setting.get('logo_path')) ?? undefined
+      logo = (await Setting.get('logo_path')) ?? '/assets/logo_penus.png'
       academicYear = (await Setting.get('academic_year', '2024/2025')) ?? undefined
       announcementDate = (await Setting.get('graduation_announcement_at')) ?? undefined
-      brandName = (await Setting.get('brand_name', 'SMK PLUS PN')) ?? 'SMK PLUS PN'
+      brandName = (await Setting.get('brand_name', 'SMK PLUS PELITA NUSANTARA')) ?? 'SMK PLUS PELITA NUSANTARA'
+      
+      const Major = (await import('#models/major')).default
+      majors = await Major.query().orderBy('name', 'asc')
     } catch (e) {
       // Database might not be ready or table might not exist yet
     }
@@ -52,6 +56,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       academicYear: ctx.inertia.always(academicYear || undefined),
       announcementDate: ctx.inertia.always(announcementDate || undefined),
       brandName: ctx.inertia.always(brandName),
+      majors: ctx.inertia.always(majors.map(m => typeof m.serialize === 'function' ? m.serialize() : m)),
     }
   }
 

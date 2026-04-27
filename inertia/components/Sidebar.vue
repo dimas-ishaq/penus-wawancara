@@ -16,6 +16,7 @@ const navLinks = computed(() => {
   const links = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: 'dashboard', roles: ['super_admin', 'admin', 'staff'] },
     { name: 'Manajemen Wawancara', href: '/admin/interviews', icon: 'record_voice_over', roles: ['super_admin', 'admin', 'staff'] },
+    { name: 'Profil Saya', href: '/admin/profile', icon: 'person', roles: ['super_admin', 'admin', 'staff'] },
   ]
   return links.filter(l => l.roles.includes(page.props.user?.role))
 })
@@ -70,7 +71,7 @@ watch(() => page.url, () => {
             </div>
             <div class="flex flex-col">
               <span class="text-primary font-headline font-black text-lg leading-none tracking-tight">ADMIN PANEL</span>
-              <span class="text-on-surface-variant font-body font-bold text-[9px] tracking-[0.2em] uppercase leading-none mt-1 text-secondary">{{ page.props.brandName }}</span>
+              <span class="text-secondary font-body font-bold text-[8px] md:text-[9px] tracking-[0.2em] uppercase leading-none mt-1 uppercase">{{ page.props.brandName }}</span>
             </div>
           </Link>
 

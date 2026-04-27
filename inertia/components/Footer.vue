@@ -8,16 +8,17 @@ const page = usePage()
   <footer class="bg-surface-container-lowest w-full rounded-none mt-auto border-t border-outline-variant/30">
     <div class="flex flex-col md:flex-row justify-between items-start px-12 py-16 gap-12 w-full max-w-7xl mx-auto">
       <div class="max-w-md">
-        <Link href="/" class="flex items-center gap-3 mb-6 group">
+        <Link href="/" class="flex items-center gap-3 mb-6 group shrink-0">
           <template v-if="page.props.logo">
-            <img :src="page.props.logo" class="h-12 w-auto object-contain" alt="Logo" />
+            <img :src="page.props.logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+              alt="Logo" />
           </template>
           <div v-else class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
             <span class="material-symbols-outlined text-white text-2xl">school</span>
           </div>
           <div class="flex flex-col">
-            <span class="text-primary font-headline font-black text-lg leading-none tracking-tight">SMK PLUS PN</span>
-            <span class="text-secondary font-body font-bold text-[10px] tracking-[0.2em] uppercase leading-none">Success By Character</span>
+            <span class="text-primary font-headline font-black text-sm md:text-lg leading-none tracking-tight whitespace-nowrap">{{ page.props.brandName || 'SMK PLUS PELITA NUSANTARA' }}</span>
+            <span class="text-secondary font-body font-bold text-[8px] md:text-[10px] tracking-[0.2em] uppercase leading-none"> Success By Character</span>
           </div>
         </Link>
         <p class="text-on-surface-variant font-body text-sm leading-relaxed mb-6">
@@ -41,14 +42,12 @@ const page = usePage()
         </div>
         <div>
           <h5 class="text-primary font-headline font-black mb-6 text-sm uppercase tracking-[0.2em]">Program Keahlian</h5>
-          <ul class="space-y-3 font-body">
-            <li><a class="text-on-surface-variant hover:text-primary transition-all text-sm" href="#">Rekayasa Perangkat Lunak</a></li>
-            <li><a class="text-on-surface-variant hover:text-primary transition-all text-sm" href="#">Teknik Komputer & Jaringan</a></li>
-            <li><a class="text-on-surface-variant hover:text-primary transition-all text-sm" href="#">Desain Komunikasi Visual</a></li>
-            <li><a class="text-on-surface-variant hover:text-primary transition-all text-sm" href="#">Perbankan & Keuangan Mikro</a></li>
-            <li><a class="text-on-surface-variant hover:text-primary transition-all text-sm" href="#">Teknik Otomasi Industri</a></li>
-            <li><a class="text-on-surface-variant hover:text-primary transition-all text-sm" href="#">Manajemen Perkantoran (MPLB)</a></li>
+          <ul v-if="page.props.majors && (page.props.majors as any[]).length > 0" class="space-y-3 font-body">
+            <li v-for="major in (page.props.majors as any[])" :key="major.id">
+              <a class="text-on-surface-variant hover:text-primary transition-all text-sm" href="#">{{ major.name }}</a>
+            </li>
           </ul>
+          <p v-else class="text-on-surface-variant text-xs font-bold italic opacity-60">Segera hadir...</p>
         </div>
         <div class="col-span-2 md:col-span-1">
           <h5 class="text-primary font-headline font-black mb-6 text-sm uppercase tracking-[0.2em]">Kontak</h5>
@@ -61,7 +60,7 @@ const page = usePage()
       </div>
     </div>
     <div class="flex flex-col md:flex-row justify-between items-center px-12 py-10 border-t border-outline-variant/30 w-full max-w-7xl mx-auto">
-      <span class="text-on-surface-variant text-xs font-body font-medium">© 2026 SMK Plus Pelita Nusantara. Success By Character.</span>
+      <span class="text-on-surface-variant text-xs font-body font-medium">© 2026 SMK PLUS PELITA NUSANTARA. Success By Character.</span>
       <div class="flex gap-6 mt-4 md:mt-0 font-body">
         <a class="text-on-surface-variant/60 text-xs hover:text-primary transition-colors" href="#">Kebijakan Privasi</a>
         <a class="text-on-surface-variant/60 text-xs hover:text-primary transition-colors" href="#">Syarat & Ketentuan</a>

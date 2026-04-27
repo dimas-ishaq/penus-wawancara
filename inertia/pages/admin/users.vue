@@ -260,6 +260,10 @@ const columns: ColumnDef<any>[] = [
               </div>
 
               <div class="space-y-1">
+                <label class="text-xs font-black text-secondary tracking-widest uppercase ml-1">Kata Sandi</label>
+                <input v-model="form.password" type="password"
+                  class="w-full px-5 py-4 bg-surface-container-low rounded-2xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body"
+                  placeholder="********" required />
                 <p v-if="form.errors.password" class="text-error text-xs font-bold mt-1">{{ form.errors.password }}</p>
               </div>
 
@@ -320,6 +324,10 @@ const columns: ColumnDef<any>[] = [
               </div>
 
               <div class="space-y-1">
+                <label class="text-xs font-black text-secondary tracking-widest uppercase ml-1">Kata Sandi Baru</label>
+                <input v-model="form.password" type="password"
+                  class="w-full px-5 py-4 bg-surface-container-low rounded-2xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body"
+                  placeholder="Kosongkan jika tidak diubah" />
                 <p v-if="form.errors.password" class="text-error text-xs font-bold mt-1">{{ form.errors.password }}</p>
               </div>
 
@@ -359,7 +367,7 @@ const columns: ColumnDef<any>[] = [
       :processing="form.processing"
       @close="isDeleteModalOpen = false" 
       @confirm="submitDelete" 
-    />
+      />
   </div>
 </template>
 <style scoped>

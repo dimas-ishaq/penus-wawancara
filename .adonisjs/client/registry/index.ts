@@ -108,6 +108,18 @@ const routes = {
     tokens: [{"old":"/admin/interviews/:id","type":0,"val":"admin","end":""},{"old":"/admin/interviews/:id","type":0,"val":"interviews","end":""},{"old":"/admin/interviews/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.interviews.destroy']['types'],
   },
+  'admin.profile': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/profile',
+    tokens: [{"old":"/admin/profile","type":0,"val":"admin","end":""},{"old":"/admin/profile","type":0,"val":"profile","end":""}],
+    types: placeholder as Registry['admin.profile']['types'],
+  },
+  'admin.profile.update': {
+    methods: ["PUT"],
+    pattern: '/admin/profile',
+    tokens: [{"old":"/admin/profile","type":0,"val":"admin","end":""},{"old":"/admin/profile","type":0,"val":"profile","end":""}],
+    types: placeholder as Registry['admin.profile.update']['types'],
+  },
   'admin.users': {
     methods: ["GET","HEAD"],
     pattern: '/admin/users',
@@ -149,6 +161,18 @@ const routes = {
     pattern: '/admin/settings/general',
     tokens: [{"old":"/admin/settings/general","type":0,"val":"admin","end":""},{"old":"/admin/settings/general","type":0,"val":"settings","end":""},{"old":"/admin/settings/general","type":0,"val":"general","end":""}],
     types: placeholder as Registry['admin.settings.general']['types'],
+  },
+  'admin.settings.kop_surat': {
+    methods: ["POST"],
+    pattern: '/admin/settings/kop-surat',
+    tokens: [{"old":"/admin/settings/kop-surat","type":0,"val":"admin","end":""},{"old":"/admin/settings/kop-surat","type":0,"val":"settings","end":""},{"old":"/admin/settings/kop-surat","type":0,"val":"kop-surat","end":""}],
+    types: placeholder as Registry['admin.settings.kop_surat']['types'],
+  },
+  'admin.settings.private': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/settings/private/:key',
+    tokens: [{"old":"/admin/settings/private/:key","type":0,"val":"admin","end":""},{"old":"/admin/settings/private/:key","type":0,"val":"settings","end":""},{"old":"/admin/settings/private/:key","type":0,"val":"private","end":""},{"old":"/admin/settings/private/:key","type":1,"val":"key","end":""}],
+    types: placeholder as Registry['admin.settings.private']['types'],
   },
   'admin.graduation': {
     methods: ["GET","HEAD"],
@@ -251,6 +275,12 @@ const routes = {
     pattern: '/admin/audit-logs',
     tokens: [{"old":"/admin/audit-logs","type":0,"val":"admin","end":""},{"old":"/admin/audit-logs","type":0,"val":"audit-logs","end":""}],
     types: placeholder as Registry['admin.audit_logs']['types'],
+  },
+  'admin.audit_logs.clear': {
+    methods: ["DELETE"],
+    pattern: '/admin/audit-logs/clear',
+    tokens: [{"old":"/admin/audit-logs/clear","type":0,"val":"admin","end":""},{"old":"/admin/audit-logs/clear","type":0,"val":"audit-logs","end":""},{"old":"/admin/audit-logs/clear","type":0,"val":"clear","end":""}],
+    types: placeholder as Registry['admin.audit_logs.clear']['types'],
   },
   'admin.backups': {
     methods: ["GET","HEAD"],

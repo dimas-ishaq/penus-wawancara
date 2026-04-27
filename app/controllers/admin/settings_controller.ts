@@ -9,12 +9,14 @@ export default class SettingsController {
    * Display settings page
    */
   async index({ inertia }: HttpContext) {
-    const logo = await Setting.get('logo_path')
-    const brandName = await Setting.get('brand_name', 'SMK PLUS PN')
+    const logo = (await Setting.get('logo_path')) || '/assets/logo_penus.png'
+    const kopSurat = await Setting.get('kop_surat_path')
+    const brandName = await Setting.get('brand_name', 'SMK PLUS PELITA NUSANTARA')
     const academicYear = await Setting.get('academic_year', '2024/2025')
     
     return inertia.render('admin/settings', {
       logo: logo || undefined,
+      kopSurat: kopSurat || undefined,
       academicYear: academicYear || undefined,
       brandName: brandName || undefined,
     })
@@ -80,5 +82,62 @@ export default class SettingsController {
 
     session.flash('success', 'Logo berhasil diperbarui')
     return response.redirect().back()
+  }
+
+  /**
+   * Update Kop Surat (Private Asset)
+   */
+  async updateKopSurat({ request, response, session }: HttpContext) {
+    const kopFile = request.file('kopSurat', {
+      size: '5mb',
+      extnames: ['jpg', 'png', 'jpeg'],
+    })
+
+    if (!kopFile) {
+      session.flash('error', 'Pilih file kop surat terlebih dahulu')
+      return response.redirect().back()
+    }
+
+    if (!kopFile.isValid) {
+      session.flash('error', kopFile.errors[0].message)
+      return response.redirect().back()
+    }
+
+    // Create directory if not exists
+    const storagePath = app.makePath('storage', 'uploads', 'settings')
+    await fs.mkdir(storagePath, { recursive: true })
+
+    const fileName = `kop_surat_${new Date().getTime()}.${kopFile.extname}`
+    await kopFile.move(storagePath, {
+      name: fileName,
+      overwrite: true,
+    })
+
+    // Get old kop to delete it
+    const oldKop = await Setting.get('kop_surat_path')
+    if (oldKop) {
+        try {
+            await fs.unlink(oldKop)
+        } catch (error) {
+            // Ignore
+        }
+    }
+
+    const fullPath = join(storagePath, fileName)
+    await Setting.set('kop_surat_path', fullPath)
+
+    session.flash('success', 'Kop Surat berhasil diperbarui')
+    return response.redirect().back()
+  }
+
+  /**
+   * Proxy to serve private assets (if needed for preview)
+   */
+  async servePrivateAsset({ params, response }: HttpContext) {
+    const path = await Setting.get(params.key)
+    if (!path) {
+      return response.notFound()
+    }
+    return response.download(path)
   }
 }

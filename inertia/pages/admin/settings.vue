@@ -4,14 +4,20 @@ import { ref, computed } from 'vue'
 
 const props = defineProps<{
   logo: string | null
+  kopSurat: string | null
   academicYear: string
   brandName: string
 }>()
 
 const logoPreview = ref<string | null>(props.logo)
+const kopPreview = ref<string | null>(props.kopSurat ? `/admin/settings/private/kop_surat_path?t=${new Date().getTime()}` : null)
 
 const logoForm = useForm({
   logo: null as File | null,
+})
+
+const kopForm = useForm({
+  kopSurat: null as File | null,
 })
 
 const generalForm = useForm({
@@ -29,7 +35,7 @@ const academicYears = computed(() => {
   return years
 })
 
-const onFileChange = (e: Event) => {
+const onLogoChange = (e: Event) => {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (file) {
     logoForm.logo = file
@@ -41,11 +47,32 @@ const onFileChange = (e: Event) => {
   }
 }
 
+const onKopChange = (e: Event) => {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (file) {
+    kopForm.kopSurat = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      kopPreview.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
 const submitLogo = () => {
   logoForm.post('/admin/settings/logo', {
     forceFormData: true,
     onSuccess: () => {
       logoForm.reset()
+    }
+  })
+}
+
+const submitKop = () => {
+  kopForm.post('/admin/settings/kop-surat', {
+    forceFormData: true,
+    onSuccess: () => {
+      kopForm.reset()
     }
   })
 }
@@ -67,8 +94,10 @@ const submitGeneral = () => {
       </div>
     </header>
 
-    <!-- Branding Tab -->
+    <!-- Branding & Assets -->
     <div class="space-y-8 sm:space-y-12 animate-fade-in">
+      
+      <!-- Logo Section -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
         <div class="lg:col-span-1">
           <h3 class="text-lg sm:text-xl font-black text-primary font-headline mb-2 sm:mb-3 flex items-center gap-2">
@@ -100,7 +129,7 @@ const submitGeneral = () => {
               </div>
 
               <form @submit.prevent="submitLogo" class="w-full space-y-6">
-                <input id="logo-upload" type="file" @change="onFileChange" accept="image/*" class="hidden" />
+                <input id="logo-upload" type="file" @change="onLogoChange" accept="image/*" class="hidden" />
                 <div class="flex justify-center sm:justify-end">
                   <button type="submit" :disabled="!logoForm.logo || logoForm.processing"
                     class="w-full sm:w-auto px-8 sm:px-12 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 tracking-widest disabled:opacity-50 text-xs sm:text-sm">
@@ -113,13 +142,62 @@ const submitGeneral = () => {
         </div>
       </div>
 
+      <!-- Kop Surat Section -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 pt-8 sm:pt-12 border-t border-outline-variant/10">
         <div class="lg:col-span-1">
           <h3 class="text-lg sm:text-xl font-black text-primary font-headline mb-2 sm:mb-3 flex items-center gap-2">
-            <span class="material-symbols-outlined text-secondary">date_range</span>
-            Periode Aktif
+            <span class="material-symbols-outlined text-secondary">description</span>
+            Kop Surat (Private)
           </h3>
-          <p class="text-xs sm:text-sm text-on-surface-variant font-body leading-relaxed">Atur tahun ajaran yang sedang berjalan untuk sinkronisasi data siswa.</p>
+          <p class="text-xs sm:text-sm text-on-surface-variant font-body leading-relaxed">
+            Asset gambar kop surat yang akan ditempelkan pada dokumen unduhan PDF hasil wawancara. 
+            <span class="block mt-2 font-bold text-amber-600">Disimpan secara privat di server.</span>
+          </p>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="bg-card rounded-3xl sm:rounded-[32px] border border-outline-variant/30 p-6 sm:p-10 shadow-sm">
+            <div class="flex flex-col items-center gap-6 sm:gap-8">
+              <!-- Preview -->
+              <div
+                class="w-full h-48 sm:h-64 bg-surface-container-lowest rounded-2xl sm:rounded-3xl border-2 border-dashed border-outline-variant/50 flex items-center justify-center overflow-hidden group relative">
+                <img v-if="kopPreview" :src="kopPreview" class="max-h-full max-w-full object-contain p-6 sm:p-8" />
+                <div v-else class="flex flex-col items-center gap-3 text-outline-variant text-center">
+                  <span class="material-symbols-outlined text-5xl sm:text-7xl">draft</span>
+                  <p class="font-black text-xs uppercase tracking-widest">Kop surat belum diunggah</p>
+                </div>
+
+                <div
+                  class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm p-4">
+                  <label for="kop-upload"
+                    class="cursor-pointer px-6 sm:px-10 py-3 sm:py-4 bg-background text-primary text-xs sm:text-sm font-black rounded-xl sm:rounded-2xl shadow-2xl hover:scale-105 transition-transform text-center">
+                    UNGGAH KOP SURAT
+                  </label>
+                </div>
+              </div>
+
+              <form @submit.prevent="submitKop" class="w-full space-y-6">
+                <input id="kop-upload" type="file" @change="onKopChange" accept="image/*" class="hidden" />
+                <div class="flex justify-center sm:justify-end">
+                  <button type="submit" :disabled="!kopForm.kopSurat || kopForm.processing"
+                    class="w-full sm:w-auto px-8 sm:px-12 py-4 bg-primary text-primary-foreground font-black rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 tracking-widest disabled:opacity-50 text-xs sm:text-sm">
+                    SIMPAN KOP SURAT
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- General Settings Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12 pt-8 sm:pt-12 border-t border-outline-variant/10">
+        <div class="lg:col-span-1">
+          <h3 class="text-lg sm:text-xl font-black text-primary font-headline mb-2 sm:mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">settings</span>
+            Pengaturan Umum
+          </h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant font-body leading-relaxed">Informasi identitas sekolah dan periode aktif sistem.</p>
         </div>
 
         <div class="lg:col-span-2">
@@ -127,7 +205,7 @@ const submitGeneral = () => {
             <form @submit.prevent="submitGeneral" class="space-y-6 sm:space-y-8">
               <div class="space-y-3">
                 <label class="text-[10px] font-black text-outline-variant uppercase tracking-[0.2em] block ml-1">Nama Brand / Sekolah</label>
-                <input v-model="generalForm.brandName" type="text" placeholder="Contoh: SMK PLUS PN" required
+                <input v-model="generalForm.brandName" type="text" placeholder="Contoh: SMK PLUS PELITA NUSANTARA" required
                   class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl p-4 sm:p-6 font-black text-primary focus:ring-2 ring-primary outline-none transition-all text-sm sm:text-base" />
               </div>
               <div class="space-y-3">

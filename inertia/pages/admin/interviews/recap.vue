@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm, Link, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
+import { toast } from 'vue-sonner'
 import AdminLayout from '~/layouts/admin.vue'
 
 import { DatePicker } from '@/components/ui/date-picker'
@@ -29,7 +30,11 @@ const toggleAccordion = (id: string) => {
   openAccordion.value = openAccordion.value === id ? null : id
 }
 
+const isEditingIdentity = ref(false)
+
 const form = useForm({
+  studentName: props.interview.studentName || '',
+  schoolOrigin: props.interview.schoolOrigin || '',
   interviewDate: props.interview.interviewDate ? props.interview.interviewDate.split('T')[0] : new Date().toISOString().split('T')[0],
   accompaniment: props.interview.accompaniment || '',
   interviewer: props.interview.interviewer || currentUser.value?.fullName || 'Admin PPDB',
@@ -101,7 +106,11 @@ const submitRecap = () => {
   form.transform((data) => ({
     ...data,
     infoSource: finalInfoSource
-  })).put(`/admin/interviews/${props.interview.id}/recap`)
+  })).put(`/admin/interviews/${props.interview.id}/recap`, {
+    onSuccess: () => {
+      toast.success('Hasil wawancara berhasil disimpan')
+    }
+  })
 }
 </script>
 
@@ -134,15 +143,39 @@ const submitRecap = () => {
             class="w-16 h-16 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary shadow-inner">
             <span class="material-symbols-outlined text-3xl">assignment_ind</span>
           </div>
-          <div>
-            <h4 class="text-2xl font-black text-primary font-headline tracking-tighter mb-1">{{ interview.studentName }}
-            </h4>
-            <div class="flex items-center gap-3">
-              <span class="px-3 py-1 bg-emerald-600 text-white text-[9px] font-black rounded-lg tracking-wider transition-colors">{{
-                interview.id }}</span>
-              <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">{{
-                interview.schoolOrigin }}</span>
+          <div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1 grow">
+              <div v-if="!isEditingIdentity">
+                <h4 class="text-2xl font-black text-primary font-headline tracking-tighter uppercase">{{ form.studentName }}</h4>
+                <div class="flex items-center gap-3">
+                  <span class="px-3 py-1 bg-emerald-600 text-white text-[9px] font-black rounded-lg tracking-wider transition-colors shrink-0">{{
+                    interview.id }}</span>
+                  <span class="text-xs text-on-surface-variant font-bold uppercase tracking-widest">{{ form.schoolOrigin }}</span>
+                </div>
+              </div>
+              
+              <div v-else class="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div class="space-y-1">
+                  <label class="text-[9px] font-black text-primary uppercase tracking-[0.2em] ml-1">Nama Lengkap Siswa</label>
+                  <input v-model="form.studentName" type="text"
+                    class="w-full bg-white dark:bg-stone-900 border-2 border-primary rounded-xl px-4 py-2 text-lg font-black text-primary outline-none focus:ring-4 ring-primary/10 transition-all"
+                    placeholder="Nama Siswa..." />
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.2em] ml-1">Asal Sekolah Siswa</label>
+                  <input v-model="form.schoolOrigin" type="text"
+                    class="w-full bg-white dark:bg-stone-900 border-2 border-outline-variant rounded-xl px-4 py-2 text-xs font-bold text-on-surface-variant outline-none focus:border-primary transition-all uppercase"
+                    placeholder="Asal Sekolah..." />
+                </div>
+              </div>
             </div>
+
+            <button @click.prevent="isEditingIdentity = !isEditingIdentity" 
+              class="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all"
+              :class="isEditingIdentity ? 'bg-primary text-white shadow-lg' : 'bg-surface-container-low text-primary border border-primary/20 hover:bg-white'">
+              <span class="material-symbols-outlined text-sm">{{ isEditingIdentity ? 'check_circle' : 'edit_square' }}</span>
+              {{ isEditingIdentity ? 'Selesai Edit' : 'Edit Data Siswa' }}
+            </button>
           </div>
         </div>
       </div>
@@ -169,8 +202,8 @@ const submitRecap = () => {
             </div>
             <div class="space-y-3">
               <label class="text-[10px] font-black text-outline dark:text-white/60 uppercase tracking-widest">Pewawancara <span class="text-red-500">*</span></label>
-              <input type="text" v-model="form.interviewer" readonly
-                class="w-full bg-surface-container-low/50 dark:bg-stone-950/80 border border-outline-variant/20 rounded-2xl p-4 font-bold text-outline dark:text-white/60 cursor-not-allowed outline-none transition-all shadow-inner" />
+              <input type="text" v-model="form.interviewer" placeholder="Nama Pewawancara..." required readonly
+                class="w-full bg-surface-container-low dark:bg-stone-950/40 border border-outline-variant/10 rounded-2xl p-4 font-bold text-primary/50 dark:text-white/50 cursor-not-allowed outline-none shadow-inner" />
             </div>
             <div class="space-y-3">
               <label class="text-[10px] font-black text-outline dark:text-white/60 uppercase tracking-widest">Pendamping Wawancara <span class="text-red-500">*</span></label>

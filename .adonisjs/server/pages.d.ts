@@ -18,6 +18,7 @@ declare module '@adonisjs/inertia/types' {
     'admin/interviews/create': ExtractProps<(typeof import('../../inertia/pages/admin/interviews/create.vue'))['default']>
     'admin/interviews/recap': ExtractProps<(typeof import('../../inertia/pages/admin/interviews/recap.vue'))['default']>
     'admin/majors': ExtractProps<(typeof import('../../inertia/pages/admin/majors.vue'))['default']>
+    'admin/profile': ExtractProps<(typeof import('../../inertia/pages/admin/profile.vue'))['default']>
     'admin/settings': ExtractProps<(typeof import('../../inertia/pages/admin/settings.vue'))['default']>
     'admin/users': ExtractProps<(typeof import('../../inertia/pages/admin/users.vue'))['default']>
     'auth/login': ExtractProps<(typeof import('../../inertia/pages/auth/login.vue'))['default']>

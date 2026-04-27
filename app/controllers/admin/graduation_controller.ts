@@ -71,7 +71,7 @@ export default class GraduationController {
 
   async store({ request, response, auth, session }: HttpContext) {
     const user = auth.user!
-    const data = request.only(['nisn', 'name', 'class', 'majorCode', 'status', 'skl'])
+    const data = request.only(['nisn', 'name', 'class', 'majorCode', 'status'])
     
     // Check if nisn already exists
     const existing = await Student.findBy('nisn', data.nisn)
@@ -89,7 +89,6 @@ export default class GraduationController {
       class: data.class,
       majorCode: data.majorCode || null,
       status: data.status || 'Pending',
-      skl: data.skl || null,
       userId: user.id
     })
 
@@ -150,7 +149,6 @@ export default class GraduationController {
           class: data.class,
           majorCode: data.majorCode || data.jurusan || null,
           status: data.status || 'Pending',
-          skl: data.skl || data.SKL || null,
           userId: user.id
         }
       )
@@ -162,7 +160,7 @@ export default class GraduationController {
 
   async update({ params, request, response, auth, session }: HttpContext) {
     const user = auth.user!
-    const data = request.only(['nisn', 'name', 'class', 'majorCode', 'status', 'skl'])
+    const data = request.only(['nisn', 'name', 'class', 'majorCode', 'status'])
     
     let query = Student.query().where('id', params.id)
     if (user.role !== 'super_admin') {
@@ -188,8 +186,7 @@ export default class GraduationController {
       name,
       class: data.class || student.class,
       majorCode: data.majorCode || student.majorCode,
-      status: data.status || student.status,
-      skl: data.skl !== undefined ? data.skl : student.skl
+      status: data.status || student.status
     })
     
     await student.save()

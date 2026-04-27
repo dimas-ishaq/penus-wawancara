@@ -211,6 +211,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['destroy']>>>
     }
   }
+  'admin.profile': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/profile'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/profile_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/profile_controller').default['index']>>>
+    }
+  }
+  'admin.profile.update': {
+    methods: ["PUT"]
+    pattern: '/admin/profile'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/profile_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/profile_controller').default['update']>>>
+    }
+  }
   'admin.users': {
     methods: ["GET","HEAD"]
     pattern: '/admin/users'
@@ -293,6 +317,30 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['updateGeneral']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['updateGeneral']>>>
+    }
+  }
+  'admin.settings.kop_surat': {
+    methods: ["POST"]
+    pattern: '/admin/settings/kop-surat'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['updateKopSurat']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['updateKopSurat']>>>
+    }
+  }
+  'admin.settings.private': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/settings/private/:key'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { key: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['servePrivateAsset']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['servePrivateAsset']>>>
     }
   }
   'admin.graduation': {
@@ -497,6 +545,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/audit_logs_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/audit_logs_controller').default['index']>>>
+    }
+  }
+  'admin.audit_logs.clear': {
+    methods: ["DELETE"]
+    pattern: '/admin/audit-logs/clear'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/audit_logs_controller').default['clear']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/audit_logs_controller').default['clear']>>>
     }
   }
   'admin.backups': {

@@ -26,4 +26,15 @@ export default class AuditLogsController {
       }
     })
   }
+
+  async clear({ response, session, auth }: HttpContext) {
+    const user = auth.user!
+    await AuditLog.query().delete()
+    
+    // Log the clear action itself
+    await AuditLog.log(user.id, 'deleted', 'audit_log', 'all', 'Membersihkan seluruh log aktivitas')
+    
+    session.flash('success', 'Seluruh log aktivitas berhasil dihapus')
+    return response.redirect().back()
+  }
 }

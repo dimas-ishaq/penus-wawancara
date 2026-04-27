@@ -169,19 +169,14 @@ const s2ab = (s: string) => {
 }
 
 const exportToExcel = () => {
-  const data = students.value.map(s => ({
-    'ID': s.id, 'Nama': s.name, 'Sekolah': s.school, 'Status': s.status
-  }))
-  const ws = utils.json_to_sheet(data)
-  const wb = utils.book_new()
-  utils.book_append_sheet(wb, ws, 'Wawancara')
-  const wbout = write(wb, { bookType: 'xlsx', type: 'binary' })
-  const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
-  const url = window.URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.setAttribute('download', 'rekap_wawancara.xlsx')
-  a.click()
+  const params = new URLSearchParams()
+  if (startDate.value) params.append('startDate', startDate.value)
+  if (endDate.value) params.append('endDate', endDate.value)
+
+  // Add client timestamp (ISO format)
+  params.append('clientTime', new Date().toISOString())
+
+  window.location.href = `/admin/interviews/export?${params.toString()}`
 }
 
 // Import Logic

@@ -209,7 +209,7 @@ const infoSourceOptions = computed(() => ({
       <div class="lg:col-span-5 bg-surface-container-lowest p-4 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 shadow-sm">
         <div class="mb-6 text-center">
           <h2 class="text-lg sm:text-xl font-bold text-primary font-headline">Analisis Sumber Informasi</h2>
-          <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Efetivitas Pemasaran</p>
+          <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Efektivitas Pemasaran</p>
         </div>
         <div class="h-[300px] sm:h-[350px]">
           <ApexChart

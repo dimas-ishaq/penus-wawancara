@@ -21,6 +21,8 @@ export type ScannedRoutes = {
     'admin.interviews.export': { paramsTuple?: []; params?: {} }
     'admin.interviews.import': { paramsTuple?: []; params?: {} }
     'admin.interviews.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.profile': { paramsTuple?: []; params?: {} }
+    'admin.profile.update': { paramsTuple?: []; params?: {} }
     'admin.users': { paramsTuple?: []; params?: {} }
     'admin.users.store': { paramsTuple?: []; params?: {} }
     'admin.users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -28,6 +30,8 @@ export type ScannedRoutes = {
     'admin.settings': { paramsTuple?: []; params?: {} }
     'admin.settings.logo': { paramsTuple?: []; params?: {} }
     'admin.settings.general': { paramsTuple?: []; params?: {} }
+    'admin.settings.kop_surat': { paramsTuple?: []; params?: {} }
+    'admin.settings.private': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
     'admin.graduation': { paramsTuple?: []; params?: {} }
     'admin.graduation.settings': { paramsTuple?: []; params?: {} }
     'admin.graduation.import': { paramsTuple?: []; params?: {} }
@@ -45,6 +49,7 @@ export type ScannedRoutes = {
     'admin.classes.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.classes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.audit_logs': { paramsTuple?: []; params?: {} }
+    'admin.audit_logs.clear': { paramsTuple?: []; params?: {} }
     'admin.backups': { paramsTuple?: []; params?: {} }
     'admin.backups.store': { paramsTuple?: []; params?: {} }
     'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
@@ -65,8 +70,10 @@ export type ScannedRoutes = {
     'admin.interviews.edit_recap': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.interviews.pdf': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.interviews.export': { paramsTuple?: []; params?: {} }
+    'admin.profile': { paramsTuple?: []; params?: {} }
     'admin.users': { paramsTuple?: []; params?: {} }
     'admin.settings': { paramsTuple?: []; params?: {} }
+    'admin.settings.private': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
     'admin.graduation': { paramsTuple?: []; params?: {} }
     'admin.majors': { paramsTuple?: []; params?: {} }
     'admin.classes': { paramsTuple?: []; params?: {} }
@@ -87,8 +94,10 @@ export type ScannedRoutes = {
     'admin.interviews.edit_recap': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.interviews.pdf': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.interviews.export': { paramsTuple?: []; params?: {} }
+    'admin.profile': { paramsTuple?: []; params?: {} }
     'admin.users': { paramsTuple?: []; params?: {} }
     'admin.settings': { paramsTuple?: []; params?: {} }
+    'admin.settings.private': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
     'admin.graduation': { paramsTuple?: []; params?: {} }
     'admin.majors': { paramsTuple?: []; params?: {} }
     'admin.classes': { paramsTuple?: []; params?: {} }
@@ -103,6 +112,7 @@ export type ScannedRoutes = {
     'admin.users.store': { paramsTuple?: []; params?: {} }
     'admin.settings.logo': { paramsTuple?: []; params?: {} }
     'admin.settings.general': { paramsTuple?: []; params?: {} }
+    'admin.settings.kop_surat': { paramsTuple?: []; params?: {} }
     'admin.graduation.settings': { paramsTuple?: []; params?: {} }
     'admin.graduation.import': { paramsTuple?: []; params?: {} }
     'admin.graduation.students.store': { paramsTuple?: []; params?: {} }
@@ -115,6 +125,7 @@ export type ScannedRoutes = {
   }
   PUT: {
     'admin.interviews.recap': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.profile.update': { paramsTuple?: []; params?: {} }
     'admin.users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.graduation.status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.graduation.students.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -127,6 +138,7 @@ export type ScannedRoutes = {
     'admin.graduation.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.majors.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.classes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.audit_logs.clear': { paramsTuple?: []; params?: {} }
     'admin.backups.destroy': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
 }

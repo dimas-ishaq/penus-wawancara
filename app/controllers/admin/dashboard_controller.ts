@@ -15,15 +15,15 @@ export default class DashboardController {
     const stats = [
       { name: 'Total Pendaftar', value: (totalPendaftar[0] as any).$extras.total || '0', icon: 'groups', color: 'bg-primary' },
       { name: 'Wawancara Selesai', value: (wawancaraSelesai[0] as any).$extras.total || '0', icon: 'fact_check', color: 'bg-secondary' },
-      { name: 'Belum Wawancara', value: (belumWawancara[0] as any).$extras.total || '0', icon: 'pending_actions', color: 'bg-tertiary-fixed' },
-      { name: 'Siswa Lulus', value: (siswaLulus[0] as any).$extras.total || '0', icon: 'military_tech', color: 'bg-primary-fixed' },
+      { name: 'Belum Wawancara', value: (belumWawancara[0] as any).$extras.total || '0', icon: 'pending_actions', color: 'bg-amber-500' },
+      { name: 'Siswa Lulus', value: (siswaLulus[0] as any).$extras.total || '0', icon: 'military_tech', color: 'bg-emerald-600' },
     ]
 
     // Recent Activities
     const recentActivities = await AuditLog.query()
       .preload('user')
       .orderBy('createdAt', 'desc')
-      .limit(5)
+      .limit(3)
 
     const serializedActivities = recentActivities.map(log => ({
       id: log.id,

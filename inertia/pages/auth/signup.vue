@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import HeroImage from '@/assets/hero.webp'
+import LogoPenus from '@/assets/logo_penus.png'
 
 const form = useForm({
   fullName: '',
@@ -21,7 +22,7 @@ const submit = () => {
 </script>
 
 <template>
-  <Head title="Sign Up - Portal Akademik SMK Plus PN" />
+  <Head title="Sign Up - SMK Plus Pelita Nusantara" />
   <div class="min-h-screen flex items-stretch bg-surface overflow-hidden text-on-surface">
     <!-- Left side: Illustration -->
     <div class="hidden lg:flex lg:w-1/2 relative bg-primary dark:bg-surface-container items-center justify-center overflow-hidden transition-colors duration-500">
@@ -34,10 +35,10 @@ const submit = () => {
       
       <div class="relative z-10 p-12 text-white dark:text-primary transition-colors">
         <div class="flex items-center gap-3 mb-8">
-          <div class="w-12 h-12 bg-white dark:bg-primary rounded-xl flex items-center justify-center p-2 shadow-lg transition-colors">
-            <span class="material-symbols-outlined text-primary dark:text-white text-3xl">school</span>
+          <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center p-2 shadow-xl shadow-primary/10">
+            <img :src="LogoPenus" alt="Logo SMK Plus Pelita Nusantara" class="w-full h-full object-contain" />
           </div>
-          <span class="text-2xl font-headline font-bold tracking-tight">SMK PLUS PN</span>
+          <span class="text-2xl font-headline font-bold tracking-tight text-white dark:text-primary">SMK Plus Pelita Nusantara</span>
         </div>
         <h1 class="text-5xl font-headline font-black leading-tight mb-6">
           Mulai Perjalanan <br />
@@ -53,11 +54,11 @@ const submit = () => {
     <!-- Right side: Signup Form -->
     <div class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-12 lg:p-24 overflow-y-auto bg-surface">
       <div class="w-full max-w-md space-y-10 py-12">
-        <div class="lg:hidden flex items-center gap-2 mb-8">
-          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <span class="material-symbols-outlined text-white">school</span>
+        <div class="lg:hidden flex items-center gap-3 mb-8">
+          <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1.5 shadow-lg border border-outline-variant/20">
+            <img :src="LogoPenus" alt="Logo SMK Plus Pelita Nusantara" class="w-full h-full object-contain" />
           </div>
-          <span class="font-headline font-bold text-primary tracking-tight">SMK PLUS PN</span>
+          <span class="font-headline font-bold text-primary tracking-tight">SMK Plus Pelita Nusantara</span>
         </div>
 
         <div class="space-y-2">

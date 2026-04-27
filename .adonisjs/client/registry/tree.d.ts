@@ -24,6 +24,9 @@ export interface ApiDefinition {
       import: typeof routes['admin.interviews.import']
       destroy: typeof routes['admin.interviews.destroy']
     }
+    profile: typeof routes['admin.profile'] & {
+      update: typeof routes['admin.profile.update']
+    }
     users: typeof routes['admin.users'] & {
       store: typeof routes['admin.users.store']
       update: typeof routes['admin.users.update']
@@ -32,6 +35,8 @@ export interface ApiDefinition {
     settings: typeof routes['admin.settings'] & {
       logo: typeof routes['admin.settings.logo']
       general: typeof routes['admin.settings.general']
+      kopSurat: typeof routes['admin.settings.kop_surat']
+      private: typeof routes['admin.settings.private']
     }
     graduation: typeof routes['admin.graduation'] & {
       settings: typeof routes['admin.graduation.settings']
@@ -54,7 +59,9 @@ export interface ApiDefinition {
       update: typeof routes['admin.classes.update']
       destroy: typeof routes['admin.classes.destroy']
     }
-    auditLogs: typeof routes['admin.audit_logs']
+    auditLogs: typeof routes['admin.audit_logs'] & {
+      clear: typeof routes['admin.audit_logs.clear']
+    }
     backups: typeof routes['admin.backups'] & {
       store: typeof routes['admin.backups.store']
       download: typeof routes['admin.backups.download']

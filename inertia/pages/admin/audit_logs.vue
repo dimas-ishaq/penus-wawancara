@@ -19,7 +19,24 @@ import {
   CardHeader, 
   CardTitle 
 } from '@/components/ui/card'
-import { Search, History } from 'lucide-vue-next'
+import { Search, History, Trash2 } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import ConfirmModal from '~/components/ConfirmModal.vue'
+import { computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
+
+const page = usePage()
+const user = computed(() => page.props.user as any)
+
+const showClearModal = ref(false)
+
+const clearLogs = () => {
+  router.delete('/admin/audit-logs/clear', {
+    onSuccess: () => {
+      showClearModal.value = false
+    }
+  })
+}
 import {
   Pagination,
   PaginationContent,
@@ -85,6 +102,12 @@ const getActionVariant = (action: string) => {
         <p class="text-muted-foreground mt-1 text-sm">
           Pantau seluruh aktivitas staff dan perubahan data pada sistem secara real-time.
         </p>
+      </div>
+      <div v-if="user?.role === 'super_admin'">
+        <Button variant="destructive" class="gap-2 rounded-xl shadow-lg shadow-destructive/20" @click="showClearModal = true">
+          <Trash2 class="w-4 h-4" />
+          Reset Seluruh Log
+        </Button>
       </div>
     </div>
 
@@ -195,5 +218,13 @@ const getActionVariant = (action: string) => {
         </div>
       </CardContent>
     </Card>
+
+    <ConfirmModal
+      :show="showClearModal"
+      title="Hapus Seluruh Log Aktivitas?"
+      message="Tindakan ini akan menghapus seluruh catatan riwayat aktivitas sistem secara permanen. Database akan dikosongkan untuk menghemat ruang penyimpanan. Apakah Anda yakin?"
+      @close="showClearModal = false"
+      @confirm="clearLogs"
+    />
   </div>
 </template>

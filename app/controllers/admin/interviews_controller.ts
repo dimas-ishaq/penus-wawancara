@@ -80,40 +80,41 @@ export default class InterviewsController {
       }
 
       return {
+        // --- PROFIL SISWA ---
         'ID Pendaftaran': i.id,
         'Nama Siswa': i.studentName,
         'Asal Sekolah': i.schoolOrigin,
         'Status': i.status,
         'Pewawancara': i.interviewer || '-',
         'Pendamping': i.accompaniment || '-',
-        'Sumber Informasi': i.infoSource || '-',
-        'Alasan Sekolah': i.reasonChoosingSchool || '-',
-        'Jurusan': fullMajor || '-',
-        'Alasan Jurusan': i.majorReason || '-',
-        'Cita-cita': i.longTermGoals || '-',
-        'Tinggal Dengan': i.livingWith || '-',
-        'Kontak Darurat': i.emergencyContact || '-',
-        'HP Kontak Darurat': i.emergencyContactPhone || '-',
+        'Tanggal Wawancara': i.interviewDate ? i.interviewDate.toFormat('yyyy-MM-dd') : '-',
 
-        // Section II: Karakter
+        // --- I. IDENTITAS & ASPIRASI ---
+        'Sumber Informasi': i.infoSource || '-',
+        'Alasan Pilih Sekolah': i.reasonChoosingSchool || '-',
+        'Pilihan Jurusan': fullMajor || '-',
+        'Alasan Pilih Jurusan': i.majorReason || '-',
+        'Cita-cita / Harapan': i.longTermGoals || '-',
+
+        // --- II. KARAKTER & DISIPLIN ---
         'Jarak Rumah (km)': i.characterAnswers?.homeDistance || '-',
         'Metode Berangkat': i.characterAnswers?.travelMethod || '-',
-        'Komitmen 06.45': i.characterAnswers?.arrival645Commitment ? 'Y' : 'T',
-        'Komitmen Kendaraan': i.characterAnswers?.vehicleCommitment ? 'Y' : 'T',
-        'Komitmen Kehadiran': i.characterAnswers?.presenceCommitment ? 'Y' : 'T',
-        'Komitmen Alfa': i.characterAnswers?.alfaCommitment ? 'Y' : 'T',
-        'Komitmen Disiplin': i.characterAnswers?.disciplineCommitment ? 'Y' : 'T',
-        'Komitmen Kebersihan': i.characterAnswers?.cleanlinessCommitment ? 'Y' : 'T',
-        'Komitmen Seluruh Kegiatan': i.characterAnswers?.allActivityCommitment ? 'Y' : 'T',
+        'Sanggup Hadir 06.45': i.characterAnswers?.arrival645Commitment ? 'Y' : 'T',
+        'Sanggup Kendaraan Standar': i.characterAnswers?.vehicleCommitment ? 'Y' : 'T',
+        'Sanggup Hadir Senin-Sabtu': i.characterAnswers?.presenceCommitment ? 'Y' : 'T',
+        'Siap Bila Alfa > 7': i.characterAnswers?.alfaCommitment ? 'Y' : 'T',
+        'Siap Jalankan Disiplin': i.characterAnswers?.disciplineCommitment ? 'Y' : 'T',
+        'Siap Jaga Kebersihan': i.characterAnswers?.cleanlinessCommitment ? 'Y' : 'T',
+        'Aktif Seluruh Kegiatan': i.characterAnswers?.allActivityCommitment ? 'Y' : 'T',
 
-        // Section III-V: Softskill, Entrepreneur, Religious
-        'Komitmen Softskill/Hardskill': i.skillCommitment ? 'Y' : 'T',
-        'Komitmen Entrepreneur': i.entrepreneurCommitment ? 'Y' : 'T',
-        'Komitmen Religious': i.religiousCommitment ? 'Y' : 'T',
-        'Alasan Kesanggupan Kegiatan': i.specialActivities || '-',
+        // --- III-V. KOMITMEN KURIKULUM ---
+        'Siap Softskill/Hardskill': i.skillCommitment ? 'Y' : 'T',
+        'Siap Entrepreneurship': i.entrepreneurCommitment ? 'Y' : 'T',
+        'Siap Religious Program': i.religiousCommitment ? 'Y' : 'T',
+        'Alasan Kesanggupan Kurikulum': i.specialActivities || '-',
 
-        // Section VII: Pelanggaran
-        'Setuju Aturan Pelanggaran': i.violationAgreement ? 'Y' : 'T',
+        // --- VII. PELANGGARAN LUAR BIASA ---
+        'Setuju Konsekuensi Pelanggaran': i.violationAgreement ? 'Y' : 'T',
         'Pelanggaran - Tauran': i.violationDetails?.tauran ? 'Y' : 'T',
         'Pelanggaran - Asusila': i.violationDetails?.asusila ? 'Y' : 'T',
         'Pelanggaran - Narkoba': i.violationDetails?.narkoba ? 'Y' : 'T',
@@ -122,24 +123,31 @@ export default class InterviewsController {
         'Pelanggaran - Kekerasan Guru': i.violationDetails?.kekerasanGuru ? 'Y' : 'T',
         'Pelanggaran - Menikah': i.violationDetails?.menikah ? 'Y' : 'T',
 
-        // Section VIII: Orang Tua
-        'Ortu - Dukung Program': i.parentCommitments?.fullSupport ? 'Y' : 'T',
-        'Ortu - Laptop': i.parentCommitments?.laptopProvision ? 'Y' : 'T',
-        'Ortu - PKL Jauh': i.parentCommitments?.pklConsent ? 'Y' : 'T',
-        'Ortu - Periksa Device': i.parentCommitments?.deviceCheckConsent ? 'Y' : 'T',
-        'Ortu - Hubungan Baik': i.parentCommitments?.relationshipCommitment ? 'Y' : 'T',
-        'Ortu - Keuangan': i.parentCommitments?.financialCommitment ? 'Y' : 'T',
+        // --- VIII. ORANG TUA & PEMBIAYAAN ---
+        'Dukung Program Sekolah': i.parentCommitments?.fullSupport ? 'Y' : 'T',
+        'Sanggup Sediakan Laptop': i.parentCommitments?.laptopProvision ? 'Y' : 'T',
+        'Setuju PKL Jauh': i.parentCommitments?.pklConsent ? 'Y' : 'T',
+        'Setuju Periksa Device': i.parentCommitments?.deviceCheckConsent ? 'Y' : 'T',
+        'Hubungan Baik dg Sekolah': i.parentCommitments?.relationshipCommitment ? 'Y' : 'T',
+        'Tinggal Bersama': i.livingWith || '-',
+        'Kontak Darurat': i.emergencyContact || '-',
+        'No. HP Darurat': i.emergencyContactPhone || '-',
+        'Sanggup Biaya s/d Lulus': i.parentCommitments?.financialCommitment ? 'Y' : 'T',
 
-        // Billing Details
+        // --- DATA PENANGGUNG JAWAB ---
         'Nama Penanggung Jawab': i.billingDetails?.name || '-',
-        'Hubungan Penanggung Jawab': i.billingDetails?.relationship || '-',
-        'Pekerjaan Penanggung Jawab': i.billingDetails?.job || '-',
-        'HP Penanggung Jawab': i.billingDetails?.phone || '-',
-        'Sumber Biaya Lain': i.billingDetails?.otherSource || '-',
+        'Hubungan Keluarga': i.billingDetails?.relationship || '-',
+        'Pekerjaan': i.billingDetails?.job || '-',
+        'No. Telp/WA': i.billingDetails?.phone || '-',
+        'Sumber Dana Lain': i.billingDetails?.otherSource || '-',
 
-        'Catatan': i.notes || '-',
-        'Tanggal Wawancara': i.interviewDate ? i.interviewDate.toFormat('yyyy-MM-dd') : '-',
-        'Tanggal Input': i.createdAt?.toFormat('yyyy-MM-dd HH:mm'),
+        // --- PENILAIAN & CATATAN ---
+        'Skor Akademik': i.academicScore || 0,
+        'Skor Teknis': i.technicalScore || 0,
+        'Skor Sikap': i.attitudeScore || 0,
+        'Total Skor': i.totalScore || 0,
+        'Catatan Pewawancara': i.notes || '-',
+        'Waktu Input Laporan': i.createdAt?.toFormat('yyyy-MM-dd HH:mm'),
       }
     })
 
@@ -148,9 +156,14 @@ export default class InterviewsController {
     utils.book_append_sheet(wb, ws, 'Data Wawancara')
 
     const buf = write(wb, { type: 'buffer', bookType: 'xlsx' })
+    
+    const clientTime = request.input('clientTime')
+    const fileNameDate = clientTime 
+      ? DateTime.fromISO(clientTime).toFormat('dd-MM-yyyy_HH-mm-ss')
+      : DateTime.local().toFormat('dd-MM-yyyy_HH-mm-ss')
 
     response.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response.header('Content-Disposition', `attachment; filename=interviews_${DateTime.local().toFormat('yyyy-MM-dd')}.xlsx`)
+    response.header('Content-Disposition', `attachment; filename=interviews_${fileNameDate}.xlsx`)
     return response.send(buf)
   }
 
@@ -165,7 +178,7 @@ export default class InterviewsController {
     
     // Generate simple ID PPDB-XXX
     const countData = await Interview.query().count('* as total')
-    const total = (countData[0] as any).$extras.total
+    const total = Number((countData[0] as any).$extras.total || 0)
     const nextId = `PPDB-${String(total + 1).padStart(3, '0')}`
 
     const interview = await Interview.create({
@@ -202,9 +215,11 @@ export default class InterviewsController {
     const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
 
     interview.merge({
+      studentName: capitalize(data.studentName.toLowerCase()),
+      schoolOrigin: capitalize(data.schoolOrigin.toLowerCase()),
       interviewDate: data.interviewDate ? DateTime.fromISO(data.interviewDate) : null,
       accompaniment: data.accompaniment ? capitalize(data.accompaniment.toLowerCase()) : null,
-      interviewer: user.fullName || user.email, // Automatically set based on logged-in user
+      interviewer: data.interviewer,
       infoSource: data.infoSource,
       reasonChoosingSchool: data.reasonChoosingSchool,
       majorChoice: data.selectedMajor,
@@ -254,13 +269,32 @@ export default class InterviewsController {
       serializedInterview.infoSource = `Lainnya (${serializedInterview.infoSourceOther})`
     }
 
-    // Fetch branding logo
+    // Fetch branding settings
     const Setting = (await import('#models/setting')).default
-    const logo = await Setting.get('logo_path')
+    const logo = (await Setting.get('logo_path')) || '/assets/logo_penus.png'
+    const academicYear = await Setting.get('academic_year', '2024/2025')
+    const brandName = await Setting.get('brand_name', 'SMK PLUS PELITA NUSANTARA')
+    const kopSuratPath = await Setting.get('kop_surat_path')
+    
+    let kopSuratBase64 = null
+    if (kopSuratPath) {
+      try {
+        const fs = await import('node:fs/promises')
+        const { extname } = await import('node:path')
+        const imageBuffer = await fs.readFile(kopSuratPath)
+        const extension = extname(kopSuratPath).replace('.', '')
+        kopSuratBase64 = `data:image/${extension};base64,${imageBuffer.toString('base64')}`
+      } catch (error) {
+        // Ignore if file error
+      }
+    }
 
     return view.render('admin/interview_report', {
       interview: serializedInterview,
-      logo: logo
+      logo: logo,
+      kopSurat: kopSuratBase64,
+      academicYear: academicYear,
+      brandName: brandName
     })
   }
 

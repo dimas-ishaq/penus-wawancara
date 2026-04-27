@@ -110,6 +110,7 @@ const handleSearch = async () => {
 </script>
 
 <template>
+
   <Head title="Pengumuman Kelulusan - SMK Plus Pelita Nusantara" />
 
   <div class="min-h-screen bg-surface-container-lowest font-body">
@@ -118,23 +119,25 @@ const handleSearch = async () => {
       <div class="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         <div class="flex flex-col md:flex-row justify-between items-center gap-10">
           <div class="text-center md:text-left space-y-6">
-            <span class="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs block">Success By Character.</span>
+            <span class="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs block">Success By
+              Character.</span>
             <h1 class="text-4xl md:text-7xl font-black font-headline tracking-tighter leading-[0.9]">
-              Pengumuman <br/>
+              Pengumuman <br />
               <span class="text-secondary italic">Hasil Akhir.</span>
             </h1>
             <p class="text-white/70 max-w-lg leading-relaxed text-sm md:text-base">
-              Selamat datang di sistem informasi kelulusan SMK Plus Pelita Nusantara. Masukkan NIS Anda untuk memvalidasi status kelulusan tahun ajaran {{ page.props.academicYear }}.
+              Selamat datang di sistem informasi kelulusan SMK Plus Pelita Nusantara. Masukkan NIS Anda untuk
+              memvalidasi status kelulusan tahun ajaran {{ page.props.academicYear }}.
             </p>
           </div>
-          
+
           <div class="hidden lg:block relative">
-             <div class="w-64 h-64 bg-white/10 rounded-full blur-3xl absolute -top-10 -right-10"></div>
-             <img :src="LogoPenus" class="h-48 w-auto opacity-20 rotate-12" alt="" />
+            <div class="w-64 h-64 bg-white/10 rounded-full blur-3xl absolute -top-10 -right-10"></div>
+            <img :src="LogoPenus" class="h-48 w-auto opacity-20 rotate-12" alt="" />
           </div>
         </div>
       </div>
-      
+
       <!-- Decorative background -->
       <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-secondary/20 rounded-full blur-[120px]"></div>
     </header>
@@ -146,27 +149,23 @@ const handleSearch = async () => {
         <div v-if="isReleased" class="space-y-12 animate-fade-in">
           <div class="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl border border-outline-variant/30 space-y-10">
             <div class="text-center space-y-3">
-              <h2 class="text-3xl font-black text-primary font-headline tracking-tight">Validasi Nomor Induk Siswa (NIS)</h2>
-              <p class="text-on-surface-variant max-w-md mx-auto">Gunakan nomor induk siswa resmi yang terdaftar pada pangkalan data sekolah.</p>
+              <h2 class="text-3xl font-black text-primary font-headline tracking-tight">Validasi Nomor Induk Siswa (NIS)
+              </h2>
+              <p class="text-on-surface-variant max-w-md mx-auto">Gunakan nomor induk siswa resmi yang terdaftar pada
+                pangkalan data sekolah.</p>
             </div>
 
             <div class="space-y-6">
-              <div class="bg-surface-container p-2 rounded-[2rem] flex flex-col md:flex-row items-stretch md:items-center gap-2 group-focus-within:ring-4 ring-primary/10 transition-all">
+              <div
+                class="bg-surface-container p-2 rounded-[2rem] flex flex-col md:flex-row items-stretch md:items-center gap-2 group-focus-within:ring-4 ring-primary/10 transition-all">
                 <div class="flex items-center gap-3 md:gap-4 px-6 md:px-8 py-4 grow w-full">
                   <span class="material-symbols-outlined text-primary text-2xl">fingerprint</span>
-                  <input 
-                    v-model="nisnQuery" 
-                    type="text" 
-                    placeholder="Masukkan NIS Anda..."
+                  <input v-model="nisnQuery" type="text" placeholder="Masukkan NIS Anda..."
                     class="grow bg-transparent border-none outline-none text-lg md:text-xl font-bold text-primary placeholder:text-outline-variant/50 w-full"
-                    @keyup.enter="handleSearch"
-                  />
+                    @keyup.enter="handleSearch" />
                 </div>
-                <button 
-                  @click="handleSearch" 
-                  :disabled="isChecking || !nisnQuery"
-                  class="w-full md:w-auto px-12 py-5 bg-primary text-white font-black rounded-[1.5rem] hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50"
-                >
+                <button @click="handleSearch" :disabled="isChecking || !nisnQuery"
+                  class="w-full md:w-auto px-12 py-5 bg-primary text-white font-black rounded-[1.5rem] hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50">
                   <span v-if="isChecking" class="material-symbols-outlined animate-spin">sync</span>
                   <span v-else class="material-symbols-outlined">verified</span>
                   {{ isChecking ? 'MEMPROSES...' : 'CEK STATUS' }}
@@ -183,17 +182,20 @@ const handleSearch = async () => {
               <div class="p-6 bg-surface-container-low rounded-3xl space-y-2">
                 <span class="material-symbols-outlined text-secondary">info</span>
                 <p class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Informasi</p>
-                <p class="text-xs font-medium text-on-surface-variant">Hasil yang ditampilkan adalah data resmi yang sudah disahkan.</p>
+                <p class="text-xs font-medium text-on-surface-variant">Hasil yang ditampilkan adalah data resmi yang
+                  sudah disahkan.</p>
               </div>
               <div class="p-6 bg-surface-container-low rounded-3xl space-y-2">
                 <span class="material-symbols-outlined text-secondary">help_center</span>
                 <p class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Bantuan</p>
-                <p class="text-xs font-medium text-on-surface-variant">Hubungi tim IT sekolah jika NIS Anda tidak ditemukan.</p>
+                <p class="text-xs font-medium text-on-surface-variant">Hubungi tim IT sekolah jika NIS Anda tidak
+                  ditemukan.</p>
               </div>
               <div class="p-6 bg-surface-container-low rounded-3xl space-y-2">
                 <span class="material-symbols-outlined text-secondary">download</span>
                 <p class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Dokumen</p>
-                <p class="text-xs font-medium text-on-surface-variant">Anda dapat mengunduh surat keterangan setelah status muncul.</p>
+                <p class="text-xs font-medium text-on-surface-variant">Anda dapat mengunduh surat keterangan setelah
+                  status muncul.</p>
               </div>
             </div>
           </div>
@@ -201,13 +203,17 @@ const handleSearch = async () => {
 
         <!-- Countdown State -->
         <div v-else class="animate-fade-in">
-          <div class="bg-primary p-12 md:p-20 rounded-[4rem] space-y-12 shadow-2xl shadow-primary/30 relative overflow-hidden text-center">
+          <div
+            class="bg-primary p-12 md:p-20 rounded-[4rem] space-y-12 shadow-2xl shadow-primary/30 relative overflow-hidden text-center">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
-            
+
             <div class="space-y-4 relative z-10">
-              <span class="px-4 py-2 bg-white/10 text-white font-bold text-[10px] uppercase tracking-[0.4em] rounded-full">Hitung Mundur Rilis</span>
+              <span
+                class="px-4 py-2 bg-white/10 text-white font-bold text-[10px] uppercase tracking-[0.4em] rounded-full">Hitung
+                Mundur Rilis</span>
               <h2 class="text-4xl md:text-6xl font-black text-white font-headline tracking-tighter">Sesaat Lagi.</h2>
-              <p class="text-white/60 max-w-md mx-auto">Akses pengecekan kelulusan akan dibuka secara otomatis sesuai jadwal yang ditentukan.</p>
+              <p class="text-white/60 max-w-md mx-auto">Akses pengecekan kelulusan akan dibuka secara otomatis sesuai
+                jadwal yang ditentukan.</p>
             </div>
 
             <div class="grid grid-cols-4 gap-4 md:gap-8 max-w-2xl mx-auto relative z-10">
@@ -220,10 +226,11 @@ const handleSearch = async () => {
             </div>
 
             <div class="pt-8 relative z-10">
-               <div class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 rounded-2xl border border-white/5 text-white/80 font-bold text-sm">
-                 <span class="material-symbols-outlined animate-pulse">lock_clock</span>
-                 Sistem Terkunci Otomatis
-               </div>
+              <div
+                class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 rounded-2xl border border-white/5 text-white/80 font-bold text-sm">
+                <span class="material-symbols-outlined animate-pulse">lock_clock</span>
+                Sistem Terkunci Otomatis
+              </div>
             </div>
           </div>
         </div>
@@ -232,16 +239,19 @@ const handleSearch = async () => {
 
     <!-- Help Section -->
     <section class="pb-32 px-8">
-      <div class="max-w-4xl mx-auto bg-white rounded-[3rem] p-12 md:p-16 text-center space-y-10 shadow-xl border border-outline-variant/20">
+      <div
+        class="max-w-4xl mx-auto bg-white rounded-[3rem] p-12 md:p-16 text-center space-y-10 shadow-xl border border-outline-variant/20">
         <div class="space-y-4">
           <h2 class="text-3xl font-black text-primary font-headline">Butuh Bantuan Teknis?</h2>
           <p class="text-on-surface-variant max-w-xl mx-auto leading-relaxed">
-            Jika Anda mengalami kendala saat melakukan pengecekan atau terdapat ketidaksesuaian data, silakan hubungi pusat bantuan kami.
+            Jika Anda mengalami kendala saat melakukan pengecekan atau terdapat ketidaksesuaian data, silakan hubungi
+            pusat bantuan kami.
           </p>
         </div>
-        
+
         <div class="flex flex-wrap justify-center gap-4">
-          <a href="#" class="px-10 py-5 bg-primary text-white font-bold rounded-2xl hover:brightness-110 transition-all flex items-center gap-3 shadow-lg shadow-primary/10">
+          <a href="#"
+            class="px-10 py-5 bg-primary text-white font-bold rounded-2xl hover:brightness-110 transition-all flex items-center gap-3 shadow-lg shadow-primary/10">
             <span class="material-symbols-outlined">support_agent</span>
             Hubungi Helpdesk
           </a>
@@ -258,17 +268,14 @@ const handleSearch = async () => {
         <div
           class="relative bg-white w-full max-w-[850px] rounded-3xl shadow-2xl overflow-hidden animate-zoom-in flex flex-col max-h-[98vh] border border-white/20">
           <!-- Header Actions -->
-          <div class="flex flex-col sm:flex-row items-center justify-between px-6 md:px-8 py-4 md:py-5 border-b bg-surface-container-low/50 backdrop-blur-md gap-4">
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between px-6 md:px-8 py-4  border-b bg-surface-container-low/50 backdrop-blur-md gap-4">
             <div class="flex items-center gap-3">
               <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-              <h3 class="font-headline font-bold text-primary tracking-tight text-sm md:text-base">Surat Keterangan Kelulusan Digital</h3>
+              <h3 class="font-headline font-bold text-primary tracking-tight text-sm md:text-base">Surat Keterangan
+                Kelulusan Digital</h3>
             </div>
             <div class="flex items-center gap-2 md:gap-4 w-full sm:w-auto">
-              <a v-if="result.skl" :href="result.skl" target="_blank"
-                class="flex-grow sm:flex-grow-0 flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-emerald-500 text-white font-bold text-xs md:text-sm rounded-xl md:rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20">
-                <span class="material-symbols-outlined text-lg">download</span>
-                UNDUH SKL
-              </a>
               <button @click="showResultModal = false"
                 class="p-2.5 md:p-3 hover:bg-surface-variant/50 rounded-xl md:rounded-2xl transition-colors">
                 <span class="material-symbols-outlined">close</span>
@@ -277,7 +284,7 @@ const handleSearch = async () => {
           </div>
 
           <!-- Scrollable Certificate Container -->
-          <div class="overflow-auto bg-surface-variant/10 flex justify-center p-4 md:p-8 lg:p-12">
+          <div class="overflow-auto bg-surface-variant/10 flex justify-center p-4 md:p-6">
             <!-- The Certificate Card -->
             <div id="skl-certificate"
               class="relative bg-white w-full max-w-[800px] min-h-[400px] md:min-h-0 md:aspect-[1.414/1] p-6 md:p-12 flex flex-col items-center justify-between border-[6px] md:border-[16px] border-surface-container shadow-2xl transition-transform duration-700"
@@ -292,7 +299,8 @@ const handleSearch = async () => {
               <div class="text-center space-y-2 md:space-y-4 z-10 w-full flex-grow flex flex-col justify-center">
                 <!-- Header -->
                 <div class="space-y-1 md:space-y-2 flex-shrink-0">
-                  <img alt="SMK Plus Pelita Nusantara official seal" class="h-10 md:h-16 mx-auto mb-1" :src="LogoPenus" />
+                  <img alt="SMK Plus Pelita Nusantara official seal" class="h-10 md:h-16 mx-auto mb-1"
+                    :src="LogoPenus" />
                   <h2
                     class="font-headline font-bold text-primary text-xs md:text-base tracking-[0.05em] uppercase max-w-[240px] md:max-w-md mx-auto leading-tight">
                     Berdasarkan Surat Keputusan Kepala Sekolah
@@ -317,10 +325,17 @@ const handleSearch = async () => {
                   <div class="space-y-1.5 md:space-y-2">
                     <span :class="[
                       'inline-block px-5 py-1.5 md:px-10 md:py-3 text-white text-[10px] md:text-base font-black uppercase tracking-[0.2em] rounded-full shadow-lg',
-                      result.status === 'Lulus' ? 'bg-green-500 shadow-green-500/30' : 'bg-error shadow-error/30'
+                      result.status === 'Lulus' ? 'bg-green-500 shadow-green-500/30' : (result.status === 'Menunggu Administrasi' ? 'bg-amber-500 shadow-amber-500/30' : 'bg-red-600 shadow-red-600/30')
                     ]">
                       {{ result.status }}
                     </span>
+
+                    <div v-if="result.status === 'Menunggu Administrasi'"
+                      class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                      <p class="text-[9px] md:text-xs font-bold text-amber-800 leading-tight">
+                        Harap segera hubungi bagian Administrasi/Keuangan Sekolah untuk penyelesaian berkas.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -329,7 +344,8 @@ const handleSearch = async () => {
               <div class="w-full flex justify-between items-end z-10">
                 <!-- Left: Academic Year -->
                 <div class="text-left font-body">
-                  <p class="text-[8px] md:text-[9px] text-outline font-bold uppercase tracking-widest mb-0.5">Tahun Ajaran
+                  <p class="text-[8px] md:text-[9px] text-outline font-bold uppercase tracking-widest mb-0.5">Tahun
+                    Ajaran
                   </p>
                   <p class="text-xs md:text-sm font-black text-primary">{{ page.props.academicYear }}</p>
                 </div>
@@ -370,6 +386,7 @@ const handleSearch = async () => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -381,6 +398,7 @@ const handleSearch = async () => {
     opacity: 0;
     transform: scale(0.9) translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -388,9 +406,26 @@ const handleSearch = async () => {
 }
 
 @keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(4px, 0, 0); }
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 </style>

@@ -12,6 +12,7 @@ export const controllers = {
     Graduation: () => import('#controllers/admin/graduation_controller'),
     Interviews: () => import('#controllers/admin/interviews_controller'),
     Majors: () => import('#controllers/admin/majors_controller'),
+    Profile: () => import('#controllers/admin/profile_controller'),
     Settings: () => import('#controllers/admin/settings_controller'),
     Users: () => import('#controllers/admin/users_controller'),
   },

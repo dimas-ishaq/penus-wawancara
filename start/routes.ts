@@ -42,6 +42,11 @@ router.group(() => {
   router.get('/admin/interviews/export', [InterviewsController, 'export']).as('admin.interviews.export')
   router.post('/admin/interviews/import', [InterviewsController, 'importInterviews']).as('admin.interviews.import')
   router.delete('/admin/interviews/:id', [InterviewsController, 'destroy']).as('admin.interviews.destroy')
+  
+  // Profile Management - All Auth Users
+  const ProfileController = () => import('#controllers/admin/profile_controller')
+  router.get('/admin/profile', [ProfileController, 'index']).as('admin.profile')
+  router.put('/admin/profile', [ProfileController, 'update']).as('admin.profile.update')
 
   // User Management - Super Admin & Admin
   const UsersController = () => import('#controllers/admin/users_controller')
@@ -68,6 +73,12 @@ router.group(() => {
     .use(middleware.role({ allowedRoles: ['super_admin'] }))
   router.post('/admin/settings/general', [SettingsController, 'updateGeneral'])
     .as('admin.settings.general')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+  router.post('/admin/settings/kop-surat', [SettingsController, 'updateKopSurat'])
+    .as('admin.settings.kop_surat')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+  router.get('/admin/settings/private/:key', [SettingsController, 'servePrivateAsset'])
+    .as('admin.settings.private')
     .use(middleware.role({ allowedRoles: ['super_admin'] }))
 
   // Graduation - Super Admin & Admin Only
@@ -131,6 +142,9 @@ router.group(() => {
   const AuditLogsController = () => import('#controllers/admin/audit_logs_controller')
   router.get('/admin/audit-logs', [AuditLogsController, 'index'])
     .as('admin.audit_logs')
+    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+  router.delete('/admin/audit-logs/clear', [AuditLogsController, 'clear'])
+    .as('admin.audit_logs.clear')
     .use(middleware.role({ allowedRoles: ['super_admin'] }))
 
   // Backups - Super Admin Only

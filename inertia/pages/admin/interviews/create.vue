@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, useForm, Link } from '@inertiajs/vue3'
+import { toast } from 'vue-sonner'
 import AdminLayout from '~/layouts/admin.vue'
 
 defineOptions({ layout: AdminLayout })
@@ -10,7 +11,11 @@ const form = useForm({
 })
 
 const submitForm = () => {
-  form.post('/admin/interviews')
+  form.post('/admin/interviews', {
+    onSuccess: () => {
+      toast.success('Pendaftar baru berhasil ditambahkan')
+    }
+  })
 }
 </script>
 

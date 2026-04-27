@@ -24,10 +24,8 @@ const toggleMenu = () => {
           <span class="material-symbols-outlined text-white text-xl md:text-2xl">school</span>
         </div>
         <div class="flex flex-col">
-          <span class="text-primary font-headline font-black text-sm md:text-lg leading-none tracking-tight">SMK PLUS PELITA
-            NUSANTARA</span>
-          <span class="text-secondary font-body font-bold text-[8px] md:text-[10px] tracking-[0.2em] uppercase leading-none">
-            Success By Character</span>
+          <span class="text-primary font-headline font-black text-sm md:text-lg leading-none tracking-tight whitespace-nowrap">{{ page.props.brandName || 'SMK PLUS PELITA NUSANTARA' }}</span>
+          <span class="text-secondary font-body font-bold text-[8px] md:text-[10px] tracking-[0.2em] uppercase leading-none"> Success By Character</span>
         </div>
       </Link>
 

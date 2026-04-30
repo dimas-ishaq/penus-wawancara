@@ -31,6 +31,7 @@ router
 const InterviewsController = () => import('#controllers/admin/interviews_controller')
 
 router.group(() => {
+  router.get('/admin', ({ response }) => response.redirect().toRoute('admin.dashboard'))
   const DashboardController = () => import('#controllers/admin/dashboard_controller')
   router.get('/admin/dashboard', [DashboardController, 'index']).as('admin.dashboard')
   router.get('/admin/interviews', [InterviewsController, 'index']).as('admin.interviews')
@@ -38,6 +39,7 @@ router.group(() => {
   router.post('/admin/interviews', [InterviewsController, 'store']).as('admin.interviews.store')
   router.get('/admin/interviews/:id/recap', [InterviewsController, 'editRecap']).as('admin.interviews.edit_recap')
   router.put('/admin/interviews/:id/recap', [InterviewsController, 'updateRecap']).as('admin.interviews.recap')
+  router.put('/admin/interviews/:id/reset', [InterviewsController, 'reset']).as('admin.interviews.reset')
   router.get('/admin/interviews/:id/pdf', [InterviewsController, 'pdf']).as('admin.interviews.pdf')
   router.get('/admin/interviews/export', [InterviewsController, 'export']).as('admin.interviews.export')
   router.post('/admin/interviews/import', [InterviewsController, 'importInterviews']).as('admin.interviews.import')

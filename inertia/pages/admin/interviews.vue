@@ -4,6 +4,7 @@ import { ref, h, watch, computed } from 'vue'
 import { utils, write, read } from 'xlsx'
 import { debounce } from 'lodash-es'
 import { toast } from 'vue-sonner'
+import { DateTime } from 'luxon'
 import DataTable from '~/components/DataTable.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import ConfirmModal from '~/components/ConfirmModal.vue'
@@ -44,8 +45,17 @@ import {
   Edit3,
   Calendar as CalendarIcon,
   Download,
-  Upload
+  Upload,
+  ListFilter,
+  X,
+  RotateCcw
 } from 'lucide-vue-next'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Label } from '@/components/ui/label'
 
 const props = defineProps<{
   interviews: {
@@ -53,6 +63,16 @@ const props = defineProps<{
     meta: any
   }
   search?: string
+  interviewers: string[]
+  filters: {
+    status?: string
+    interviewer?: string
+    startDate?: string
+    endDate?: string
+    major?: string
+  }
+  isStaff: boolean
+  majors: any[]
 }>()
 
 const page = usePage()
@@ -68,15 +88,38 @@ const students = computed(() => props.interviews.data.map(i => ({
 })))
 
 const searchQuery = ref(props.search || '')
-const startDate = ref('')
-const endDate = ref('')
-const statusFilter = ref('all')
+const startDate = ref(props.filters?.startDate || '')
+const endDate = ref(props.filters?.endDate || '')
+const statusFilter = ref(props.filters?.status || 'all')
+const interviewerFilter = ref(props.filters?.interviewer || 'all')
 const perPage = ref(props.interviews.meta.perPage.toString())
+const majorFilter = ref(props.filters?.major || 'all')
+
+const activeFiltersCount = computed(() => {
+  let count = 0
+  if (startDate.value) count++
+  if (endDate.value) count++
+  if (statusFilter.value !== 'all') count++
+  if (interviewerFilter.value !== 'all') count++
+  if (majorFilter.value !== 'all') count++
+  return count
+})
+
+const resetFilters = () => {
+  searchQuery.value = ''
+  startDate.value = ''
+  endDate.value = ''
+  statusFilter.value = 'all'
+  interviewerFilter.value = 'all'
+  majorFilter.value = 'all'
+}
 
 const handleFilter = debounce(() => {
   router.get('/admin/interviews', { 
     search: searchQuery.value,
     status: statusFilter.value !== 'all' ? statusFilter.value : undefined,
+    interviewer: interviewerFilter.value !== 'all' ? interviewerFilter.value : undefined,
+    major: majorFilter.value !== 'all' ? majorFilter.value : undefined,
     startDate: startDate.value || undefined,
     endDate: endDate.value || undefined,
     perPage: perPage.value
@@ -87,7 +130,7 @@ const handleFilter = debounce(() => {
   })
 }, 300)
 
-watch([searchQuery, statusFilter, startDate, endDate, perPage], () => {
+watch([searchQuery, statusFilter, interviewerFilter, majorFilter, startDate, endDate, perPage], () => {
   handleFilter()
 })
 
@@ -172,9 +215,13 @@ const exportToExcel = () => {
   const params = new URLSearchParams()
   if (startDate.value) params.append('startDate', startDate.value)
   if (endDate.value) params.append('endDate', endDate.value)
+  if (statusFilter.value !== 'all') params.append('status', statusFilter.value)
+  if (interviewerFilter.value !== 'all') params.append('interviewer', interviewerFilter.value)
+  if (majorFilter.value !== 'all') params.append('major', majorFilter.value)
+  if (searchQuery.value) params.append('search', searchQuery.value)
 
   // Add client timestamp (ISO format)
-  params.append('clientTime', new Date().toISOString())
+  params.append('clientTime', DateTime.now().toISO())
 
   window.location.href = `/admin/interviews/export?${params.toString()}`
 }
@@ -273,48 +320,98 @@ const confirmImport = () => {
     </div>
 
     <!-- Filters -->
-    <Card>
-      <CardHeader class="pb-3">
-        <div class="flex flex-col xl:flex-row xl:items-center gap-4">
-          <div class="relative flex-grow max-w-full xl:max-w-md">
-            <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input v-model="searchQuery" placeholder="Cari nama atau nomor pendaftaran..." class="pl-10 h-11 sm:h-10 rounded-xl" />
+    <Card class="rounded-3xl border-outline-variant/10 shadow-sm overflow-visible">
+      <CardHeader class="pb-4">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="relative flex-grow">
+            <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-outline" />
+            <Input v-model="searchQuery" placeholder="Cari nama siswa atau nomor pendaftaran..." 
+              class="pl-11 h-12 rounded-2xl border-outline-variant/20 focus:ring-primary/20 bg-surface-container-lowest" />
           </div>
 
-          <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center bg-background border border-outline-variant/20 rounded-xl sm:rounded-2xl shadow-sm overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-outline-variant/20">
-            <div class="flex items-center px-4 h-10 bg-muted/30">
-              <span class="text-[10px] font-black text-outline uppercase tracking-widest">Filter:</span>
-            </div>
-            
-            <div class="flex items-center divide-x divide-outline-variant/20">
-              <DatePicker v-model="startDate" class="h-10 w-full sm:w-32 text-xs rounded-none border-0 shadow-none focus:ring-0" placeholder="Mulai" />
-              <DatePicker v-model="endDate" class="h-10 w-full sm:w-32 text-xs rounded-none border-0 shadow-none focus:ring-0" placeholder="Selesai" />
-            </div>
+          <div class="flex items-center gap-3">
+            <Popover>
+              <PopoverTrigger as-child>
+                <Button variant="outline" class="h-12 px-5 rounded-2xl border-outline-variant/20 gap-2 relative group hover:bg-primary/5 transition-all">
+                  <ListFilter class="w-4 h-4 text-primary group-hover:rotate-12 transition-transform" />
+                  <span class="font-bold text-sm">Filter Lanjutan</span>
+                  <Badge v-if="activeFiltersCount > 0" 
+                    class="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 rounded-full bg-primary text-white text-[10px] border-2 border-surface shadow-lg">
+                    {{ activeFiltersCount }}
+                  </Badge>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="w-[320px] sm:w-[450px] p-6 rounded-3xl border-outline-variant/20 shadow-2xl mr-4" align="end">
+                <div class="space-y-6">
+                  <div class="flex items-center justify-between">
+                    <h3 class="font-black text-primary uppercase text-[10px] tracking-[0.2em]">Opsi Filter</h3>
+                    <Button variant="ghost" size="sm" @click="resetFilters" class="h-8 text-[10px] font-black uppercase tracking-widest text-outline hover:text-primary gap-1.5">
+                      <RotateCcw class="w-3 h-3" /> Reset
+                    </Button>
+                  </div>
 
-            <Select v-model="statusFilter">
-              <SelectTrigger class="w-full sm:w-36 h-10 rounded-none border-0 shadow-none focus:ring-0">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Status</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Done">Selesai</SelectItem>
-              </SelectContent>
-            </Select>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                      <Label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Rentang Tanggal</Label>
+                      <div class="flex flex-col gap-2">
+                        <DatePicker v-model="startDate" class="h-10 text-xs rounded-xl border-outline-variant/30" placeholder="Dari Tanggal" />
+                        <DatePicker v-model="endDate" class="h-10 text-xs rounded-xl border-outline-variant/30" placeholder="Sampai Tanggal" />
+                      </div>
+                    </div>
 
-            <div class="flex items-center px-4 h-10 bg-muted/10">
-              <span class="text-[10px] font-black text-outline uppercase tracking-widest mr-3">Limit:</span>
-              <Select v-model="perPage">
-                <SelectTrigger class="w-20 h-7 text-xs rounded-lg border border-outline-variant/30 shadow-none focus:ring-0 bg-background">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                </SelectContent>
-              </Select>
+                    <div class="space-y-2">
+                      <Label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Status Laporan</Label>
+                      <Select v-model="statusFilter">
+                        <SelectTrigger class="h-10 rounded-xl border-outline-variant/30 text-xs">
+                          <SelectValue placeholder="Semua Status" />
+                        </SelectTrigger>
+                        <SelectContent class="rounded-xl shadow-xl border-outline-variant/20">
+                          <SelectItem value="all">Semua Status</SelectItem>
+                          <SelectItem value="Pending">Pending</SelectItem>
+                          <SelectItem value="Done">Selesai</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div class="space-y-2">
+                      <Label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Pewawancara</Label>
+                      <Select v-model="interviewerFilter">
+                        <SelectTrigger class="h-10 rounded-xl border-outline-variant/30 text-xs">
+                          <SelectValue placeholder="Semua Pewawancara" />
+                        </SelectTrigger>
+                        <SelectContent class="rounded-xl shadow-xl border-outline-variant/20 max-h-60">
+                          <SelectItem value="all">Semua Pewawancara</SelectItem>
+                          <SelectItem v-for="name in interviewers" :key="name" :value="name">
+                            {{ name }}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div class="space-y-2">
+                      <Label class="text-[10px] font-black text-outline uppercase tracking-widest ml-1">Pilihan Jurusan</Label>
+                      <Select v-model="majorFilter">
+                        <SelectTrigger class="h-10 rounded-xl border-outline-variant/30 text-xs">
+                          <SelectValue placeholder="Semua Jurusan" />
+                        </SelectTrigger>
+                        <SelectContent class="rounded-xl shadow-xl border-outline-variant/20 max-h-60">
+                          <SelectItem value="all">Semua Jurusan</SelectItem>
+                          <SelectItem v-for="major in majors" :key="major.id" :value="major.code">
+                            {{ major.name }}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            <div v-if="activeFiltersCount > 0" class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-xl">
+              <span class="text-[10px] font-black text-primary uppercase tracking-widest">Aktif: {{ activeFiltersCount }}</span>
+              <button @click="resetFilters" class="text-primary hover:text-primary/70">
+                <X class="w-3 h-3" />
+              </button>
             </div>
           </div>
         </div>
@@ -324,11 +421,27 @@ const confirmImport = () => {
 
         <!-- Pagination -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mt-8 px-2">
-          <div class="text-[10px] sm:text-xs text-outline font-bold uppercase tracking-[0.1em] text-center sm:text-left">
-            Menampilkan 
-            <span class="text-primary">{{ ((props.interviews.meta.currentPage - 1) * props.interviews.meta.perPage) + 1 }}</span> - 
-            <span class="text-primary">{{ Math.min(props.interviews.meta.currentPage * props.interviews.meta.perPage, props.interviews.meta.total) }}</span> 
-            dari <span class="text-primary">{{ props.interviews.meta.total }}</span> data
+          <div class="flex flex-col sm:flex-row items-center gap-6">
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-muted/5 border border-outline-variant/20 rounded-xl">
+              <span class="text-[10px] font-black text-outline uppercase tracking-widest">Limit:</span>
+              <Select v-model="perPage">
+                <SelectTrigger class="w-16 h-7 text-xs rounded-lg border-0 shadow-none focus:ring-0 bg-transparent p-0">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent class="rounded-xl border-outline-variant/20 shadow-xl">
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="text-[10px] sm:text-xs text-outline font-bold uppercase tracking-[0.1em] text-center sm:text-left">
+              Menampilkan 
+              <span class="text-primary">{{ ((props.interviews.meta.currentPage - 1) * props.interviews.meta.perPage) + 1 }}</span> - 
+              <span class="text-primary">{{ Math.min(props.interviews.meta.currentPage * props.interviews.meta.perPage, props.interviews.meta.total) }}</span> 
+              dari <span class="text-primary">{{ props.interviews.meta.total }}</span> data
+            </div>
           </div>
           
           <Pagination 
@@ -341,6 +454,8 @@ const confirmImport = () => {
               page: p,
               search: searchQuery,
               status: statusFilter !== 'all' ? statusFilter : undefined,
+              interviewer: interviewerFilter !== 'all' ? interviewerFilter : undefined,
+              major: majorFilter !== 'all' ? majorFilter : undefined,
               startDate: startDate || undefined,
               endDate: endDate || undefined
             }, { preserveScroll: true, preserveState: true })"

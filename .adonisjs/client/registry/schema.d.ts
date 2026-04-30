@@ -131,12 +131,12 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/admin/interviews'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/interview').createInterviewValidator)>>
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/interview').createInterviewValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'admin.interviews.edit_recap': {
@@ -161,6 +161,18 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/interview').updateRecapValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['updateRecap']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['updateRecap']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'admin.interviews.reset': {
+    methods: ["PUT"]
+    pattern: '/admin/interviews/:id/reset'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['reset']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/interviews_controller').default['reset']>>>
     }
   }
   'admin.interviews.pdf': {

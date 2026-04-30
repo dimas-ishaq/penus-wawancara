@@ -19,6 +19,7 @@ export interface ApiDefinition {
       store: typeof routes['admin.interviews.store']
       editRecap: typeof routes['admin.interviews.edit_recap']
       recap: typeof routes['admin.interviews.recap']
+      reset: typeof routes['admin.interviews.reset']
       pdf: typeof routes['admin.interviews.pdf']
       export: typeof routes['admin.interviews.export']
       import: typeof routes['admin.interviews.import']

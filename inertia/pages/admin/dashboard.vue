@@ -10,6 +10,7 @@ const props = defineProps<{
     registrationTrend: { categories: string[], series: any[] }
     interviewStatus: { labels: string[], series: number[] }
     infoSource: { labels: string[], series: number[] }
+    majorDistribution: { labels: string[], series: number[] }
   }
 }>()
 
@@ -102,6 +103,43 @@ const infoSourceOptions = computed(() => ({
   },
   legend: { show: false }
 }))
+
+const majorDistributionOptions = computed(() => ({
+  chart: { 
+    id: 'major-distribution', 
+    fontFamily: 'Inter, sans-serif',
+    toolbar: { show: false }
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 12,
+      columnWidth: '55%',
+      distributed: true,
+      dataLabels: { position: 'top' }
+    }
+  },
+  colors: ['#003366', '#FF9900', '#22c55e', '#8b5cf6', '#ec4899', '#f59e0b'],
+  xaxis: {
+    categories: props.charts.majorDistribution.labels,
+    labels: { 
+      style: { colors: '#64748b', fontWeight: 600 },
+      rotate: -45,
+      rotateAlways: false
+    }
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => val,
+    offsetY: -20,
+    style: { fontSize: '12px', colors: ['#304758'] }
+  },
+  grid: {
+    borderColor: '#f1f5f9',
+    strokeDashArray: 4
+  },
+  legend: { show: false },
+  tooltip: { theme: 'light' }
+}))
 </script>
 
 <template>
@@ -173,35 +211,21 @@ const infoSourceOptions = computed(() => ({
       </div>
     </div>
 
-    <!-- Main Section: Recent Activity & Analysis -->
+    <!-- Analysis Section: Majors & Information Source -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <!-- Recent Activity -->
+      <!-- Major Distribution Chart -->
       <div class="lg:col-span-7 bg-surface-container-lowest p-4 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 shadow-sm">
-        <div class="flex justify-between items-center mb-8">
-          <h2 class="text-lg sm:text-xl font-bold text-primary font-headline flex items-center gap-3">
-            <span class="material-symbols-outlined text-secondary">history</span>
-            Log Aktivitas
-          </h2>
-          <button class="text-[10px] sm:text-xs font-bold text-primary hover:underline">LIHAT SEMUA</button>
+        <div class="mb-6">
+          <h2 class="text-lg sm:text-xl font-bold text-primary font-headline">Minat Pilihan Jurusan</h2>
+          <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Jurusan Paling Populer</p>
         </div>
-
-        <div class="space-y-4 sm:space-y-6">
-          <div v-for="activity in props.recentActivities" :key="activity.id"
-            class="flex items-center gap-3 sm:gap-6 p-3 sm:p-4 rounded-2xl hover:bg-surface-container-low transition-colors group">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-surface-container-low group-hover:bg-primary/10 flex items-center justify-center text-primary border border-outline-variant/20 transition-all shrink-0">
-              <span class="material-symbols-outlined text-lg sm:text-xl">person</span>
-            </div>
-            <div class="grow font-body min-w-0">
-              <p class="text-xs sm:text-sm font-bold text-primary truncate sm:whitespace-normal">
-                {{ activity.user }} <span class="font-normal text-on-surface-variant">{{ activity.action }}</span> {{ activity.student }}
-              </p>
-              <p class="text-[9px] sm:text-[10px] text-outline font-bold uppercase tracking-tighter">{{ activity.time }}</p>
-            </div>
-            <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors shrink-0">chevron_right</span>
-          </div>
-          <div v-if="props.recentActivities.length === 0" class="text-center py-8 text-on-surface-variant font-body text-sm italic">
-            Belum ada aktivitas terbaru.
-          </div>
+        <div class="h-[300px] sm:h-[350px]">
+          <ApexChart
+            type="bar"
+            height="100%"
+            :options="majorDistributionOptions"
+            :series="[{ name: 'Jumlah Peminat', data: props.charts.majorDistribution.series }]"
+          />
         </div>
       </div>
 
@@ -218,6 +242,35 @@ const infoSourceOptions = computed(() => ({
             :options="infoSourceOptions"
             :series="[{ name: 'Jumlah Siswa', data: props.charts.infoSource.series }]"
           />
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="bg-surface-container-lowest p-4 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/10 shadow-sm">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-lg sm:text-xl font-bold text-primary font-headline flex items-center gap-3">
+          <span class="material-symbols-outlined text-secondary">history</span>
+          Log Aktivitas Terkini
+        </h2>
+        <button class="text-[10px] sm:text-xs font-bold text-primary hover:underline">LIHAT SEMUA</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div v-for="activity in props.recentActivities" :key="activity.id"
+          class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/10 transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+            <span class="material-symbols-outlined text-xl">person</span>
+          </div>
+          <div class="grow font-body min-w-0">
+            <p class="text-xs sm:text-sm font-bold text-primary truncate sm:whitespace-normal">
+              {{ activity.user }} <span class="font-normal text-on-surface-variant">{{ activity.action }}</span> {{ activity.student }}
+            </p>
+            <p class="text-[9px] text-outline font-bold uppercase tracking-tighter">{{ activity.time }}</p>
+          </div>
+        </div>
+        <div v-if="props.recentActivities.length === 0" class="col-span-full text-center py-8 text-on-surface-variant font-body text-sm italic">
+          Belum ada aktivitas terbaru.
         </div>
       </div>
     </div>

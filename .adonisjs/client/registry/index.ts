@@ -84,6 +84,12 @@ const routes = {
     tokens: [{"old":"/admin/interviews/:id/recap","type":0,"val":"admin","end":""},{"old":"/admin/interviews/:id/recap","type":0,"val":"interviews","end":""},{"old":"/admin/interviews/:id/recap","type":1,"val":"id","end":""},{"old":"/admin/interviews/:id/recap","type":0,"val":"recap","end":""}],
     types: placeholder as Registry['admin.interviews.recap']['types'],
   },
+  'admin.interviews.reset': {
+    methods: ["PUT"],
+    pattern: '/admin/interviews/:id/reset',
+    tokens: [{"old":"/admin/interviews/:id/reset","type":0,"val":"admin","end":""},{"old":"/admin/interviews/:id/reset","type":0,"val":"interviews","end":""},{"old":"/admin/interviews/:id/reset","type":1,"val":"id","end":""},{"old":"/admin/interviews/:id/reset","type":0,"val":"reset","end":""}],
+    types: placeholder as Registry['admin.interviews.reset']['types'],
+  },
   'admin.interviews.pdf': {
     methods: ["GET","HEAD"],
     pattern: '/admin/interviews/:id/pdf',

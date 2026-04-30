@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Interview from '#models/interview'
 import Student from '#models/student'
+import Major from '#models/major'
 import AuditLog from '#models/audit_log'
 import { DateTime } from 'luxon'
 
@@ -72,6 +73,22 @@ export default class DashboardController {
     const sourceLabels = sourceCounts.map(s => s.infoSource || 'Tidak Diketahui')
     const sourceSeries = sourceCounts.map(s => Number((s as any).$extras.total))
 
+    // Chart: Major Distribution
+    const majorCounts = await Interview.query()
+      .select('majorChoice')
+      .count('* as total')
+      .groupBy('majorChoice')
+      .orderBy('total', 'desc')
+
+    const allMajors = await Major.all()
+    const majorMap = new Map(allMajors.map(m => [m.code, m.name]))
+
+    const majorLabels = majorCounts.map(m => {
+      const code = m.majorChoice
+      return code && majorMap.has(code) ? `${code} - ${majorMap.get(code)}` : (code || 'Belum Pilih')
+    })
+    const majorSeries = majorCounts.map(m => Number((m as any).$extras.total))
+
     return inertia.render('admin/dashboard', {
       stats,
       recentActivities: serializedActivities,
@@ -87,6 +104,10 @@ export default class DashboardController {
         infoSource: {
           labels: sourceLabels,
           series: sourceSeries
+        },
+        majorDistribution: {
+          labels: majorLabels,
+          series: majorSeries
         }
       }
     })

@@ -325,15 +325,15 @@ const handleSearch = async () => {
                   <div class="space-y-1.5 md:space-y-2">
                     <span :class="[
                       'inline-block px-5 py-1.5 md:px-10 md:py-3 text-white text-[10px] md:text-base font-black uppercase tracking-[0.2em] rounded-full shadow-lg',
-                      result.status === 'Lulus' ? 'bg-green-500 shadow-green-500/30' : (result.status === 'Menunggu Administrasi' ? 'bg-amber-500 shadow-amber-500/30' : 'bg-red-600 shadow-red-600/30')
+                      result.status === 'Lulus' ? 'bg-green-500 shadow-green-500/30' : (result.status === 'Di Tangguhkan' ? 'bg-amber-500 shadow-amber-500/30' : 'bg-red-600 shadow-red-600/30')
                     ]">
-                      {{ result.status }}
+                      {{ result.status === 'Di Tangguhkan' ? 'DITANGGUHKAN' : result.status }}
                     </span>
 
-                    <div v-if="result.status === 'Menunggu Administrasi'"
+                    <div v-if="result.status === 'Di Tangguhkan'"
                       class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
                       <p class="text-[9px] md:text-xs font-bold text-amber-800 leading-tight">
-                        Harap segera hubungi bagian Administrasi/Keuangan Sekolah untuk penyelesaian berkas.
+                        Silahkan hadir kesekolah bersama orang tua untuk informasi kelulusan
                       </p>
                     </div>
                   </div>

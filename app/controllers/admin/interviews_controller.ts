@@ -1,33 +1,54 @@
+import User from '#models/user'
 import Interview from '#models/interview'
 import Major from '#models/major'
 import type { HttpContext } from '@adonisjs/core/http'
 import { utils, write } from 'xlsx'
 import { DateTime } from 'luxon'
 import AuditLog from '#models/audit_log'
-import { updateRecapValidator } from '#validators/interview'
+import { createInterviewValidator, updateRecapValidator } from '#validators/interview'
 
 export default class InterviewsController {
-  async index({ inertia, request }: HttpContext) {
-    const page = request.input('page', 1)
-    const perPage = request.input('perPage', 20)
-    const search = request.input('search', '')?.toLowerCase()
+  async index({ inertia, request, auth }: HttpContext) {
+    const user = auth.user!
+    const { startDate, endDate, status, search, major } = request.qs()
+    let interviewer = request.qs().interviewer
 
-    const status = request.input('status')
-    const startDate = request.input('startDate')
-    const endDate = request.input('endDate')
+    // If user is staff, they can only see their own interviews
+    const isStaff = user.role === 'staff'
+    // Default interviewer is now null (All) as requested
+
+    const interviewersQuery = User.query()
+      .whereNotNull('fullName')
+      .orderBy('fullName', 'asc')
+    
+    if (isStaff) {
+      interviewersQuery.where('id', user.id)
+    }
+    
+    const staffUsers = await interviewersQuery
+    const interviewersList = [...new Set(staffUsers.map((u) => u.fullName!).filter(Boolean))]
 
     let query = Interview.query()
 
     if (search) {
+      const lowerSearch = search.toLowerCase()
       query = query.where((q) => {
-        q.whereRaw('LOWER(student_name) LIKE ?', [`%${search}%`])
-          .orWhereRaw('LOWER(school_origin) LIKE ?', [`%${search}%`])
-          .orWhere('id', 'like', `%${search}%`)
+        q.whereRaw('LOWER(student_name) LIKE ?', [`%${lowerSearch}%`])
+          .orWhereRaw('LOWER(school_origin) LIKE ?', [`%${lowerSearch}%`])
+          .orWhere('id', 'like', `%${lowerSearch}%`)
       })
     }
 
     if (status) {
       query = query.where('status', status)
+    }
+
+    if (interviewer) {
+      query = query.where('interviewer', interviewer)
+    }
+
+    if (major) {
+      query = query.where('majorChoice', major)
     }
 
     if (startDate) {
@@ -38,15 +59,29 @@ export default class InterviewsController {
       query = query.where('interviewDate', '<=', endDate)
     }
 
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 20)
+
     const interviews = await query
       .orderBy('createdAt', 'desc')
       .orderBy('id', 'asc')
       .paginate(page, perPage)
 
     interviews.baseUrl('/admin/interviews').queryString(request.qs())
+    const majors = await Major.query().orderBy('name', 'asc')
     return inertia.render('admin/interviews', {
       interviews: interviews.serialize(),
       search,
+      interviewers: interviewersList,
+      majors: majors.map((m) => m.serialize()),
+      filters: {
+        status,
+        interviewer,
+        startDate,
+        endDate,
+        major,
+      },
+      isStaff,
     })
   }
 
@@ -55,15 +90,41 @@ export default class InterviewsController {
   }
 
   async export({ request, response }: HttpContext) {
-    const { startDate, endDate } = request.qs()
+    const { startDate, endDate, status, search, major } = request.qs()
+    let interviewer = request.qs().interviewer
+
+    // If user is staff, they can only see their own interviews
+    // Default interviewer is now null (All) as requested
 
     let query = Interview.query()
 
-    if (startDate) {
-      query = query.where('created_at', '>=', DateTime.fromISO(startDate).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss'))
+    if (search) {
+      const lowerSearch = search.toLowerCase()
+      query = query.where((q) => {
+        q.whereRaw('LOWER(student_name) LIKE ?', [`%${lowerSearch}%`])
+          .orWhereRaw('LOWER(school_origin) LIKE ?', [`%${lowerSearch}%`])
+          .orWhere('id', 'like', `%${lowerSearch}%`)
+      })
     }
+
+    if (status) {
+      query = query.where('status', status)
+    }
+
+    if (interviewer) {
+      query = query.where('interviewer', interviewer)
+    }
+
+    if (major) {
+      query = query.where('majorChoice', major)
+    }
+
+    if (startDate) {
+      query = query.where('interviewDate', '>=', startDate)
+    }
+
     if (endDate) {
-      query = query.where('created_at', '<=', DateTime.fromISO(endDate).endOf('day').toFormat('yyyy-MM-dd HH:mm:ss'))
+      query = query.where('interviewDate', '<=', endDate)
     }
 
     const data = await query.orderBy('createdAt', 'desc')
@@ -169,7 +230,7 @@ export default class InterviewsController {
 
   async store({ request, response, auth }: HttpContext) {
     const user = auth.user!
-    const data = request.only(['studentName', 'schoolOrigin'])
+    const data = await createInterviewValidator.validate(request.all())
     
     // Capitalize names
     const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
@@ -211,7 +272,7 @@ export default class InterviewsController {
     let query = Interview.query().where('id', params.id)
     
     const interview = await query.firstOrFail()
-    const data = await request.validateUsing(updateRecapValidator)
+    const data = await updateRecapValidator.validate(request.all())
     const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
 
     interview.merge({
@@ -237,11 +298,56 @@ export default class InterviewsController {
       emergencyContact: data.emergencyContact,
       emergencyContactPhone: data.emergencyContactPhone,
       billingDetails: data.billingDetails,
+      academicScore: data.academicScore || 0,
+      technicalScore: data.technicalScore || 0,
+      attitudeScore: data.attitudeScore || 0,
+      totalScore: (data.academicScore || 0) + (data.technicalScore || 0) + (data.attitudeScore || 0),
       status: 'Done',
     })
 
     await interview.save()
     await AuditLog.log(user.id, 'updated', 'interview', interview.id, `Melakukan rekap/update data wawancara untuk ${interview.studentName}`)
+    return response.redirect().toRoute('admin.interviews')
+  }
+
+  async reset({ response, params, auth }: HttpContext) {
+    const user = auth.user!
+    let query = Interview.query().where('id', params.id)
+
+    const interview = await query.firstOrFail()
+
+    interview.merge({
+      interviewDate: null,
+      accompaniment: null,
+      interviewer: null,
+      infoSource: null,
+      infoSourceOther: null,
+      reasonChoosingSchool: null,
+      majorChoice: null,
+      majorReason: null,
+      longTermGoals: null,
+      characterAnswers: null,
+      skillCommitment: false,
+      entrepreneurCommitment: false,
+      religiousCommitment: false,
+      violationAgreement: false,
+      parentCommitments: null,
+      livingWith: null,
+      emergencyContact: null,
+      emergencyContactPhone: null,
+      billingDetails: null,
+      violationDetails: null,
+      notes: null,
+      status: 'Pending',
+      academicScore: 0,
+      technicalScore: 0,
+      attitudeScore: 0,
+      totalScore: 0,
+    })
+
+    await interview.save()
+    await AuditLog.log(user.id, 'reset', 'interview', interview.id, `Mereset data wawancara untuk ${interview.studentName}`)
+    
     return response.redirect().toRoute('admin.interviews')
   }
 

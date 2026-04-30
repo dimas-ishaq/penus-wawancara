@@ -17,6 +17,7 @@ export type ScannedRoutes = {
     'admin.interviews.store': { paramsTuple?: []; params?: {} }
     'admin.interviews.edit_recap': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.interviews.recap': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.interviews.reset': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.interviews.pdf': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.interviews.export': { paramsTuple?: []; params?: {} }
     'admin.interviews.import': { paramsTuple?: []; params?: {} }
@@ -125,6 +126,7 @@ export type ScannedRoutes = {
   }
   PUT: {
     'admin.interviews.recap': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.interviews.reset': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.profile.update': { paramsTuple?: []; params?: {} }
     'admin.users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.graduation.status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

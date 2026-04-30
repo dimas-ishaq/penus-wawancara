@@ -320,14 +320,15 @@ const columns: ColumnDef<any>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status?.toLowerCase().trim()
-      const variant = status === 'lulus' ? 'success' : (status === 'tidak lulus' ? 'destructive' : 'secondary')
+      const variant = status === 'lulus' ? 'success' : (status === 'tidak lulus' ? 'destructive' : (status === 'di tangguhkan' ? 'warning' : 'secondary'))
       return h(Badge, {
         variant,
         class: [
           'uppercase px-3 py-1 text-[10px] tracking-wider font-black',
           status === 'tidak lulus' ? 'bg-red-600 text-white border-transparent shadow-sm' : '',
           status === 'lulus' ? 'bg-emerald-500 text-white border-transparent shadow-sm' : '',
-          status !== 'lulus' && status !== 'tidak lulus' ? 'bg-muted text-muted-foreground border-transparent' : ''
+          status === 'di tangguhkan' ? 'bg-amber-500 text-white border-transparent shadow-sm' : '',
+          status !== 'lulus' && status !== 'tidak lulus' && status !== 'di tangguhkan' ? 'bg-muted text-muted-foreground border-transparent' : ''
         ]
       }, () => row.original.status)
     },
@@ -658,7 +659,7 @@ const columns: ColumnDef<any>[] = [
                 <SelectItem value="Pending">Pending</SelectItem>
                 <SelectItem value="Lulus">Lulus</SelectItem>
                 <SelectItem value="Tidak lulus">Tidak lulus</SelectItem>
-                <SelectItem value="Menunggu Administrasi">Menunggu Administrasi</SelectItem>
+                <SelectItem value="Di Tangguhkan">Di Tangguhkan</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -734,7 +735,7 @@ const columns: ColumnDef<any>[] = [
                 <SelectItem value="Pending">Pending</SelectItem>
                 <SelectItem value="Lulus">Lulus</SelectItem>
                 <SelectItem value="Tidak lulus">Tidak lulus</SelectItem>
-                <SelectItem value="Menunggu Administrasi">Menunggu Administrasi</SelectItem>
+                <SelectItem value="Di Tangguhkan">Di Tangguhkan</SelectItem>
               </SelectContent>
             </Select>
           </div>

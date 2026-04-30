@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { DateFormatter, type DateValue, getLocalTimeZone, parseDate } from '@internationalized/date'
 import { Calendar as CalendarIcon, Clock } from 'lucide-vue-next'
+import { DateTime } from 'luxon'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -53,7 +54,7 @@ const timeValue = computed({
     return props.modelValue.split('T')[1].substring(0, 5)
   },
   set: (val: string) => {
-    const datePart = props.modelValue?.split('T')[0] || new Date().toISOString().split('T')[0]
+    const datePart = props.modelValue?.split('T')[0] || DateTime.now().toISODate()
     emits('update:modelValue', `${datePart}T${val}`)
   }
 })

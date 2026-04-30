@@ -1,4 +1,21 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
+export const messages = {
+  'required': 'Kolom ini wajib diisi atau diklik',
+  'minLength': 'Minimal {{ min }} karakter',
+  'studentName.minLength': 'Nama siswa harus memiliki minimal 3 karakter',
+  'schoolOrigin.minLength': 'Asal sekolah harus memiliki minimal 3 karakter',
+  'accepted': 'Kolom ini wajib disetujui atau diklik',
+  'characterAnswers.homeDistance.number': 'Jarak rumah harus berupa angka',
+}
+
+vine.messagesProvider = new SimpleMessagesProvider(messages)
+
+export const createInterviewValidator = vine.compile(
+  vine.object({
+    studentName: vine.string().minLength(3),
+    schoolOrigin: vine.string().minLength(3),
+  })
+)
 
 export const updateRecapValidator = vine.compile(
   vine.object({
@@ -55,5 +72,8 @@ export const updateRecapValidator = vine.compile(
       phone: vine.string(),
       otherSource: vine.string(),
     }),
+    academicScore: vine.number().optional(),
+    technicalScore: vine.number().optional(),
+    attitudeScore: vine.number().optional(),
   })
 )

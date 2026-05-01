@@ -72,8 +72,6 @@ export const updateRecapValidator = vine.compile(
       phone: vine.string(),
       otherSource: vine.string(),
     }),
-    academicScore: vine.number().optional(),
-    technicalScore: vine.number().optional(),
-    attitudeScore: vine.number().optional(),
+
   })
 )

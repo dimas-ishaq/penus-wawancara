@@ -82,7 +82,7 @@ const students = computed(() => props.interviews.data.map(i => ({
   name: i.studentName,
   school: i.schoolOrigin,
   status: i.status,
-  score: i.totalScore || 0,
+
   createdAt: i.createdAt,
   originalData: i
 })))

@@ -121,9 +121,7 @@ const form = useForm({
     notes: props.interview.billingDetails?.notes || '',
   },
   notes: props.interview.notes || '',
-  academicScore: props.interview.academicScore || 0,
-  technicalScore: props.interview.technicalScore || 0,
-  attitudeScore: props.interview.attitudeScore || 0,
+
 })
 
 // --- Autosave state ---
@@ -289,9 +287,7 @@ const performAutoSave = () => {
     emergencyContact: form.data().emergencyContact,
     emergencyContactPhone: form.data().emergencyContactPhone,
     billingDetails: { ...form.data().billingDetails },
-    academicScore: form.data().academicScore,
-    technicalScore: form.data().technicalScore,
-    attitudeScore: form.data().attitudeScore,
+
   }
 
   saveDraftToStorage(formData)
@@ -349,9 +345,7 @@ const restoreDraft = () => {
   if (d.billingDetails) {
     form.billingDetails = { ...form.billingDetails, ...d.billingDetails }
   }
-  form.academicScore = d.academicScore || form.academicScore
-  form.technicalScore = d.technicalScore || form.technicalScore
-  form.attitudeScore = d.attitudeScore || form.attitudeScore
+
 
   toast.success('Draft autosave berhasil dipulihkan')
   hasUnsavedChanges.value = true
@@ -1703,39 +1697,7 @@ const handleReset = () => {
           </div>
         </div>
 
-        <!-- Section VII: Penilaian & Skor -->
-        <div class="space-y-8">
-          <h4
-            class="text-sm font-black text-primary uppercase tracking-[0.2em] flex items-center gap-3"
-          >
-            <span class="w-2 h-2 rounded-full bg-primary"></span>
-            VII. Penilaian & Skor
-          </h4>
 
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-outline dark:text-white/60 uppercase tracking-widest ml-1">Skor Akademik</label>
-              <input v-model.number="form.academicScore" type="number" 
-                class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl px-6 py-4 text-primary font-bold focus:border-primary focus:bg-background transition-all outline-none" />
-            </div>
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-outline dark:text-white/60 uppercase tracking-widest ml-1">Skor Teknis</label>
-              <input v-model.number="form.technicalScore" type="number"
-                class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl px-6 py-4 text-primary font-bold focus:border-primary focus:bg-background transition-all outline-none" />
-            </div>
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-outline dark:text-white/60 uppercase tracking-widest ml-1">Skor Sikap</label>
-              <input v-model.number="form.attitudeScore" type="number"
-                class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl px-6 py-4 text-primary font-bold focus:border-primary focus:bg-background transition-all outline-none" />
-            </div>
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-primary uppercase tracking-widest ml-1">Total Skor</label>
-              <div class="w-full bg-primary/10 border-2 border-primary/20 rounded-2xl px-6 py-4 text-primary font-black text-xl flex items-center justify-center">
-                {{ (form.academicScore || 0) + (form.technicalScore || 0) + (form.attitudeScore || 0) }}
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Footer -->
         <div class="pt-8 flex justify-between items-center border-t border-outline-variant/10">

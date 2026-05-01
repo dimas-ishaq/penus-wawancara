@@ -203,10 +203,8 @@ export default class InterviewsController {
         'Sumber Dana Lain': i.billingDetails?.otherSource || '-',
 
         // --- PENILAIAN & CATATAN ---
-        'Skor Akademik': i.academicScore || 0,
-        'Skor Teknis': i.technicalScore || 0,
-        'Skor Sikap': i.attitudeScore || 0,
-        'Total Skor': i.totalScore || 0,
+
+
         'Catatan Pewawancara': i.notes || '-',
         'Waktu Input Laporan': i.createdAt?.toFormat('yyyy-MM-dd HH:mm'),
       }
@@ -298,10 +296,7 @@ export default class InterviewsController {
       emergencyContact: data.emergencyContact,
       emergencyContactPhone: data.emergencyContactPhone,
       billingDetails: data.billingDetails,
-      academicScore: data.academicScore || 0,
-      technicalScore: data.technicalScore || 0,
-      attitudeScore: data.attitudeScore || 0,
-      totalScore: (data.academicScore || 0) + (data.technicalScore || 0) + (data.attitudeScore || 0),
+
       status: 'Done',
     })
 
@@ -339,10 +334,8 @@ export default class InterviewsController {
       violationDetails: null,
       notes: null,
       status: 'Pending',
-      academicScore: 0,
-      technicalScore: 0,
-      attitudeScore: 0,
-      totalScore: 0,
+
+
     })
 
     await interview.save()

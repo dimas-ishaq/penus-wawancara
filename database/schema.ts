@@ -44,12 +44,14 @@ export class ClassSchema extends BaseModel {
 }
 
 export class InterviewSchema extends BaseModel {
-  static $columns = ['accompaniment', 'billingDetails', 'characterAnswers', 'createdAt', 'emergencyContact', 'emergencyContactPhone', 'entrepreneurCommitment', 'id', 'infoSource', 'infoSourceOther', 'interviewDate', 'interviewer', 'livingWith', 'longTermGoals', 'majorChoice', 'majorReason', 'notes', 'parentCommitments', 'reasonChoosingSchool', 'religiousCommitment', 'schoolOrigin', 'skillCommitment', 'specialActivities', 'status', 'studentName', 'updatedAt', 'userId', 'violationAgreement', 'violationDetails'] as const
+  static $columns = ['academicScore', 'accompaniment', 'attitudeScore', 'billingDetails', 'characterAnswers', 'createdAt', 'emergencyContact', 'emergencyContactPhone', 'entrepreneurCommitment', 'id', 'infoSource', 'infoSourceOther', 'interviewDate', 'interviewer', 'livingWith', 'longTermGoals', 'majorChoice', 'majorReason', 'notes', 'parentCommitments', 'reasonChoosingSchool', 'religiousCommitment', 'schoolOrigin', 'skillCommitment', 'specialActivities', 'status', 'studentName', 'technicalScore', 'totalScore', 'updatedAt', 'userId', 'violationAgreement', 'violationDetails'] as const
   $columns = InterviewSchema.$columns
-
+  @column()
+  declare academicScore: number | null
   @column()
   declare accompaniment: string | null
-
+  @column()
+  declare attitudeScore: number | null
   @column()
   declare billingDetails: any | null
   @column()
@@ -98,7 +100,10 @@ export class InterviewSchema extends BaseModel {
   declare status: string
   @column()
   declare studentName: string
-
+  @column()
+  declare technicalScore: number | null
+  @column()
+  declare totalScore: number | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()

@@ -70,9 +70,10 @@ const form = useForm({
   majorChoice: props.interview.majorChoice || '',
   selectedMajor: props.interview.majorChoice ? props.interview.majorChoice.split(' - ')[0] : '',
   majorReason:
-    props.interview.majorChoice && props.interview.majorChoice.includes(' - ')
+    props.interview.majorReason ||
+    (props.interview.majorChoice && props.interview.majorChoice.includes(' - ')
       ? props.interview.majorChoice.split(' - ').slice(1).join(' - ')
-      : props.interview.majorChoice || '',
+      : ''),
   longTermGoals: props.interview.longTermGoals || '',
   // Section 2
   characterAnswers: props.interview.characterAnswers || {

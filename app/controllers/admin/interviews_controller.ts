@@ -56,7 +56,8 @@ export default class InterviewsController {
     }
 
     if (endDate) {
-      query = query.where('interviewDate', '<=', endDate)
+      const end = DateTime.fromISO(endDate).endOf('day').toSQL()
+      query = query.where('interviewDate', '<=', end!)
     }
 
     const page = request.input('page', 1)
@@ -124,21 +125,16 @@ export default class InterviewsController {
     }
 
     if (endDate) {
-      query = query.where('interviewDate', '<=', endDate)
+      const end = DateTime.fromISO(endDate).endOf('day').toSQL()
+      query = query.where('interviewDate', '<=', end!)
     }
 
     const data = await query.orderBy('createdAt', 'desc')
 
-    // Fetch all majors to map code to full name for export
-    const majors = await Major.all()
-    const majorMap = new Map(majors.map((m) => [m.code, m.name]))
 
     const worksheetData = data.map((i) => {
       // Map major abbreviation to full name if exists
-      let fullMajor = i.majorChoice
-      if (i.majorChoice && majorMap.has(i.majorChoice)) {
-        fullMajor = `${i.majorChoice} - ${majorMap.get(i.majorChoice)}`
-      }
+      const majorCode = i.majorChoice || '-'
 
       return {
         // --- PROFIL SISWA ---
@@ -153,7 +149,7 @@ export default class InterviewsController {
         // --- I. IDENTITAS & ASPIRASI ---
         'Sumber Informasi': i.infoSource || '-',
         'Alasan Pilih Sekolah': i.reasonChoosingSchool || '-',
-        'Pilihan Jurusan': fullMajor || '-',
+        'Pilihan Jurusan': majorCode,
         'Alasan Pilih Jurusan': i.majorReason || '-',
         'Cita-cita / Harapan': i.longTermGoals || '-',
 
@@ -167,6 +163,7 @@ export default class InterviewsController {
         'Siap Jalankan Disiplin': i.characterAnswers?.disciplineCommitment ? 'Y' : 'T',
         'Siap Jaga Kebersihan': i.characterAnswers?.cleanlinessCommitment ? 'Y' : 'T',
         'Aktif Seluruh Kegiatan': i.characterAnswers?.allActivityCommitment ? 'Y' : 'T',
+        'Catatan Karakter & Disiplin': i.notes || '-',
 
         // --- III-V. KOMITMEN KURIKULUM ---
         'Siap Softskill/Hardskill': i.skillCommitment ? 'Y' : 'T',
@@ -194,6 +191,7 @@ export default class InterviewsController {
         'Kontak Darurat': i.emergencyContact || '-',
         'No. HP Darurat': i.emergencyContactPhone || '-',
         'Sanggup Biaya s/d Lulus': i.parentCommitments?.financialCommitment ? 'Y' : 'T',
+        'Catatan Khusus': i.billingDetails?.notes || '-',
 
         // --- DATA PENANGGUNG JAWAB ---
         'Nama Penanggung Jawab': i.billingDetails?.name || '-',
@@ -296,7 +294,7 @@ export default class InterviewsController {
       emergencyContact: data.emergencyContact,
       emergencyContactPhone: data.emergencyContactPhone,
       billingDetails: data.billingDetails,
-
+      notes: data.notes,
       status: 'Done',
     })
 

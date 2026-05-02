@@ -204,12 +204,6 @@ const routes = {
     tokens: [{"old":"/admin/graduation/students","type":0,"val":"admin","end":""},{"old":"/admin/graduation/students","type":0,"val":"graduation","end":""},{"old":"/admin/graduation/students","type":0,"val":"students","end":""}],
     types: placeholder as Registry['admin.graduation.students.store']['types'],
   },
-  'admin.graduation.batch': {
-    methods: ["POST"],
-    pattern: '/admin/graduation/students/batch-update',
-    tokens: [{"old":"/admin/graduation/students/batch-update","type":0,"val":"admin","end":""},{"old":"/admin/graduation/students/batch-update","type":0,"val":"graduation","end":""},{"old":"/admin/graduation/students/batch-update","type":0,"val":"students","end":""},{"old":"/admin/graduation/students/batch-update","type":0,"val":"batch-update","end":""}],
-    types: placeholder as Registry['admin.graduation.batch']['types'],
-  },
   'admin.graduation.status': {
     methods: ["PUT"],
     pattern: '/admin/graduation/students/:id/status',

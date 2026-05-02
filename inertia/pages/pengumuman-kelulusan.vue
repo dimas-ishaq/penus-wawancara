@@ -305,6 +305,9 @@ const handleSearch = async () => {
                     class="font-headline font-bold text-primary text-xs md:text-base tracking-[0.05em] uppercase max-w-[240px] md:max-w-md mx-auto leading-tight">
                     Berdasarkan Surat Keputusan Kepala Sekolah
                   </h2>
+                  <p class="text-[10px] md:text-sm font-bold text-on-surface-variant font-mono mt-1">
+                    Nomor: 01.025/SMK.P-PNB/PKPD/V/2026
+                  </p>
                   <div class="h-0.5 w-12 bg-secondary mx-auto"></div>
                 </div>
 
@@ -325,12 +328,12 @@ const handleSearch = async () => {
                   <div class="space-y-1.5 md:space-y-2">
                     <span :class="[
                       'inline-block px-5 py-1.5 md:px-10 md:py-3 text-white text-[10px] md:text-base font-black uppercase tracking-[0.2em] rounded-full shadow-lg',
-                      result.status === 'Lulus' ? 'bg-green-500 shadow-green-500/30' : (result.status === 'Di Tangguhkan' ? 'bg-amber-500 shadow-amber-500/30' : 'bg-red-600 shadow-red-600/30')
+                      result.status === 'Lulus' ? 'bg-green-500 shadow-green-500/30' : (result.status === 'Ditunda' ? 'bg-amber-500 shadow-amber-500/30' : 'bg-red-600 shadow-red-600/30')
                     ]">
-                      {{ result.status === 'Di Tangguhkan' ? 'DITANGGUHKAN' : result.status }}
+                      {{ result.status === 'Ditunda' ? 'DITUNDA' : result.status }}
                     </span>
 
-                    <div v-if="result.status === 'Di Tangguhkan'"
+                    <div v-if="result.status === 'Ditunda'"
                       class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
                       <p class="text-[9px] md:text-xs font-bold text-amber-800 leading-tight">
                         Silahkan hadir kesekolah bersama orang tua untuk informasi kelulusan

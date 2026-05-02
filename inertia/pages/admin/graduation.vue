@@ -115,6 +115,10 @@ const addForm = useForm({
   status: 'Pending',
 })
 
+const importForm = useForm({
+  students: [] as any[]
+})
+
 const submitAddStudent = () => {
   addForm.post('/admin/graduation/students', {
     onSuccess: () => {
@@ -196,13 +200,6 @@ const updateStatus = (student: any, newStatus: string) => {
   })
 }
 
-const batchUpdate = (status: string) => {
-  const form = useForm({ status })
-  form.post('/admin/graduation/students/batch-update', {
-    preserveScroll: true,
-    onSuccess: () => toast.success('Berhasil update masal')
-  })
-}
 
 // Import/Export Logic (Keeping existing logic but integrating into UI)
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -233,7 +230,7 @@ const handleFileUpload = (event: Event) => {
         name: row.Nama || row.Nama_Siswa || row.nama || '',
         class: row.Kelas || row.kelas || '',
         majorCode: row.Jurusan || row.Kode_Jurusan || row.majorCode || '',
-        status: row.Status || row.status || 'Pending',
+        status: (row.Status || row.status || 'Pending').toLowerCase().trim() === 'di tangguhkan' || (row.Status || row.status || 'Pending').toLowerCase().trim() === 'ditangguhkan' ? 'Ditunda' : (row.Status || row.status || 'Pending'),
       }))
       showPreview.value = true
     } catch (err) {
@@ -243,6 +240,56 @@ const handleFileUpload = (event: Event) => {
   reader.readAsArrayBuffer(file)
   target.value = ''
 }
+
+const submitImport = () => {
+  importForm.students = previewData.value
+  importForm.post('/admin/graduation/students/import', {
+    onSuccess: () => {
+      toast.success('Data siswa berhasil diimpor')
+      showPreview.value = false
+      previewData.value = []
+    },
+    onError: () => {
+      toast.error('Gagal mengimpor data siswa')
+    }
+  })
+}
+
+const previewColumns: ColumnDef<any>[] = [
+  {
+    accessorKey: 'nisn',
+    header: 'NIS',
+    cell: ({ row }) => h('div', { class: 'font-mono text-xs font-bold' }, row.original.nisn),
+  },
+  {
+    accessorKey: 'name',
+    header: 'Nama Siswa',
+    cell: ({ row }) => h('div', { class: 'font-medium text-sm' }, row.original.name),
+  },
+  {
+    accessorKey: 'class',
+    header: 'Kelas',
+    cell: ({ row }) => h(Badge, { variant: 'outline', class: 'text-[10px] px-2 py-0' }, () => row.original.class),
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const status = row.original.status?.toLowerCase().trim()
+      const variant = status === 'lulus' ? 'success' : (status === 'tidak lulus' ? 'destructive' : (status === 'ditunda' ? 'secondary' : 'secondary'))
+      return h(Badge, {
+        variant,
+        class: [
+          'uppercase px-3 py-1 text-[10px] tracking-wider font-black',
+          status === 'tidak lulus' ? 'bg-red-600 text-white border-transparent shadow-sm' : '',
+          status === 'lulus' ? 'bg-emerald-500 text-white border-transparent shadow-sm' : '',
+          status === 'ditunda' ? 'bg-amber-500 text-white border-transparent shadow-sm' : '',
+          status !== 'lulus' && status !== 'tidak lulus' && status !== 'ditunda' ? 'bg-muted text-muted-foreground border-transparent' : ''
+        ]
+      }, () => row.original.status)
+    },
+  },
+]
 
 const s2ab = (s: string) => {
   const buf = new ArrayBuffer(s.length)
@@ -320,15 +367,15 @@ const columns: ColumnDef<any>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status?.toLowerCase().trim()
-      const variant = status === 'lulus' ? 'success' : (status === 'tidak lulus' ? 'destructive' : (status === 'di tangguhkan' ? 'warning' : 'secondary'))
+      const variant = status === 'lulus' ? 'success' : (status === 'tidak lulus' ? 'destructive' : (status === 'ditunda' ? 'secondary' : 'secondary'))
       return h(Badge, {
         variant,
         class: [
           'uppercase px-3 py-1 text-[10px] tracking-wider font-black',
           status === 'tidak lulus' ? 'bg-red-600 text-white border-transparent shadow-sm' : '',
           status === 'lulus' ? 'bg-emerald-500 text-white border-transparent shadow-sm' : '',
-          status === 'di tangguhkan' ? 'bg-amber-500 text-white border-transparent shadow-sm' : '',
-          status !== 'lulus' && status !== 'tidak lulus' && status !== 'di tangguhkan' ? 'bg-muted text-muted-foreground border-transparent' : ''
+          status === 'ditunda' ? 'bg-amber-500 text-white border-transparent shadow-sm' : '',
+          status !== 'lulus' && status !== 'tidak lulus' && status !== 'ditunda' ? 'bg-muted text-muted-foreground border-transparent' : ''
         ]
       }, () => row.original.status)
     },
@@ -393,9 +440,6 @@ const columns: ColumnDef<any>[] = [
           </Button>
           <Button variant="outline" class="flex-1 sm:flex-none rounded-xl sm:rounded-none px-3 sm:px-4 h-10 text-xs border-l sm:border-l-0" @click="exportToExcel">
             <FileSpreadsheet class="w-3.5 h-3.5 mr-2" /> Ekspor
-          </Button>
-          <Button variant="secondary" class="flex-1 sm:flex-none rounded-xl sm:rounded-none px-5 h-10 text-xs border-l sm:border-l-0" @click="batchUpdate('Lulus')">
-            <CheckCircle2 class="w-3.5 h-3.5 mr-2" /> Lulus Masal
           </Button>
         </div>
         <Button class="rounded-xl px-6 h-11 shadow-lg shadow-primary/20 flex items-center justify-center gap-2 font-black w-full sm:w-auto" @click="showAddModal = true">
@@ -597,15 +641,53 @@ const columns: ColumnDef<any>[] = [
     />
 
 
+    <!-- Import Preview Modal -->
+    <Dialog v-model:open="showPreview">
+      <DialogContent class="w-[95%] max-w-[1000px] max-h-[90vh] rounded-3xl p-0 overflow-hidden border-none shadow-2xl flex flex-col">
+        <DialogHeader class="p-6 sm:p-8 bg-white text-primary text-left shrink-0 relative overflow-hidden border-b border-outline-variant/30">
+          <div class="relative z-10 space-y-1">
+            <DialogTitle class="text-xl sm:text-2xl font-black font-headline text-primary flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary/40">upload_file</span>
+              Preview Import Data
+            </DialogTitle>
+            <DialogDescription class="text-on-surface-variant font-medium text-xs sm:text-sm max-w-md">
+              Tinjau data dari file Excel sebelum disimpan ke database. Pastikan semua kolom sudah sesuai.
+            </DialogDescription>
+          </div>
+        </DialogHeader>
+        
+        <div class="p-6 overflow-y-auto grow custom-scrollbar">
+          <DataTable :columns="previewColumns" :data="previewData" />
+        </div>
+
+        <DialogFooter class="p-6 bg-surface-container-lowest border-t shrink-0">
+          <Button type="button" variant="ghost" class="rounded-xl h-12 px-6 font-bold" @click="showPreview = false">Batal</Button>
+          <Button 
+            type="button" 
+            :disabled="importForm.processing" 
+            class="rounded-xl h-12 px-8 font-black shadow-lg shadow-primary/20"
+            @click="submitImport"
+          >
+            {{ importForm.processing ? 'Mengimpor...' : `Konfirmasi Import (${previewData.length} Data)` }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
 
     <!-- Add Student Modal -->
     <Dialog v-model:open="showAddModal">
       <DialogContent class="w-[95%] max-w-[500px] rounded-3xl p-0 overflow-hidden border-none shadow-2xl">
-        <DialogHeader class="p-6 sm:p-8 bg-primary text-white text-left">
-          <DialogTitle class="text-xl sm:text-2xl font-black font-headline">Tambah Siswa Baru</DialogTitle>
-          <DialogDescription class="text-white/80 font-medium text-xs sm:text-sm">
-            Masukkan data siswa untuk pengecekan kelulusan.
-          </DialogDescription>
+        <DialogHeader class="p-6 sm:p-8 bg-gradient-to-br from-primary to-primary-container text-white text-left relative overflow-hidden shrink-0">
+          <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+          <div class="relative z-10 space-y-1">
+            <DialogTitle class="text-xl sm:text-2xl font-black font-headline text-white flex items-center gap-3">
+              <span class="material-symbols-outlined text-white/40">person_add</span>
+              Tambah Siswa Baru
+            </DialogTitle>
+            <DialogDescription class="text-white/70 font-medium text-xs sm:text-sm max-w-md">
+              Masukkan data siswa untuk pengecekan kelulusan. Pastikan NIS/NISN sudah benar.
+            </DialogDescription>
+          </div>
         </DialogHeader>
         
         <form @submit.prevent="submitAddStudent" class="p-6 sm:p-8 space-y-4 sm:space-y-6">
@@ -659,7 +741,7 @@ const columns: ColumnDef<any>[] = [
                 <SelectItem value="Pending">Pending</SelectItem>
                 <SelectItem value="Lulus">Lulus</SelectItem>
                 <SelectItem value="Tidak lulus">Tidak lulus</SelectItem>
-                <SelectItem value="Di Tangguhkan">Di Tangguhkan</SelectItem>
+                <SelectItem value="Ditunda">Ditunda</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -677,11 +759,17 @@ const columns: ColumnDef<any>[] = [
     <!-- Edit Student Modal -->
     <Dialog v-model:open="showEditModal">
       <DialogContent class="w-[95%] max-w-[500px] rounded-3xl p-0 overflow-hidden border-none shadow-2xl">
-        <DialogHeader class="p-6 sm:p-8 bg-primary text-white text-left">
-          <DialogTitle class="text-xl sm:text-2xl font-black font-headline">Edit Data Siswa</DialogTitle>
-          <DialogDescription class="text-white/80 font-medium text-xs sm:text-sm">
-            Perbarui informasi siswa untuk pengecekan kelulusan.
-          </DialogDescription>
+        <DialogHeader class="p-6 sm:p-8 bg-gradient-to-br from-secondary to-secondary-container text-white text-left relative overflow-hidden shrink-0">
+          <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+          <div class="relative z-10 space-y-1">
+            <DialogTitle class="text-xl sm:text-2xl font-black font-headline text-white flex items-center gap-3">
+              <span class="material-symbols-outlined text-white/40">edit_square</span>
+              Edit Data Siswa
+            </DialogTitle>
+            <DialogDescription class="text-white/70 font-medium text-xs sm:text-sm max-w-md">
+              Perbarui informasi siswa untuk pengecekan kelulusan.
+            </DialogDescription>
+          </div>
         </DialogHeader>
         
         <form @submit.prevent="submitEditStudent" class="p-6 sm:p-8 space-y-4 sm:space-y-6">
@@ -735,7 +823,7 @@ const columns: ColumnDef<any>[] = [
                 <SelectItem value="Pending">Pending</SelectItem>
                 <SelectItem value="Lulus">Lulus</SelectItem>
                 <SelectItem value="Tidak lulus">Tidak lulus</SelectItem>
-                <SelectItem value="Di Tangguhkan">Di Tangguhkan</SelectItem>
+                <SelectItem value="Ditunda">Ditunda</SelectItem>
               </SelectContent>
             </Select>
           </div>

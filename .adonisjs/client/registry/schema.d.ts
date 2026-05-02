@@ -403,18 +403,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['store']>>>
     }
   }
-  'admin.graduation.batch': {
-    methods: ["POST"]
-    pattern: '/admin/graduation/students/batch-update'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['batchUpdate']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/graduation_controller').default['batchUpdate']>>>
-    }
-  }
   'admin.graduation.status': {
     methods: ["PUT"]
     pattern: '/admin/graduation/students/:id/status'

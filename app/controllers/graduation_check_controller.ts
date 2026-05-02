@@ -6,11 +6,15 @@ export default class GraduationCheckController {
   async check({ request, response }: HttpContext) {
     const nisn = request.input('nisn')
 
-    // Check if announcement is already released
     const announcementDateStr = await Setting.get('graduation_announcement_at')
     if (announcementDateStr) {
-      const announcementDate = new Date(announcementDateStr)
-      const now = new Date()
+      const { DateTime } = await import('luxon')
+      
+      // Parse target date as Asia/Jakarta
+      const announcementDate = DateTime.fromISO(announcementDateStr, { zone: 'Asia/Jakarta' })
+      // Get current time in Asia/Jakarta
+      const now = DateTime.now().setZone('Asia/Jakarta')
+
       if (now < announcementDate) {
         return response.status(403).json({ 
           error: 'Pengumuman belum dirilis secara resmi.' 

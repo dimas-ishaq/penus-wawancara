@@ -46,7 +46,6 @@ export interface ApiDefinition {
         store: typeof routes['admin.graduation.students.store']
         update: typeof routes['admin.graduation.students.update']
       }
-      batch: typeof routes['admin.graduation.batch']
       status: typeof routes['admin.graduation.status']
       destroy: typeof routes['admin.graduation.destroy']
     }

@@ -97,9 +97,6 @@ router.group(() => {
   router.post('/admin/graduation/students', [GraduationController, 'store'])
     .as('admin.graduation.students.store')
     .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
-  router.post('/admin/graduation/students/batch-update', [GraduationController, 'batchUpdate'])
-    .as('admin.graduation.batch')
-    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.put('/admin/graduation/students/:id/status', [GraduationController, 'updateStudentStatus'])
     .as('admin.graduation.status')
     .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
@@ -173,3 +170,4 @@ router
     router.post('logout', [controllers.Session, 'destroy'])
   })
   .use(middleware.auth())
+

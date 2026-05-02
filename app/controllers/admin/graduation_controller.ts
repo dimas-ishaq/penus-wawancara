@@ -1,4 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
+import db from '@adonisjs/lucid/services/db'
 import Setting from '#models/setting'
 import Student from '#models/student'
 
@@ -112,49 +113,54 @@ export default class GraduationController {
     return response.redirect().back()
   }
 
-  async batchUpdate({ request, response, session, auth }: HttpContext) {
-    const user = auth.user!
-    const status = request.input('status')
-    
-    let query = Student.query().where('status', 'Pending')
-    if (user.role !== 'super_admin') {
-      query = query.where('userId', user.id)
-    }
-
-    await query.update({ status })
-
-    session.flash('success', `Berhasil memperbarui status masal menjadi ${status}`)
-    return response.redirect().back()
-  }
 
   async importStudents({ request, response, session, auth }: HttpContext) {
     const user = auth.user!
     const studentsData = request.input('students') as any[]
-    const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
     
-    for (const data of studentsData) {
-      const name = capitalize(data.name.trim().toLowerCase())
-      // Find if exists to check ownership before update if needed,
-      // but usually updateOrCreate is fine as it uses uniq key (nisn).
-      // If we want to prevent Admin A from hijacking Admin B's student via import:
-      const existing = await Student.findBy('nisn', String(data.nisn))
-      if (existing && user.role !== 'super_admin' && existing.userId !== user.id) {
-        continue // Skip students owned by others
-      }
-
-      await Student.updateOrCreate(
-        { nisn: String(data.nisn) },
-        {
-          name,
-          class: data.class,
-          majorCode: data.majorCode || data.jurusan || null,
-          status: data.status || 'Pending',
-          userId: user.id
-        }
-      )
+    if (!studentsData || !Array.isArray(studentsData) || studentsData.length === 0) {
+      session.flash('error', 'Data siswa tidak ditemukan atau format tidak valid')
+      return response.redirect().back()
     }
 
-    session.flash('success', `Berhasil mengimpor ${studentsData.length} data siswa`)
+    const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
+    
+    try {
+      await db.transaction(async (trx) => {
+        for (const data of studentsData) {
+          if (!data.nisn || !data.name) continue
+
+          const name = capitalize(data.name.trim().toLowerCase())
+          
+          // Find if exists to check ownership
+          const existing = await Student.query({ client: trx }).where('nisn', String(data.nisn)).first()
+          if (existing && user.role !== 'super_admin' && existing.userId !== user.id) {
+            continue // Skip students owned by others
+          }
+
+          const status = (data.status || 'Pending').toString().toLowerCase().trim()
+          const normalizedStatus = status === 'di tangguhkan' || status === 'ditangguhkan' || status === 'di tunda' ? 'Ditunda' : (data.status || 'Pending')
+
+          await Student.updateOrCreate(
+            { nisn: String(data.nisn) },
+            {
+              name,
+              class: data.class || '',
+              majorCode: data.majorCode || data.jurusan || null,
+              status: normalizedStatus,
+              userId: user.id
+            },
+            { client: trx }
+          )
+        }
+      })
+
+      session.flash('success', `Berhasil mengimpor ${studentsData.length} data siswa`)
+    } catch (error) {
+      console.error('Import Error:', error)
+      session.flash('error', 'Gagal mengimpor data siswa. Terjadi kesalahan pada sistem.')
+    }
+
     return response.redirect().back()
   }
 

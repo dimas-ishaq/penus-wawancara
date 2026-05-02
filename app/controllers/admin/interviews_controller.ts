@@ -233,10 +233,15 @@ export default class InterviewsController {
     const studentName = capitalize(data.studentName.toLowerCase())
     const schoolOrigin = capitalize(data.schoolOrigin.toLowerCase())
     
-    // Generate simple ID PPDB-XXX
-    const countData = await Interview.query().count('* as total')
-    const total = Number((countData[0] as any).$extras.total || 0)
-    const nextId = `PPDB-${String(total + 1).padStart(3, '0')}`
+    // Generate ID based on MAX existing number, not count (avoids conflict when records are deleted)
+    const maxIdResult = await Interview.query().max('id as maxId')
+    const maxIdRaw: string | null = (maxIdResult[0] as any).$extras.maxId
+    let nextNum = 1
+    if (maxIdRaw) {
+      const match = maxIdRaw.match(/PPDB-(\d+)/i)
+      if (match) nextNum = parseInt(match[1]) + 1
+    }
+    const nextId = `PPDB-${String(nextNum).padStart(3, '0')}`
 
     const interview = await Interview.create({
       id: nextId,
@@ -410,10 +415,6 @@ export default class InterviewsController {
   async importInterviews({ request, response, auth, session }: HttpContext) {
     const user = auth.user!
     const studentsData = request.input('students') as any[]
-    
-    // Get current count to start incrementing IDs
-    const countData = await Interview.query().count('* as total')
-    let currentTotal = Number((countData[0] as any).$extras.total)
 
     const createdInterviews = []
     const capitalize = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase())
@@ -430,8 +431,15 @@ export default class InterviewsController {
         
       if (existing) continue
 
-      currentTotal++
-      const nextId = data.id || `PPDB-${String(currentTotal).padStart(3, '0')}`
+      // Generate ID based on MAX existing number, not count (avoids conflict when records are deleted)
+      const maxIdResult = await Interview.query().max('id as maxId')
+      const maxIdRaw: string | null = (maxIdResult[0] as any).$extras.maxId
+      let nextNum = 1
+      if (maxIdRaw) {
+        const match = maxIdRaw.match(/PPDB-(\d+)/i)
+        if (match) nextNum = parseInt(match[1]) + 1
+      }
+      const nextId = data.id || `PPDB-${String(nextNum).padStart(3, '0')}`
 
       const interview = await Interview.create({
         id: nextId,

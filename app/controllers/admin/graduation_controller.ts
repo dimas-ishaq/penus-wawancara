@@ -8,6 +8,7 @@ export default class GraduationController {
     const user = auth.user!
     const page = request.input('page', 1)
     const search = request.input('search', '')?.toLowerCase()
+    const classFilter = request.input('class', '')
     const perPage = 20
     
     let query = Student.query()
@@ -21,6 +22,10 @@ export default class GraduationController {
           .orWhereRaw('LOWER(nisn) LIKE ?', [`%${search}%`])
           .orWhereRaw('LOWER(class) LIKE ?', [`%${search}%`])
       })
+    }
+
+    if (classFilter && classFilter !== 'all') {
+      query = query.where('class', classFilter)
     }
 
     const students = await query
@@ -51,6 +56,7 @@ export default class GraduationController {
     return inertia.render('admin/graduation', {
       students: students.serialize(),
       search,
+      classFilter,
       uniqueClasses,
       allClasses: allClasses.map(c => c.serialize()),
       allMajors: allMajors.map(m => m.serialize()),

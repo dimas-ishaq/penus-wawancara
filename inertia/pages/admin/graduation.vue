@@ -86,6 +86,7 @@ const props = defineProps<{
   allClasses: any[]
   allMajors: any[]
   search?: string
+  classFilter?: string
 }>()
 
 const settingsForm = useForm({
@@ -168,7 +169,7 @@ const submitEditStudent = () => {
 
 const students = computed(() => props.students.data)
 const searchQuery = ref(props.search || '')
-const selectedClass = ref('all')
+const selectedClass = ref(props.classFilter || 'all')
 
 const handleSearch = debounce((query: string) => {
   router.get('/admin/graduation', { search: query, class: selectedClass.value !== 'all' ? selectedClass.value : undefined }, {

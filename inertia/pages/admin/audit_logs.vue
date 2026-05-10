@@ -22,21 +22,9 @@ import {
 import { Search, History, Trash2 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import ConfirmModal from '~/components/ConfirmModal.vue'
+import { Skeleton } from '@/components/ui/skeleton'
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
-
-const page = usePage()
-const user = computed(() => page.props.user as any)
-
-const showClearModal = ref(false)
-
-const clearLogs = () => {
-  router.delete('/admin/audit-logs/clear', {
-    onSuccess: () => {
-      showClearModal.value = false
-    }
-  })
-}
 import {
   Pagination,
   PaginationContent,
@@ -46,6 +34,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+
+const page = usePage()
+const user = computed(() => page.props.user as any)
+
+const showClearModal = ref(false)
+const isLoading = ref(false)
+
+const clearLogs = () => {
+  router.delete('/admin/audit-logs/clear', {
+    onSuccess: () => {
+      showClearModal.value = false
+    }
+  })
+}
+// ... other imports ...
 
 const props = defineProps<{
   logs: {
@@ -58,10 +61,12 @@ const props = defineProps<{
 const searchQuery = ref(props.search || '')
 
 const handleSearch = debounce((query: string) => {
+  isLoading.value = true
   router.get('/admin/audit-logs', { search: query }, {
     preserveState: true,
     preserveScroll: true,
-    replace: true
+    replace: true,
+    onFinish: () => { isLoading.value = false }
   })
 }, 300)
 
@@ -143,35 +148,46 @@ const getActionVariant = (action: string) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow v-for="log in props.logs.data" :key="log.id">
-                <TableCell class="font-mono text-xs">
-                  {{ formatDate(log.createdAt) }}
-                </TableCell>
-                <TableCell>
-                  <div class="flex flex-col">
-                    <span class="font-medium text-sm">{{ log.user?.fullName || 'System' }}</span>
-                    <span class="text-xs text-muted-foreground">{{ log.user?.email || '' }}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge :variant="getActionVariant(log.action)" class="uppercase text-[10px]">
-                    {{ log.action }}
-                  </Badge>
-                </TableCell>
-                <TableCell class="max-w-[300px] truncate">
-                  {{ log.details || '-' }}
-                </TableCell>
-                <TableCell class="text-right">
-                  <Badge variant="outline" class="font-mono text-[10px]">
-                    {{ log.resourceId || '-' }}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-              <TableRow v-if="props.logs.data.length === 0">
-                <TableCell colspan="5" class="h-24 text-center">
-                  Tidak ada aktivitas ditemukan.
-                </TableCell>
-              </TableRow>
+              <template v-if="isLoading">
+                <TableRow v-for="i in 5" :key="i">
+                  <TableCell><Skeleton class="h-4 w-32" /></TableCell>
+                  <TableCell><Skeleton class="h-10 w-full" /></TableCell>
+                  <TableCell><Skeleton class="h-5 w-16" /></TableCell>
+                  <TableCell><Skeleton class="h-4 w-48" /></TableCell>
+                  <TableCell class="text-right"><Skeleton class="h-5 w-12 ml-auto" /></TableCell>
+                </TableRow>
+              </template>
+              <template v-else>
+                <TableRow v-for="log in props.logs.data" :key="log.id">
+                  <TableCell class="font-mono text-xs">
+                    {{ formatDate(log.createdAt) }}
+                  </TableCell>
+                  <TableCell>
+                    <div class="flex flex-col">
+                      <span class="font-medium text-sm">{{ log.user?.fullName || 'System' }}</span>
+                      <span class="text-xs text-muted-foreground">{{ log.user?.email || '' }}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge :variant="getActionVariant(log.action)" class="uppercase text-[10px]">
+                      {{ log.action }}
+                    </Badge>
+                  </TableCell>
+                  <TableCell class="max-w-[300px] truncate">
+                    {{ log.details || '-' }}
+                  </TableCell>
+                  <TableCell class="text-right">
+                    <Badge variant="outline" class="font-mono text-[10px]">
+                      {{ log.resourceId || '-' }}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+                <TableRow v-if="props.logs.data.length === 0">
+                  <TableCell colspan="5" class="h-24 text-center">
+                    Tidak ada aktivitas ditemukan.
+                  </TableCell>
+                </TableRow>
+              </template>
             </TableBody>
           </Table>
         </div>

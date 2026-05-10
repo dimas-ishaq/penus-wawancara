@@ -9,11 +9,20 @@ import testUtils from '@adonisjs/core/services/test_utils'
  * This file is imported by the "bin/test.ts" entrypoint file
  */
 
+import { browserClient } from '@japa/browser-client'
+
 /**
  * Configure Japa plugins in the plugins array.
  * Learn more - https://japa.dev/docs/runner-config#plugins-optional
  */
-export const plugins: Config['plugins'] = [assert(), pluginAdonisJS(app), dbAssertions(app)]
+export const plugins: Config['plugins'] = [
+  assert(), 
+  pluginAdonisJS(app), 
+  dbAssertions(app),
+  browserClient({
+    runInHotReload: true,
+  })
+]
 
 /**
  * Configure lifecycle function to run before and after all the

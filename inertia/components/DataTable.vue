@@ -8,10 +8,12 @@ import {
   type SortingState,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
+import { Skeleton } from './ui/skeleton'
 
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  loading?: boolean
 }>()
 
 const sorting = ref<SortingState>([])
@@ -77,20 +79,29 @@ const table = useVueTable({
           </tr>
         </thead>
         <tbody class="divide-y divide-outline-variant/10">
-          <tr
-            v-for="row in table.getRowModel().rows"
-            :key="row.id"
-            class="hover:bg-primary/5 transition-colors group"
-          >
-            <td
-              v-for="cell in row.getVisibleCells()"
-              :key="cell.id"
-              class="px-4 sm:px-8 py-6"
-              :class="cell.column.columnDef.meta?.cellClass"
+          <template v-if="props.loading">
+            <tr v-for="i in 5" :key="i">
+              <td v-for="header in table.getHeaderGroups()[0].headers" :key="header.id" class="px-4 sm:px-8 py-6">
+                <Skeleton class="h-4 w-full" />
+              </td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr
+              v-for="row in table.getRowModel().rows"
+              :key="row.id"
+              class="hover:bg-primary/5 transition-colors group"
             >
-              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
-            </td>
-          </tr>
+              <td
+                v-for="cell in row.getVisibleCells()"
+                :key="cell.id"
+                class="px-4 sm:px-8 py-6"
+                :class="cell.column.columnDef.meta?.cellClass"
+              >
+                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>

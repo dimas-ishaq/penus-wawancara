@@ -3,11 +3,24 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AuditLogsController {
   async index({ inertia, request }: HttpContext) {
+    const search = request.input('search')
     const page = request.input('page', 1)
     const perPage = 20
 
-    const logs = await AuditLog.query()
-      .preload('user')
+    const query = AuditLog.query().preload('user')
+
+    if (search) {
+      query.where((q) => {
+        q.where('action', 'like', `%${search}%`)
+          .orWhere('details', 'like', `%${search}%`)
+          .orWhere('resource', 'like', `%${search}%`)
+          .orWhereHas('user', (userQuery) => {
+            userQuery.where('fullName', 'like', `%${search}%`)
+          })
+      })
+    }
+
+    const logs = await query
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
 

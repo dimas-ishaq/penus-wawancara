@@ -3,6 +3,7 @@ import Setting from '#models/setting'
 import app from '@adonisjs/core/services/app'
 import { join } from 'node:path'
 import fs from 'node:fs/promises'
+import GoogleDriveService from '#services/google_drive_service'
 
 export default class SettingsController {
   /**
@@ -12,13 +13,34 @@ export default class SettingsController {
     const logo = (await Setting.get('logo_path')) || '/assets/logo_penus.png'
     const kopSurat = await Setting.get('kop_surat_path')
     const brandName = await Setting.get('brand_name', 'SMK PLUS PELITA NUSANTARA')
+    const brandShortName = await Setting.get('brand_short_name', 'PENUS')
     const academicYear = await Setting.get('academic_year', '2024/2025')
     
+    const googleType = await Setting.get('google_drive_type', 'oauth')
+    const googleClientId = await Setting.get('google_drive_client_id')
+    const googleClientSecret = await Setting.get('google_drive_client_secret')
+    const googleRefreshToken = await Setting.get('google_drive_refresh_token')
+    const googleClientEmail = await Setting.get('google_drive_client_email')
+    const googlePrivateKey = await Setting.get('google_drive_private_key')
+    const googleParentFolderId = await Setting.get('google_drive_parent_folder_id')
+    const googleStudentFolderId = await Setting.get('google_drive_student_folder_id')
+    
     return inertia.render('admin/settings', {
-      logo: logo || undefined,
-      kopSurat: kopSurat || undefined,
-      academicYear: academicYear || undefined,
-      brandName: brandName || undefined,
+      logo,
+      kopSurat,
+      academicYear,
+      brandName,
+      brandShortName,
+      googleDrive: {
+        type: googleType || 'oauth',
+        clientId: googleClientId || '',
+        clientSecret: googleClientSecret || '',
+        refreshToken: googleRefreshToken || '',
+        clientEmail: googleClientEmail || '',
+        privateKey: googlePrivateKey || '',
+        parentFolderId: googleParentFolderId || '',
+        studentFolderId: googleStudentFolderId || ''
+      }
     })
   }
 
@@ -28,14 +50,16 @@ export default class SettingsController {
   async updateGeneral({ request, response, session }: HttpContext) {
     const academicYear = request.input('academicYear')
     const brandName = request.input('brandName')
+    const brandShortName = request.input('brandShortName')
 
-    if (!academicYear || !brandName) {
-      session.flash('error', 'Tahun ajaran dan Nama Brand tidak boleh kosong')
+    if (!academicYear || !brandName || !brandShortName) {
+      session.flash('error', 'Seluruh field pengaturan umum wajib diisi')
       return response.redirect().back()
     }
 
     await Setting.set('academic_year', academicYear)
     await Setting.set('brand_name', brandName)
+    await Setting.set('brand_short_name', brandShortName)
 
     session.flash('success', 'Pengaturan umum berhasil diperbarui')
     return response.redirect().back()
@@ -139,5 +163,96 @@ export default class SettingsController {
       return response.notFound()
     }
     return response.download(path)
+  }
+
+  /**
+   * Update Google Drive settings
+   */
+  async updateGoogleDrive({ request, response, session }: HttpContext) {
+    const type = request.input('type', 'oauth')
+    const clientId = request.input('clientId')
+    const clientSecret = request.input('clientSecret')
+    const refreshToken = request.input('refreshToken')
+    const clientEmail = request.input('clientEmail')
+    const privateKey = request.input('privateKey')
+    const parentFolderId = request.input('parentFolderId')
+    const studentFolderId = request.input('studentFolderId')
+
+    await Setting.set('google_drive_type', type)
+    await Setting.set('google_drive_client_id', clientId)
+    await Setting.set('google_drive_client_secret', clientSecret)
+    await Setting.set('google_drive_refresh_token', refreshToken)
+    await Setting.set('google_drive_client_email', clientEmail)
+    await Setting.set('google_drive_private_key', privateKey)
+    await Setting.set('google_drive_parent_folder_id', parentFolderId)
+    await Setting.set('google_drive_student_folder_id', studentFolderId)
+
+    session.flash('success', 'Pengaturan Google Drive berhasil diperbarui')
+    return response.redirect().back()
+  }
+
+  async verifyGoogleDrive({ request, response }: HttpContext) {
+    const type = request.input('type')
+    const clientId = request.input('clientId')
+    const clientSecret = request.input('clientSecret')
+    const refreshToken = request.input('refreshToken')
+    const clientEmail = request.input('clientEmail')
+    const privateKey = request.input('privateKey')
+    const folderId = request.input('folderId')?.trim()
+
+    console.log('Verify Input - Email:', clientEmail)
+    console.log('Verify Input - Key Presence:', !!privateKey)
+    console.log('Verify Input - Folder ID:', folderId)
+    
+    try {
+      const result = await GoogleDriveService.verify(folderId, {
+        type,
+        clientId,
+        clientSecret,
+        refreshToken,
+        clientEmail,
+        privateKey
+      })
+      return response.json(result)
+    } catch (error) {
+      return response.status(400).json({
+        success: false,
+        message: error.message
+      })
+    }
+  }
+
+  async googleAuth({ response }: HttpContext) {
+    try {
+      const url = await GoogleDriveService.getAuthUrl()
+      return response.redirect().toPath(url)
+    } catch (error) {
+      console.error('Google Auth Error:', error)
+      return response.status(400).send(error.message)
+    }
+  }
+
+  async googleCallback({ request, response, session }: HttpContext) {
+    const code = request.input('code')
+    if (!code) {
+      session.flash('error', 'Otorisasi dibatalkan atau kode tidak ditemukan.')
+      return response.redirect().toPath('/admin/settings')
+    }
+
+    try {
+      const tokens = await GoogleDriveService.getTokensFromCode(code)
+      
+      // Save refresh token to settings
+      if (tokens.refresh_token) {
+        await Setting.set('google_drive_refresh_token', tokens.refresh_token)
+      }
+      
+      session.flash('success', 'Berhasil terhubung ke Google Drive!')
+    } catch (error) {
+      console.error('Google Callback Error:', error)
+      session.flash('error', 'Gagal mendapatkan token: ' + error.message)
+    }
+
+    return response.redirect().toPath('/admin/settings')
   }
 }

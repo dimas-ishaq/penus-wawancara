@@ -3,6 +3,8 @@ import { onMounted, onUnmounted, computed } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
 import ApexChart from 'vue3-apexcharts'
 
+import { Skeleton } from '@/components/ui/skeleton'
+
 const props = defineProps<{
   stats: any[]
   recentActivities: any[]
@@ -159,19 +161,34 @@ const majorDistributionOptions = computed(() => ({
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 font-body">
-      <div v-for="stat in props.stats" :key="stat.name"
-        class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/10 shadow-sm flex flex-col justify-between group hover:bg-surface-container-high transition-all">
-        <div class="flex justify-between items-start mb-6">
-          <div :class="['w-12 h-12 rounded-2xl flex items-center justify-center text-white', stat.color]">
-            <span class="material-symbols-outlined">{{ stat.icon }}</span>
+      <template v-if="!props.stats || props.stats.length === 0">
+        <div v-for="i in 4" :key="i"
+          class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/10 shadow-sm flex flex-col justify-between">
+          <div class="flex justify-between items-start mb-6">
+            <Skeleton class="w-12 h-12 rounded-2xl" />
+            <Skeleton class="h-4 w-20" />
           </div>
-          <span class="text-xs font-bold text-on-surface-variant group-hover:text-primary tracking-tighter transition-colors">Lihat Detail</span>
+          <div class="space-y-2">
+            <Skeleton class="h-8 w-24" />
+            <Skeleton class="h-3 w-32" />
+          </div>
         </div>
-        <div>
-          <div class="text-2xl font-black text-primary tracking-tighter font-headline">{{ stat.value }}</div>
-          <div class="text-[10px] font-bold text-outline uppercase tracking-widest">{{ stat.name }}</div>
+      </template>
+      <template v-else>
+        <div v-for="stat in props.stats" :key="stat.name"
+          class="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/10 shadow-sm flex flex-col justify-between group hover:bg-surface-container-high transition-all">
+          <div class="flex justify-between items-start mb-6">
+            <div :class="['w-12 h-12 rounded-2xl flex items-center justify-center text-white', stat.color]">
+              <span class="material-symbols-outlined">{{ stat.icon }}</span>
+            </div>
+            <span class="text-xs font-bold text-on-surface-variant group-hover:text-primary tracking-tighter transition-colors">Lihat Detail</span>
+          </div>
+          <div>
+            <div class="text-2xl font-black text-primary tracking-tighter font-headline">{{ stat.value }}</div>
+            <div class="text-[10px] font-bold text-outline uppercase tracking-widest">{{ stat.name }}</div>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
 
     <!-- Charts Section -->
@@ -257,21 +274,30 @@ const majorDistributionOptions = computed(() => ({
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <div v-for="activity in props.recentActivities" :key="activity.id"
-          class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/10 transition-all group">
-          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shrink-0">
-            <span class="material-symbols-outlined text-xl">person</span>
+        <template v-if="!props.recentActivities || props.recentActivities.length === 0">
+          <div v-for="i in 3" :key="i"
+            class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/10">
+            <Skeleton class="w-10 h-10 rounded-xl shrink-0" />
+            <div class="grow space-y-2">
+              <Skeleton class="h-4 w-full" />
+              <Skeleton class="h-3 w-1/2" />
+            </div>
           </div>
-          <div class="grow font-body min-w-0">
-            <p class="text-xs sm:text-sm font-bold text-primary truncate sm:whitespace-normal">
-              {{ activity.user }} <span class="font-normal text-on-surface-variant">{{ activity.action }}</span> {{ activity.student }}
-            </p>
-            <p class="text-[9px] text-outline font-bold uppercase tracking-tighter">{{ activity.time }}</p>
+        </template>
+        <template v-else>
+          <div v-for="activity in props.recentActivities" :key="activity.id"
+            class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/10 transition-all group">
+            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+              <span class="material-symbols-outlined text-xl">person</span>
+            </div>
+            <div class="grow font-body min-w-0">
+              <p class="text-xs sm:text-sm font-bold text-primary truncate sm:whitespace-normal">
+                {{ activity.user }} <span class="font-normal text-on-surface-variant">{{ activity.action }}</span> {{ activity.student }}
+              </p>
+              <p class="text-[9px] text-outline font-bold uppercase tracking-tighter">{{ activity.time }}</p>
+            </div>
           </div>
-        </div>
-        <div v-if="props.recentActivities.length === 0" class="col-span-full text-center py-8 text-on-surface-variant font-body text-sm italic">
-          Belum ada aktivitas terbaru.
-        </div>
+        </template>
       </div>
     </div>
 

@@ -402,15 +402,12 @@ const submitRecap = () => {
     }))
     .put(`/admin/interviews/${props.interview.id}/recap`, {
       onSuccess: () => {
-        toast.success('Hasil wawancara berhasil disimpan')
         clearSavedDraft()
         hasUnsavedChanges.value = false
         lastSavedAt.value = null
         showUnsavedNotification.value = false
       },
       onError: (errors) => {
-        const errorCount = Object.keys(errors).length
-        toast.error(`Gagal menyimpan: Ada ${errorCount} data yang tidak valid atau belum diisi`)
       },
     })
 }
@@ -424,12 +421,9 @@ const handleReset = () => {
   isResetting.value = true
   form.put(`/admin/interviews/${props.interview.id}/reset`, {
     onSuccess: () => {
-      toast.success('Data wawancara berhasil dikosongkan')
       clearSavedDraft()
       isResetModalOpen.value = false
       resetConfirmationText.value = ''
-    },
-    onFinish: () => {
       isResetting.value = false
     }
   })

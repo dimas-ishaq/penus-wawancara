@@ -13,7 +13,6 @@ const form = useForm({
 const submitForm = () => {
   form.post('/admin/interviews', {
     onSuccess: () => {
-      toast.success('Pendaftar baru berhasil ditambahkan')
     }
   })
 }

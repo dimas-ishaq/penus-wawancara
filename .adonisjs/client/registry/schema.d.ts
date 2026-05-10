@@ -343,6 +343,54 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['updateKopSurat']>>>
     }
   }
+  'admin.settings.google_drive': {
+    methods: ["POST"]
+    pattern: '/admin/settings/google-drive'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['updateGoogleDrive']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['updateGoogleDrive']>>>
+    }
+  }
+  'admin.settings.google_drive.verify': {
+    methods: ["POST"]
+    pattern: '/admin/settings/google-drive/verify'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['verifyGoogleDrive']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['verifyGoogleDrive']>>>
+    }
+  }
+  'admin.settings.google_drive.auth': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/settings/google-drive/auth'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['googleAuth']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['googleAuth']>>>
+    }
+  }
+  'admin.settings.google_drive.callback': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/settings/google-drive/callback'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['googleCallback']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/settings_controller').default['googleCallback']>>>
+    }
+  }
   'admin.settings.private': {
     methods: ["GET","HEAD"]
     pattern: '/admin/settings/private/:key'
@@ -605,6 +653,114 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/backups_controller').default['destroy']>>>
+    }
+  }
+  'admin.agreement_documents.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/agreement-documents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['index']>>>
+    }
+  }
+  'admin.agreement_documents.search': {
+    methods: ["GET","HEAD"]
+    pattern: '/agreement-documents/search'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['search']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['search']>>>
+    }
+  }
+  'admin.agreement_documents.add': {
+    methods: ["POST"]
+    pattern: '/agreement-documents/add'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['add']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['add']>>>
+    }
+  }
+  'admin.agreement_documents.remove': {
+    methods: ["DELETE"]
+    pattern: '/agreement-documents/remove'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['remove']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['remove']>>>
+    }
+  }
+  'admin.agreement_documents.parent_upload': {
+    methods: ["POST"]
+    pattern: '/agreement-documents/parent-upload'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['uploadParent']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['uploadParent']>>>
+    }
+  }
+  'admin.agreement_documents.student_upload': {
+    methods: ["POST"]
+    pattern: '/agreement-documents/student-upload'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['uploadStudent']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['uploadStudent']>>>
+    }
+  }
+  'admin.agreement_documents.parent_delete': {
+    methods: ["DELETE"]
+    pattern: '/agreement-documents/:id/parent-upload'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['deleteParent']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['deleteParent']>>>
+    }
+  }
+  'admin.agreement_documents.student_delete': {
+    methods: ["DELETE"]
+    pattern: '/agreement-documents/:id/student-upload'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['deleteStudent']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['deleteStudent']>>>
+    }
+  }
+  'admin.agreement_documents.export': {
+    methods: ["GET","HEAD"]
+    pattern: '/agreement-documents/export'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['export']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin/agreement_documents_controller').default['export']>>>
     }
   }
   'graduation.check': {

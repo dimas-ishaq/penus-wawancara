@@ -224,7 +224,7 @@ export default class InterviewsController {
     return response.send(buf)
   }
 
-  async store({ request, response, auth }: HttpContext) {
+  async store({ request, response, auth, session }: HttpContext) {
     const user = auth.user!
     const data = await createInterviewValidator.validate(request.all())
     
@@ -253,6 +253,7 @@ export default class InterviewsController {
 
     await AuditLog.log(user.id, 'created', 'interview', interview.id, `Membuat data wawancara untuk ${interview.studentName}`)
 
+    session.flash('success', `Data wawancara ${studentName} berhasil dibuat`)
     return response.redirect().toRoute('admin.interviews')
   }
 

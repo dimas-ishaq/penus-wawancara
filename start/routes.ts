@@ -65,23 +65,35 @@ router.group(() => {
     .as('admin.users.destroy')
     .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
 
-  // Settings - Super Admin Only
+  // Settings - Super Admin & Admin
   const SettingsController = () => import('#controllers/admin/settings_controller')
   router.get('/admin/settings', [SettingsController, 'index'])
     .as('admin.settings')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.post('/admin/settings/logo', [SettingsController, 'updateLogo'])
     .as('admin.settings.logo')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.post('/admin/settings/general', [SettingsController, 'updateGeneral'])
     .as('admin.settings.general')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.post('/admin/settings/kop-surat', [SettingsController, 'updateKopSurat'])
     .as('admin.settings.kop_surat')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+  router.post('/admin/settings/google-drive', [SettingsController, 'updateGoogleDrive'])
+    .as('admin.settings.google_drive')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+  router.post('/admin/settings/google-drive/verify', [SettingsController, 'verifyGoogleDrive'])
+    .as('admin.settings.google_drive.verify')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+  router.get('/admin/settings/google-drive/auth', [SettingsController, 'googleAuth'])
+    .as('admin.settings.google_drive.auth')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
+  router.get('/admin/settings/google-drive/callback', [SettingsController, 'googleCallback'])
+    .as('admin.settings.google_drive.callback')
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.get('/admin/settings/private/:key', [SettingsController, 'servePrivateAsset'])
     .as('admin.settings.private')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
 
   // Graduation - Super Admin & Admin Only
   const GraduationController = () => import('#controllers/admin/graduation_controller')
@@ -137,29 +149,43 @@ router.group(() => {
     .as('admin.classes.destroy')
     .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
 
-  // Audit Logs - Super Admin Only
+  // Audit Logs - Super Admin & Admin
   const AuditLogsController = () => import('#controllers/admin/audit_logs_controller')
   router.get('/admin/audit-logs', [AuditLogsController, 'index'])
     .as('admin.audit_logs')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.delete('/admin/audit-logs/clear', [AuditLogsController, 'clear'])
     .as('admin.audit_logs.clear')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin'] })) // Only Super Admin can clear
 
-  // Backups - Super Admin Only
+  // Backups - Super Admin & Admin
   const BackupsController = () => import('#controllers/admin/backups_controller')
   router.get('/admin/backups', [BackupsController, 'index'])
     .as('admin.backups')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.post('/admin/backups', [BackupsController, 'store'])
     .as('admin.backups.store')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.get('/admin/backups/download/:name', [BackupsController, 'download'])
     .as('admin.backups.download')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin', 'admin'] }))
   router.delete('/admin/backups/:name', [BackupsController, 'destroy'])
     .as('admin.backups.destroy')
-    .use(middleware.role({ allowedRoles: ['super_admin'] }))
+    .use(middleware.role({ allowedRoles: ['super_admin'] })) // Only Super Admin can delete
+
+  // Agreement Documents Management
+  const AgreementDocumentsController = () => import('#controllers/admin/agreement_documents_controller')
+  router.group(() => {
+    router.get('/agreement-documents', [AgreementDocumentsController, 'index']).as('admin.agreement_documents.index')
+    router.get('/agreement-documents/search', [AgreementDocumentsController, 'search']).as('admin.agreement_documents.search')
+    router.post('/agreement-documents/add', [AgreementDocumentsController, 'add']).as('admin.agreement_documents.add')
+    router.delete('/agreement-documents/remove', [AgreementDocumentsController, 'remove']).as('admin.agreement_documents.remove')
+    router.post('/agreement-documents/parent-upload', [AgreementDocumentsController, 'uploadParent']).as('admin.agreement_documents.parent_upload')
+    router.post('/agreement-documents/student-upload', [AgreementDocumentsController, 'uploadStudent']).as('admin.agreement_documents.student_upload')
+    router.delete('/agreement-documents/:id/parent-upload', [AgreementDocumentsController, 'deleteParent']).as('admin.agreement_documents.parent_delete')
+    router.delete('/agreement-documents/:id/student-upload', [AgreementDocumentsController, 'deleteStudent']).as('admin.agreement_documents.student_delete')
+    router.get('/agreement-documents/export', [AgreementDocumentsController, 'export']).as('admin.agreement_documents.export')
+  }).use(middleware.role({ allowedRoles: ['super_admin', 'admin', 'staff'] }))
 }).use(middleware.auth())
 
 router.post('/pengumuman-kelulusan/check', [() => import('#controllers/graduation_check_controller'), 'check'])

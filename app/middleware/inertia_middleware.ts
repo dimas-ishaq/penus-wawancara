@@ -27,6 +27,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
     let academicYear: string | undefined = undefined
     let announcementDate: string | undefined = undefined
     let brandName: string = 'SMK PLUS PELITA NUSANTARA'
+    let brandShortName: string = 'PENUS'
     let majors: any[] = []
 
     try {
@@ -34,6 +35,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       academicYear = (await Setting.get('academic_year', '2024/2025')) ?? undefined
       announcementDate = (await Setting.get('graduation_announcement_at')) ?? undefined
       brandName = (await Setting.get('brand_name', 'SMK PLUS PELITA NUSANTARA')) ?? 'SMK PLUS PELITA NUSANTARA'
+      brandShortName = (await Setting.get('brand_short_name', 'PENUS')) ?? 'PENUS'
       
       const Major = (await import('#models/major')).default
       majors = await Major.query().orderBy('name', 'asc')
@@ -56,6 +58,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       academicYear: ctx.inertia.always(academicYear || undefined),
       announcementDate: ctx.inertia.always(announcementDate || undefined),
       brandName: ctx.inertia.always(brandName),
+      brandShortName: ctx.inertia.always(brandShortName),
       majors: ctx.inertia.always(majors.map(m => typeof m.serialize === 'function' ? m.serialize() : m)),
     }
   }

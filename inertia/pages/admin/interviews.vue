@@ -94,6 +94,7 @@ const statusFilter = ref(props.filters?.status || 'all')
 const interviewerFilter = ref(props.filters?.interviewer || 'all')
 const perPage = ref(props.interviews.meta.perPage.toString())
 const majorFilter = ref(props.filters?.major || 'all')
+const isLoading = ref(false)
 
 const activeFiltersCount = computed(() => {
   let count = 0
@@ -115,6 +116,7 @@ const resetFilters = () => {
 }
 
 const handleFilter = debounce(() => {
+  isLoading.value = true
   router.get('/admin/interviews', { 
     search: searchQuery.value,
     status: statusFilter.value !== 'all' ? statusFilter.value : undefined,
@@ -126,7 +128,8 @@ const handleFilter = debounce(() => {
   }, {
     preserveState: true,
     preserveScroll: true,
-    replace: true
+    replace: true,
+    onFinish: () => { isLoading.value = false }
   })
 }, 300)
 
@@ -146,7 +149,6 @@ const confirmDeleteInterview = () => {
   const formDelete = useForm({})
   formDelete.delete(`/admin/interviews/${interviewToDelete.value.id}`, {
     onSuccess: () => {
-      toast.success(`Data wawancara ${interviewToDelete.value.name} dihapus`)
       showDeleteModal.value = false
     }
   })
@@ -283,7 +285,6 @@ const confirmImport = () => {
   const form = useForm({ students: previewData.value })
   form.post('/admin/interviews/import', {
     onSuccess: () => {
-      toast.success('Data wawancara berhasil diimpor')
       showPreview.value = false
       previewData.value = []
     }
@@ -417,7 +418,7 @@ const confirmImport = () => {
         </div>
       </CardHeader>
       <CardContent>
-        <DataTable :columns="columns" :data="students" />
+        <DataTable :columns="columns" :data="students" :loading="isLoading" />
 
         <!-- Pagination -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mt-8 px-2">

@@ -142,6 +142,33 @@ export class SettingSchema extends BaseModel {
   declare value: string | null
 }
 
+export class StudentAgreementDocumentSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'parentAgreementFileName', 'parentAgreementFileUrl', 'parentAgreementGoogleDriveId', 'studentAgreementFileName', 'studentAgreementFileUrl', 'studentAgreementGoogleDriveId', 'studentId', 'updatedAt', 'uploadedBy'] as const
+  $columns = StudentAgreementDocumentSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare parentAgreementFileName: string | null
+  @column()
+  declare parentAgreementFileUrl: string | null
+  @column()
+  declare parentAgreementGoogleDriveId: string | null
+  @column()
+  declare studentAgreementFileName: string | null
+  @column()
+  declare studentAgreementFileUrl: string | null
+  @column()
+  declare studentAgreementGoogleDriveId: string | null
+  @column()
+  declare studentId: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare uploadedBy: number | null
+}
+
 export class StudentSchema extends BaseModel {
   static $columns = ['class', 'createdAt', 'id', 'majorCode', 'name', 'nisn', 'status', 'updatedAt', 'userId'] as const
   $columns = StudentSchema.$columns

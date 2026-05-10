@@ -5,6 +5,8 @@ import { toast } from 'vue-sonner'
 
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 
+import { Skeleton } from '@/components/ui/skeleton'
+
 const props = defineProps<{
   classes: any[]
   majors: any[]
@@ -43,14 +45,12 @@ const submit = () => {
     form.put(`/admin/classes/${selectedClassId.value}`, {
       onSuccess: () => {
         isModalOpen.value = false
-        toast.success('Kelas berhasil diperbarui')
       }
     })
   } else {
     form.post('/admin/classes', {
       onSuccess: () => {
         isModalOpen.value = false
-        toast.success('Kelas berhasil ditambahkan')
       }
     })
   }
@@ -65,7 +65,6 @@ const confirmDelete = () => {
   form.delete(`/admin/classes/${classToDelete.value.id}`, {
     onSuccess: () => {
       isDeleteModalOpen.value = false
-      toast.success('Kelas berhasil dihapus')
     }
   })
 }
@@ -109,38 +108,57 @@ const filteredClasses = computed(() => {
 
     <!-- Classes Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="cls in filteredClasses" :key="cls.id"
-        class="bg-card p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
-          <span class="material-symbols-outlined text-7xl sm:text-8xl">meeting_room</span>
-        </div>
-
-        <div class="relative z-10 space-y-4 sm:space-y-6">
+      <template v-if="!props.classes || props.classes.length === 0">
+        <div v-for="i in 3" :key="i"
+          class="bg-card p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/30 shadow-sm space-y-6">
           <div class="flex justify-between items-start">
-            <span
-              class="px-4 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/10">
-              {{ cls.name }}
-            </span>
-            <div class="flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
-              <button @click="openEditModal(cls)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-primary hover:bg-primary/10 transition-all flex items-center justify-center">
-                <span class="material-symbols-outlined text-xl">edit</span>
-              </button>
-              <button @click="openDeleteModal(cls)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-error hover:bg-error/10 transition-all flex items-center justify-center">
-                <span class="material-symbols-outlined text-xl">delete</span>
-              </button>
+            <Skeleton class="h-6 w-16 rounded-full" />
+            <div class="flex gap-2">
+              <Skeleton class="w-10 h-10 rounded-xl" />
+              <Skeleton class="w-10 h-10 rounded-xl" />
             </div>
           </div>
-
-          <h3 class="text-lg sm:text-xl font-black text-primary font-headline leading-tight tracking-tight">
-            {{ cls.majorName }}
-          </h3>
-
+          <Skeleton class="h-8 w-3/4" />
           <div class="pt-4 border-t border-outline-variant/10 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-[10px] font-bold text-outline uppercase tracking-widest">Ruang Kelas Aktif</span>
+            <Skeleton class="w-2 h-2 rounded-full" />
+            <Skeleton class="h-3 w-24" />
           </div>
         </div>
-      </div>
+      </template>
+      <template v-else>
+        <div v-for="cls in filteredClasses" :key="cls.id"
+          class="bg-card p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all group relative overflow-hidden">
+          <div class="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+            <span class="material-symbols-outlined text-7xl sm:text-8xl">meeting_room</span>
+          </div>
+
+          <div class="relative z-10 space-y-4 sm:space-y-6">
+            <div class="flex justify-between items-start">
+              <span
+                class="px-4 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/10">
+                {{ cls.name }}
+              </span>
+              <div class="flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                <button @click="openEditModal(cls)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-primary hover:bg-primary/10 transition-all flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">edit</span>
+                </button>
+                <button @click="openDeleteModal(cls)" class="w-10 h-10 rounded-xl bg-surface-container-high text-outline hover:text-error hover:bg-error/10 transition-all flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">delete</span>
+                </button>
+              </div>
+            </div>
+
+            <h3 class="text-lg sm:text-xl font-black text-primary font-headline leading-tight tracking-tight">
+              {{ cls.majorName }}
+            </h3>
+
+            <div class="pt-4 border-t border-outline-variant/10 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-[10px] font-bold text-outline uppercase tracking-widest">Ruang Kelas Aktif</span>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
 
     <!-- Empty State -->

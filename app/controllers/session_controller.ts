@@ -36,6 +36,10 @@ export default class SessionController {
 
       // 3. Login jika valid
       await auth.use('web').login(user)
+      
+      const AuditLog = (await import('#models/audit_log')).default
+      await AuditLog.log(user.id, 'login', 'auth', String(user.id), 'Berhasil masuk ke sistem')
+      
       return response.redirect().toRoute('admin.dashboard')
     } catch (error) {
       console.error('Login error detail:', error)
@@ -45,6 +49,11 @@ export default class SessionController {
   }
 
   async destroy({ auth, response }: HttpContext) {
+    const user = auth.user
+    if (user) {
+      const AuditLog = (await import('#models/audit_log')).default
+      await AuditLog.log(user.id, 'logout', 'auth', String(user.id), 'Keluar dari sistem')
+    }
     await auth.use('web').logout()
     response.redirect().toRoute('session.create')
   }

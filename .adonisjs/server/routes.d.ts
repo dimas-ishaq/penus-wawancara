@@ -32,6 +32,10 @@ export type ScannedRoutes = {
     'admin.settings.logo': { paramsTuple?: []; params?: {} }
     'admin.settings.general': { paramsTuple?: []; params?: {} }
     'admin.settings.kop_surat': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.verify': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.auth': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.callback': { paramsTuple?: []; params?: {} }
     'admin.settings.private': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
     'admin.graduation': { paramsTuple?: []; params?: {} }
     'admin.graduation.settings': { paramsTuple?: []; params?: {} }
@@ -54,6 +58,15 @@ export type ScannedRoutes = {
     'admin.backups.store': { paramsTuple?: []; params?: {} }
     'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
     'admin.backups.destroy': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
+    'admin.agreement_documents.index': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.search': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.add': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.remove': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.parent_upload': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.student_upload': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.parent_delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.agreement_documents.student_delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.agreement_documents.export': { paramsTuple?: []; params?: {} }
     'graduation.check': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
   }
@@ -73,6 +86,8 @@ export type ScannedRoutes = {
     'admin.profile': { paramsTuple?: []; params?: {} }
     'admin.users': { paramsTuple?: []; params?: {} }
     'admin.settings': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.auth': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.callback': { paramsTuple?: []; params?: {} }
     'admin.settings.private': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
     'admin.graduation': { paramsTuple?: []; params?: {} }
     'admin.majors': { paramsTuple?: []; params?: {} }
@@ -80,6 +95,9 @@ export type ScannedRoutes = {
     'admin.audit_logs': { paramsTuple?: []; params?: {} }
     'admin.backups': { paramsTuple?: []; params?: {} }
     'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
+    'admin.agreement_documents.index': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.search': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.export': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
@@ -97,6 +115,8 @@ export type ScannedRoutes = {
     'admin.profile': { paramsTuple?: []; params?: {} }
     'admin.users': { paramsTuple?: []; params?: {} }
     'admin.settings': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.auth': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.callback': { paramsTuple?: []; params?: {} }
     'admin.settings.private': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
     'admin.graduation': { paramsTuple?: []; params?: {} }
     'admin.majors': { paramsTuple?: []; params?: {} }
@@ -104,6 +124,9 @@ export type ScannedRoutes = {
     'admin.audit_logs': { paramsTuple?: []; params?: {} }
     'admin.backups': { paramsTuple?: []; params?: {} }
     'admin.backups.download': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
+    'admin.agreement_documents.index': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.search': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.export': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'session.store': { paramsTuple?: []; params?: {} }
@@ -113,12 +136,17 @@ export type ScannedRoutes = {
     'admin.settings.logo': { paramsTuple?: []; params?: {} }
     'admin.settings.general': { paramsTuple?: []; params?: {} }
     'admin.settings.kop_surat': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive': { paramsTuple?: []; params?: {} }
+    'admin.settings.google_drive.verify': { paramsTuple?: []; params?: {} }
     'admin.graduation.settings': { paramsTuple?: []; params?: {} }
     'admin.graduation.import': { paramsTuple?: []; params?: {} }
     'admin.graduation.students.store': { paramsTuple?: []; params?: {} }
     'admin.majors.store': { paramsTuple?: []; params?: {} }
     'admin.classes.store': { paramsTuple?: []; params?: {} }
     'admin.backups.store': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.add': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.parent_upload': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.student_upload': { paramsTuple?: []; params?: {} }
     'graduation.check': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
   }
@@ -140,6 +168,9 @@ export type ScannedRoutes = {
     'admin.classes.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.audit_logs.clear': { paramsTuple?: []; params?: {} }
     'admin.backups.destroy': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
+    'admin.agreement_documents.remove': { paramsTuple?: []; params?: {} }
+    'admin.agreement_documents.parent_delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.agreement_documents.student_delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

@@ -27,12 +27,15 @@ const page = usePage()
 const userData = computed(() => props.users.data)
 
 const searchQuery = ref(props.search || '')
+const isLoading = ref(false)
 
 const handleSearch = debounce((query: string) => {
+  isLoading.value = true
   router.get('/admin/users', { search: query }, {
     preserveState: true,
     preserveScroll: true,
-    replace: true
+    replace: true,
+    onFinish: () => { isLoading.value = false }
   })
 }, 300)
 
@@ -188,7 +191,7 @@ const columns: ColumnDef<any>[] = [
     </div>
 
     <div class="bg-surface rounded-[32px] border border-outline-variant/30 overflow-hidden shadow-sm">
-      <DataTable :columns="columns" :data="userData" />
+      <DataTable :columns="columns" :data="userData" :loading="isLoading" />
     </div>
 
     <!-- Pagination -->

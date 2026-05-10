@@ -19,12 +19,8 @@ const form = useForm({
 const submit = () => {
   form.put('/admin/profile', {
     onSuccess: () => {
-      toast.success('Profil berhasil diperbarui')
       form.password = ''
       form.password_confirmation = ''
-    },
-    onError: () => {
-      toast.error('Gagal memperbarui profil. Periksa kembali inputan Anda.')
     }
   })
 }

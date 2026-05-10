@@ -5,6 +5,7 @@
 
 export const controllers = {
   admin: {
+    AgreementDocuments: () => import('#controllers/admin/agreement_documents_controller'),
     AuditLogs: () => import('#controllers/admin/audit_logs_controller'),
     Backups: () => import('#controllers/admin/backups_controller'),
     Classes: () => import('#controllers/admin/classes_controller'),

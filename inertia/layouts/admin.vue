@@ -1,12 +1,24 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { usePage, Link } from '@inertiajs/vue3'
-import { Toaster } from 'vue-sonner'
+import { Toaster, toast } from 'vue-sonner'
 import Sidebar from '../components/Sidebar.vue'
+import { watch } from 'vue'
 
 const page = usePage()
 const isSidebarOpen = ref(false)
+const isSidebarCollapsed = ref(false)
 const isDark = ref(false)
+
+// Handle Flash Messages
+watch(() => (page.props.flash as any), (flash) => {
+  if (flash?.success) {
+    toast.success(flash.success)
+  }
+  if (flash?.error) {
+    toast.error(flash.error)
+  }
+}, { immediate: true, deep: true })
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
@@ -19,31 +31,47 @@ const toggleTheme = () => {
   }
 }
 
+const toggleCollapse = () => {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value
+  localStorage.setItem('sidebar_collapsed', isSidebarCollapsed.value ? 'true' : 'false')
+}
+
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme')
   if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     isDark.value = true
     document.documentElement.classList.add('dark')
   }
+
+  const savedCollapse = localStorage.getItem('sidebar_collapsed')
+  if (savedCollapse === 'true') {
+    isSidebarCollapsed.value = true
+  }
 })
 </script>
 
 <template>
   <div class="min-h-screen bg-background flex text-on-surface selection:bg-primary/10 selection:text-primary transition-colors duration-300">
-    <Sidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
+    <Sidebar :is-open="isSidebarOpen" :collapsed="isSidebarCollapsed" @close="isSidebarOpen = false" />
 
     <!-- Main Content -->
-    <div class="flex-grow flex flex-col min-h-screen relative overflow-x-hidden">
+    <div class="flex-grow flex flex-col min-h-screen relative overflow-x-hidden transition-all duration-500 bg-surface-container-lowest/50">
       <!-- Top Header -->
-      <header class="h-20 border-b border-outline-variant/30 flex items-center justify-between px-4 sm:px-8 bg-background/80 backdrop-blur-md sticky top-0 z-40">
+      <header class="h-20 border-b border-outline-variant/20 flex items-center justify-between px-4 sm:px-8 bg-surface-container-lowest/80 backdrop-blur-xl sticky top-0 z-40 shadow-sm">
         <div class="flex items-center gap-2 sm:gap-4">
-          <button @click="isSidebarOpen = true" class="lg:hidden text-primary w-10 h-10 rounded-full hover:bg-primary/5 flex items-center justify-center transition-colors">
+          <button @click="isSidebarOpen = true" class="lg:hidden text-primary w-11 h-11 rounded-2xl bg-primary/5 flex items-center justify-center transition-all hover:bg-primary hover:text-white">
             <span class="material-symbols-outlined">menu</span>
           </button>
+
+          <!-- Collapse Toggle (Desktop) -->
+          <button @click="toggleCollapse" class="hidden lg:flex text-primary w-11 h-11 rounded-2xl bg-primary/5 items-center justify-center transition-all duration-300 hover:bg-primary/10"
+            :class="isSidebarCollapsed ? 'rotate-180' : ''">
+            <span class="material-symbols-outlined text-2xl">{{ isSidebarCollapsed ? 'last_page' : 'first_page' }}</span>
+          </button>
           
-          <Link href="/" class="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 bg-surface-container-high rounded-xl text-primary hover:bg-primary hover:text-white transition-all text-xs font-bold shadow-sm group">
-            <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">home</span>
-            <span class="hidden md:inline">Beranda</span>
+          <Link href="/" class="hidden sm:flex items-center gap-2 px-4 py-2.5 bg-surface-container-high rounded-2xl text-primary hover:bg-primary hover:text-white transition-all text-xs font-black shadow-sm group">
+            <span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">home</span>
+            <span class="hidden md:inline uppercase tracking-widest">Beranda</span>
           </Link>
         </div>
         

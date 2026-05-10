@@ -1,7 +1,8 @@
 import { InterviewSchema } from '#database/schema'
-import { belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { belongsTo, column, hasOne } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
+import StudentAgreementDocument from '#models/student_agreement_document'
 
 export default class Interview extends InterviewSchema {
   @column({
@@ -66,4 +67,9 @@ export default class Interview extends InterviewSchema {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @hasOne(() => StudentAgreementDocument, {
+    foreignKey: 'studentId',
+  })
+  declare agreementDocument: HasOne<StudentAgreementDocument>
 }

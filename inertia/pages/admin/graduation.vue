@@ -103,7 +103,7 @@ watch([datePart, timePart], ([newDate, newTime]) => {
 
 const submitSettings = () => {
   settingsForm.post('/admin/graduation/settings', {
-    onSuccess: () => toast.success('Waktu pengumuman berhasil disimpan')
+    onSuccess: () => {}
   })
 }
 
@@ -123,12 +123,8 @@ const importForm = useForm({
 const submitAddStudent = () => {
   addForm.post('/admin/graduation/students', {
     onSuccess: () => {
-      toast.success('Siswa berhasil ditambahkan')
       showAddModal.value = false
       addForm.reset()
-    },
-    onError: (errors) => {
-      if (errors.nisn) toast.error(errors.nisn)
     }
   })
 }
@@ -157,12 +153,8 @@ const submitEditStudent = () => {
   if (!selectedStudentId.value) return
   editForm.put(`/admin/graduation/students/${selectedStudentId.value}`, {
     onSuccess: () => {
-      toast.success('Data siswa berhasil diperbarui')
       showEditModal.value = false
       editForm.reset()
-    },
-    onError: (errors) => {
-      if (errors.nisn) toast.error(errors.nisn)
     }
   })
 }
@@ -170,12 +162,15 @@ const submitEditStudent = () => {
 const students = computed(() => props.students.data)
 const searchQuery = ref(props.search || '')
 const selectedClass = ref(props.classFilter || 'all')
+const isLoading = ref(false)
 
 const handleSearch = debounce((query: string) => {
+  isLoading.value = true
   router.get('/admin/graduation', { search: query, class: selectedClass.value !== 'all' ? selectedClass.value : undefined }, {
     preserveState: true,
     preserveScroll: true,
-    replace: true
+    replace: true,
+    onFinish: () => { isLoading.value = false }
   })
 }, 300)
 
@@ -184,10 +179,12 @@ watch(searchQuery, (newVal) => {
 })
 
 watch(selectedClass, (newVal) => {
+  isLoading.value = true
   router.get('/admin/graduation', { search: searchQuery.value, class: newVal !== 'all' ? newVal : undefined }, {
     preserveState: true,
     preserveScroll: true,
-    replace: true
+    replace: true,
+    onFinish: () => { isLoading.value = false }
   })
 })
 
@@ -197,7 +194,7 @@ const updateStatus = (student: any, newStatus: string) => {
   const form = useForm({ status: newStatus })
   form.put(`/admin/graduation/students/${student.id}/status`, {
     preserveScroll: true,
-    onSuccess: () => toast.success(`Status ${student.name} diperbarui`)
+    onSuccess: () => {}
   })
 }
 
@@ -246,12 +243,8 @@ const submitImport = () => {
   importForm.students = previewData.value
   importForm.post('/admin/graduation/students/import', {
     onSuccess: () => {
-      toast.success('Data siswa berhasil diimpor')
       showPreview.value = false
       previewData.value = []
-    },
-    onError: () => {
-      toast.error('Gagal mengimpor data siswa')
     }
   })
 }
@@ -341,7 +334,6 @@ const confirmDeleteStudent = () => {
   const form = useForm({})
   form.delete(`/admin/graduation/students/${studentToDelete.value.id}`, {
     onSuccess: () => {
-      toast.success(`Data siswa ${studentToDelete.value.name} dihapus`)
       showDeleteModal.value = false
     }
   })
@@ -585,7 +577,7 @@ const columns: ColumnDef<any>[] = [
         </div>
       </CardHeader>
       <CardContent>
-        <DataTable :columns="columns" :data="students" />
+        <DataTable :columns="columns" :data="students" :loading="isLoading" />
 
         <!-- Pagination -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mt-8 px-2">

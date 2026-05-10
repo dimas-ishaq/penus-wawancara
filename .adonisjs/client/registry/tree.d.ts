@@ -37,6 +37,11 @@ export interface ApiDefinition {
       logo: typeof routes['admin.settings.logo']
       general: typeof routes['admin.settings.general']
       kopSurat: typeof routes['admin.settings.kop_surat']
+      googleDrive: typeof routes['admin.settings.google_drive'] & {
+        verify: typeof routes['admin.settings.google_drive.verify']
+        auth: typeof routes['admin.settings.google_drive.auth']
+        callback: typeof routes['admin.settings.google_drive.callback']
+      }
       private: typeof routes['admin.settings.private']
     }
     graduation: typeof routes['admin.graduation'] & {
@@ -66,6 +71,17 @@ export interface ApiDefinition {
       store: typeof routes['admin.backups.store']
       download: typeof routes['admin.backups.download']
       destroy: typeof routes['admin.backups.destroy']
+    }
+    agreementDocuments: {
+      index: typeof routes['admin.agreement_documents.index']
+      search: typeof routes['admin.agreement_documents.search']
+      add: typeof routes['admin.agreement_documents.add']
+      remove: typeof routes['admin.agreement_documents.remove']
+      parentUpload: typeof routes['admin.agreement_documents.parent_upload']
+      studentUpload: typeof routes['admin.agreement_documents.student_upload']
+      parentDelete: typeof routes['admin.agreement_documents.parent_delete']
+      studentDelete: typeof routes['admin.agreement_documents.student_delete']
+      export: typeof routes['admin.agreement_documents.export']
     }
   }
   graduation: {

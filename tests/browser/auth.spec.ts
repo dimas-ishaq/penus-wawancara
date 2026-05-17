@@ -22,8 +22,8 @@ test.group('Auth Login Browser', () => {
 
     // Assert redirection to dashboard
     await page.waitForNavigation()
-    await page.assertPathIs('/admin/dashboard')
-    await page.assertTextContains('Dashboard')
+    await page.assertPath('/admin/dashboard')
+    await page.assertTextContains('body', 'Dashboard')
   })
 
   test('user sees error message on failed login', async ({ visit }) => {
@@ -33,6 +33,6 @@ test.group('Auth Login Browser', () => {
     await page.type('input[name="password"]', 'wrongpassword')
     await page.click('button[type="submit"]')
 
-    await page.assertTextContains('Email atau password salah.')
+    await page.assertTextContains('body', 'Email atau password salah.')
   })
 })

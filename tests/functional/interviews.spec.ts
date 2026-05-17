@@ -2,7 +2,7 @@ import { test } from '@japa/runner'
 import User from '#models/user'
 import Interview from '#models/interview'
 
-test.group('Interviews Functional', (group) => {
+test.group('Interviews Functional', () => {
   test('list interviews for authenticated user', async ({ client }) => {
     const user = await User.first()
     if (!user) return

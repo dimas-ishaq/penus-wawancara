@@ -1,0 +1,38 @@
+﻿app/exports/agreement_document_export.ts(2,10): error TS2305: Module '"@adonisjs/core/http"' has no exported member 'Response'.
+app/models/interview.ts(74,37): error TS2344: Type 'StudentAgreementDocument' does not satisfy the constraint 'LucidModel'.
+  Type 'StudentAgreementDocument' is missing the following properties from type 'LucidModel': booted, $columnsDefinitions, $relationsDefinitions, $computedDefinitions, and 47 more.
+app/models/student_agreement_document.ts(44,20): error TS2740: Type 'Promise<typeof Interview>' is missing the following properties from type 'LucidModel': booted, $columnsDefinitions, $relationsDefinitions, $computedDefinitions, and 47 more.
+app/models/student_agreement_document.ts(47,32): error TS2344: Type 'Interview' does not satisfy the constraint 'LucidModel'.
+  Type 'Interview' is missing the following properties from type 'LucidModel': booted, $columnsDefinitions, $relationsDefinitions, $computedDefinitions, and 47 more.
+app/models/student_agreement_document.ts(52,31): error TS2344: Type 'User' does not satisfy the constraint 'LucidModel'.
+  Type 'User' is missing the following properties from type 'LucidModel': booted, $columnsDefinitions, $relationsDefinitions, $computedDefinitions, and 47 more.
+app/repositories/agreement_document_repository.ts(45,8): error TS2554: Expected 2-4 arguments, but got 1.
+app/services/google_drive_service.ts(160,28): error TS18046: 'error' is of type 'unknown'.
+app/services/google_drive_service.ts(177,21): error TS18046: 'error' is of type 'unknown'.
+app/services/google_drive_service.ts(251,23): error TS18046: 'error' is of type 'unknown'.
+scratch/debug_import.ts(11,4): error TS2339: Property 'run' does not exist on type 'Ignitor'.
+tests/bootstrap.ts(25,5): error TS2353: Object literal may only specify known properties, and 'runInHotReload' does not exist in type 'PluginConfig'.
+tests/browser/auth.spec.ts(25,16): error TS2551: Property 'assertPathIs' does not exist on type 'Page'. Did you mean 'assertPath'?
+tests/browser/interviews.spec.ts(37,11): error TS6133: 'interview' is declared but its value is never read.
+tests/functional/agreement_documents.spec.ts(15,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<never, any, any>'.
+tests/functional/agreement_documents.spec.ts(27,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<never, any, any>'.
+tests/functional/auth.spec.ts(3,1): error TS6133: 'hash' is declared but its value is never read.
+tests/functional/auth.spec.ts(13,14): error TS2339: Property 'assertInertiaComponent' does not exist on type 'ApiResponse<any>'.
+tests/functional/auth.spec.ts(23,14): error TS2339: Property 'assertSessionMissed' does not exist on type 'ApiResponse<any>'.
+tests/functional/auth.spec.ts(24,14): error TS2339: Property 'assertFlashMessage' does not exist on type 'ApiResponse<any>'.
+tests/functional/auth.spec.ts(44,14): error TS2551: Property 'assertRedirectsToRoute' does not exist on type 'ApiResponse<any>'. Did you mean 'assertRedirectsTo'?
+tests/functional/auth.spec.ts(45,14): error TS2339: Property 'assertSessionExists' does not exist on type 'ApiResponse<any>'.
+tests/functional/classes.spec.ts(12,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<never, any, any>'.
+tests/functional/classes.spec.ts(27,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<any, any, any>'.
+tests/functional/graduation.spec.ts(3,31): error TS2307: Cannot find module '#models/graduation_student' or its corresponding type declarations.
+tests/functional/graduation.spec.ts(12,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<never, any, any>'.
+tests/functional/graduation.spec.ts(34,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<any, any, any>'.
+tests/functional/interviews.spec.ts(5,38): error TS6133: 'group' is declared but its value is never read.
+tests/functional/interviews.spec.ts(12,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<never, any, any>'.
+tests/functional/interviews.spec.ts(28,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<any, any, any>'.
+tests/functional/interviews.spec.ts(51,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<any, any, any>'.
+tests/functional/majors.spec.ts(12,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<never, any, any>'.
+tests/functional/majors.spec.ts(28,8): error TS2339: Property 'loginAs' does not exist on type 'ApiRequest<any, any, any>'.
+tests/unit/agreement_document_service.spec.ts(2,1): error TS6133: 'AgreementDocumentService' is declared but its value is never read.
+tests/unit/agreement_document_service.spec.ts(3,1): error TS6133: 'AgreementDocumentRepository' is declared but its value is never read.
+tests/unit/agreement_document_service.spec.ts(3,10): error TS2614: Module '"#repositories/agreement_document_repository"' has no exported member 'AgreementDocumentRepository'. Did you mean to use 'import AgreementDocumentRepository from "#repositories/agreement_document_repository"' instead?

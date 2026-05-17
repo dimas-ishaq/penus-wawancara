@@ -2,7 +2,7 @@ import { belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { BaseModel } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import type Interview from '#models/interview'
+import Interview from '#models/interview'
 import User from '#models/user'
 
 export default class StudentAgreementDocument extends BaseModel {
@@ -41,13 +41,13 @@ export default class StudentAgreementDocument extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @belongsTo(() => import('#models/interview').then(m => m.default), {
+  @belongsTo(() => Interview, {
     foreignKey: 'studentId',
   })
-  declare interview: BelongsTo<Interview>
+  declare interview: BelongsTo<typeof Interview>
 
   @belongsTo(() => User, {
     foreignKey: 'uploadedBy',
   })
-  declare uploader: BelongsTo<User>
+  declare uploader: BelongsTo<typeof User>
 }

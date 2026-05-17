@@ -42,7 +42,7 @@ export default class AgreementDocumentRepository {
    */
   async searchInterviews(search: string) {
     const query = Interview.query()
-      .whereDoesntHave('agreementDocument')
+      .doesntHave('agreementDocument')
       .where((q) => {
         q.whereRaw('LOWER(student_name) LIKE ?', [`%${search.toLowerCase()}%`])
           .orWhere('id', 'like', `%${search.toLowerCase()}%`)

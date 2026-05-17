@@ -15,7 +15,7 @@ test.group('Agreement Documents Browser Test', () => {
       await page.click('button[type="submit"]')
     }
 
-    await page.assertTextContains('Manajemen Surat Perjanjian')
+    await page.assertTextContains('body', 'Manajemen Surat Perjanjian')
   })
 
   test('can open add student modal', async ({ visit }) => {
@@ -26,6 +26,6 @@ test.group('Agreement Documents Browser Test', () => {
     // login logic...
     
     await page.click('button:has-text("Tambah Siswa")')
-    await page.assertTextContains('Cari Siswa')
+    await page.assertTextContains('body', 'Cari Siswa')
   })
 })

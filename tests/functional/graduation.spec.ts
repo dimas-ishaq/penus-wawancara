@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import User from '#models/user'
-import GraduationStudent from '#models/graduation_student'
+import Interview from '#models/interview'
 
 test.group('Graduation Functional', () => {
   test('list graduation students', async ({ client }) => {
@@ -19,8 +19,8 @@ test.group('Graduation Functional', () => {
     const user = await User.query().where('role', 'super_admin').first()
     if (!user) return
 
-    const student = await GraduationStudent.create({
-      registrationId: 'REG-001',
+    const student = await Interview.create({
+      id: 'REG-001',
       studentName: 'Grad Student',
       schoolOrigin: 'SMP Test',
       status: 'pending'

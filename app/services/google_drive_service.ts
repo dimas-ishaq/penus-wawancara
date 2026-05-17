@@ -157,7 +157,7 @@ export default class GoogleDriveService {
     } catch (error) {
       console.error('GDrive Upload Error:', error)
       
-      const isQuotaError = error.message.includes('Service Accounts do not have storage quota')
+      const isQuotaError = (error as any).message.includes('Service Accounts do not have storage quota')
       
       if (isQuotaError) {
         console.warn('Quota error detected, falling back to local storage...')
@@ -174,7 +174,7 @@ export default class GoogleDriveService {
         }
       }
       
-      let message = error.message
+      let message = (error as any).message
       if (isQuotaError) {
         message = 'Service Account tidak memiliki kuota penyimpanan. Sistem beralih ke penyimpanan lokal sementara.'
       }
@@ -248,7 +248,7 @@ export default class GoogleDriveService {
       }
     } catch (error) {
       console.error('GDrive Verification Error:', error)
-      throw new Error(error.message || 'Gagal memverifikasi koneksi Google Drive')
+      throw new Error((error as any).message || 'Gagal memverifikasi koneksi Google Drive')
     }
   }
 }

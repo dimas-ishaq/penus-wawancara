@@ -1,11 +1,11 @@
 import { utils, write } from 'xlsx'
-import { Response } from '@adonisjs/core/http'
+import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 
 export default class AgreementDocumentExport {
   constructor(protected data: any[]) {}
 
-  async download(response: Response) {
+  async download(response: HttpContext['response']) {
     const worksheetData = this.data.map((i) => {
       const doc = i.agreementDocument || {}
       return {

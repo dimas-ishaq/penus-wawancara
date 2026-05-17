@@ -6,5 +6,6 @@
     "moduleResolution": "bundler",
     "module": "ESNext"
   },
+  "exclude": ["tests/**/*", "tests/", "inertia/**/*", "inertia/", "scratch/**/*", "scratch/"],
   "references": [{ "path": "./tsconfig.inertia.json" }]
 }

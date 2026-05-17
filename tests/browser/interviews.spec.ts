@@ -25,8 +25,8 @@ test.group('Interviews Browser', () => {
 
     // Redirected to list
     await page.waitForNavigation()
-    await page.assertTextContains('Jane Doe')
-    await page.assertTextContains('Smp Pelita')
+    await page.assertTextContains('body', 'Jane Doe')
+    await page.assertTextContains('body', 'Smp Pelita')
   })
 
   test('admin can reset interview status', async ({ visit }) => {
@@ -34,7 +34,7 @@ test.group('Interviews Browser', () => {
     if (!user) return
 
     // Create a "Done" interview to reset
-    const interview = await Interview.create({
+    await Interview.create({
       id: 'RESET-001',
       studentName: 'Reset Me',
       schoolOrigin: 'Smp Reset',
@@ -48,6 +48,6 @@ test.group('Interviews Browser', () => {
     // Click Reset button (assuming it's visible in the table for "Done" status)
     // We might need to find the specific row and the button
     // For simplicity, let's just check if we can visit the index and see the data
-    await page.assertTextContains('Reset Me')
+    await page.assertTextContains('body', 'Reset Me')
   })
 })

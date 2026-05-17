@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 import User from '#models/user'
-import hash from '@adonisjs/core/services/hash'
+
 
 test.group('Auth Login Functional', (group) => {
   group.each.setup(async () => {
@@ -41,7 +41,7 @@ test.group('Auth Login Functional', (group) => {
     })
 
     response.assertStatus(200) // Redirect
-    response.assertRedirectsToRoute('admin.dashboard')
+    response.assertRedirectsTo('/admin/dashboard')
     response.assertSessionExists('auth_web')
   })
 })

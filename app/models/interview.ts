@@ -71,5 +71,5 @@ export default class Interview extends InterviewSchema {
   @hasOne(() => StudentAgreementDocument, {
     foreignKey: 'studentId',
   })
-  declare agreementDocument: HasOne<StudentAgreementDocument>
+  declare agreementDocument: HasOne<typeof StudentAgreementDocument>
 }

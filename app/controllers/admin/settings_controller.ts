@@ -217,7 +217,7 @@ export default class SettingsController {
     } catch (error) {
       return response.status(400).json({
         success: false,
-        message: error.message
+        message: (error as any).message
       })
     }
   }
@@ -228,7 +228,7 @@ export default class SettingsController {
       return response.redirect().toPath(url)
     } catch (error) {
       console.error('Google Auth Error:', error)
-      return response.status(400).send(error.message)
+      return response.status(400).send((error as any).message)
     }
   }
 
@@ -250,7 +250,7 @@ export default class SettingsController {
       session.flash('success', 'Berhasil terhubung ke Google Drive!')
     } catch (error) {
       console.error('Google Callback Error:', error)
-      session.flash('error', 'Gagal mendapatkan token: ' + error.message)
+      session.flash('error', 'Gagal mendapatkan token: ' + (error as any).message)
     }
 
     return response.redirect().toPath('/admin/settings')

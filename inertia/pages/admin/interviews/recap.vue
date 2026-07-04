@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Head, useForm, Link, usePage } from '@inertiajs/vue3'
+import { Head, useForm, Link, usePage, router } from '@inertiajs/vue3'
 import { computed, ref, watch, onBeforeUnmount, onMounted } from 'vue'
 import { toast } from 'vue-sonner'
 import { DateTime } from 'luxon'
 import AdminLayout from '~/layouts/admin.vue'
+import ConfirmModal from '~/components/ConfirmModal.vue'
 
 import { DatePicker } from '@/components/ui/date-picker'
 
@@ -127,7 +128,7 @@ const form = useForm({
 
 // --- Autosave state ---
 const AUTO_SAVE_KEY = `recap_autosave_${props.interview.id}`
-const hasUnsavedChanges = ref(false)
+const isDirty = ref(false)
 const isSavingDraft = ref(false)
 const lastSavedAt = ref<string | null>(null)
 const autoSaveTimer = ref<ReturnType<typeof setTimeout> | null>(null)
@@ -136,6 +137,9 @@ const notificationTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const isResetModalOpen = ref(false)
 const resetConfirmationText = ref('')
 const isResetting = ref(false)
+const showUnsavedLeaveModal = ref(false)
+const isLeavingSilently = ref(false)
+let pendingVisitTarget: { url: string | URL; options: Record<string, any> } | null = null
 
 // Load saved draft from localStorage
 const loadSavedDraft = () => {
@@ -251,10 +255,10 @@ const debouncedAutoSave = () => {
   if (autoSaveTimer.value) clearTimeout(autoSaveTimer.value)
 
   // Mark as having unsaved changes immediately
-  hasUnsavedChanges.value = checkForChanges(form.data())
+  isDirty.value = checkForChanges(form.data())
 
   autoSaveTimer.value = setTimeout(() => {
-    if (hasUnsavedChanges.value && !form.processing) {
+    if (isDirty.value && !form.processing) {
       performAutoSave()
     }
   }, 2000)
@@ -349,7 +353,7 @@ const restoreDraft = () => {
 
 
   toast.success('Draft autosave berhasil dipulihkan')
-  hasUnsavedChanges.value = true
+  isDirty.value = true
 }
 
 const dismissDraftRestore = () => {
@@ -369,25 +373,64 @@ watch(
 
 // Warn before leaving with unsaved changes
 const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
-  if (hasUnsavedChanges.value) {
+  if (isDirty.value) {
     e.preventDefault()
     e.returnValue = ''
   }
 }
+
+const removeUnsavedGuard = router.on('before', (event) => {
+  if (isLeavingSilently.value) return
+  if (!isDirty.value) return
+
+  event.preventDefault()
+
+  // Snapshot target visit before modal
+  pendingVisitTarget = {
+    url: event.detail.visit.url,
+    options: {
+      method: event.detail.visit.method,
+      data: event.detail.visit.data as any,
+      replace: event.detail.visit.replace,
+      preserveScroll: event.detail.visit.preserveScroll,
+      preserveState: event.detail.visit.preserveState,
+      only: event.detail.visit.only,
+      except: event.detail.visit.except,
+      headers: event.detail.visit.headers,
+      errorBag: event.detail.visit.errorBag,
+      forceFormData: event.detail.visit.forceFormData,
+      queryStringArrayFormat: event.detail.visit.queryStringArrayFormat,
+      async: event.detail.visit.async,
+      showProgress: event.detail.visit.showProgress,
+      prefetch: event.detail.visit.prefetch,
+      fresh: event.detail.visit.fresh,
+      reset: event.detail.visit.reset,
+      preserveUrl: event.detail.visit.preserveUrl,
+      invalidateCacheTags: event.detail.visit.invalidateCacheTags,
+      viewTransition: event.detail.visit.viewTransition,
+    },
+  }
+
+  showUnsavedLeaveModal.value = true
+  return false
+})
 
 onMounted(() => {
   window.addEventListener('beforeunload', beforeUnloadHandler)
 })
 
 onBeforeUnmount(() => {
+  removeUnsavedGuard()
   window.removeEventListener('beforeunload', beforeUnloadHandler)
+  pendingVisitTarget = null
   if (autoSaveTimer.value) clearTimeout(autoSaveTimer.value)
   if (notificationTimer.value) clearTimeout(notificationTimer.value)
 
   // Final auto-save on unmount if there are unsaved changes
-  if (hasUnsavedChanges.value && !form.processing) {
+  if (isDirty.value && !form.processing) {
     performAutoSave()
   }
+  isLeavingSilently.value = false
 })
 
 
@@ -403,13 +446,22 @@ const submitRecap = () => {
     .put(`/admin/interviews/${props.interview.id}/recap`, {
       onSuccess: () => {
         clearSavedDraft()
-        hasUnsavedChanges.value = false
+        isDirty.value = false
         lastSavedAt.value = null
         showUnsavedNotification.value = false
       },
       onError: (errors) => {
       },
     })
+}
+
+const confirmLeaveWithoutSave = () => {
+  if (!pendingVisitTarget) return
+  showUnsavedLeaveModal.value = false
+  const target = pendingVisitTarget
+  pendingVisitTarget = null
+  isLeavingSilently.value = true
+  router.visit(target.url, target.options)
 }
 
 const handleReset = () => {
@@ -509,7 +561,7 @@ const handleReset = () => {
         </div>
         <!-- Unsaved changes indicator -->
         <div
-          v-else-if="hasUnsavedChanges && !showUnsavedNotification"
+          v-else-if="isDirty && !showUnsavedNotification"
           class="flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/50"
         >
           <span class="material-symbols-outlined text-amber-600 text-sm">edit_note</span>
@@ -531,7 +583,7 @@ const handleReset = () => {
         </div>
         <!-- All saved -->
         <div
-          v-else-if="!hasUnsavedChanges && lastSavedAt"
+          v-else-if="!isDirty && lastSavedAt"
           class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-xl border border-outline-variant/20"
         >
           <span class="material-symbols-outlined text-emerald-600 text-sm">cloud_done</span>
@@ -1774,4 +1826,15 @@ const handleReset = () => {
       </div>
     </div>
   </Teleport>
+
+  <ConfirmModal
+    :show="showUnsavedLeaveModal"
+    title="Perubahan belum disimpan"
+    message="Simpan dulu sebelum keluar, reload, atau pindah halaman."
+    confirm-text="Keluar Tanpa Simpan"
+    cancel-text="Tetap Di Halaman"
+    variant="error"
+    @close="showUnsavedLeaveModal = false"
+    @confirm="confirmLeaveWithoutSave"
+  />
 </template>

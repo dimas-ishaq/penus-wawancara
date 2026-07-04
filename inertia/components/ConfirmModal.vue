@@ -15,41 +15,44 @@ const emit = defineEmits(['close', 'confirm'])
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="show" class="fixed inset-0 z-[200] flex items-center justify-center p-6">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" @click="emit('close')"></div>
+      <div v-if="show" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" @click="emit('close')"></div>
 
-        <!-- Modal Content -->
-        <div class="relative bg-surface w-full max-w-2xl rounded-[2.5rem] shadow-2xl border border-outline-variant/20 overflow-hidden animate-zoom-in">
-          <div class="p-8">
-            <h3 class="text-2xl font-black text-primary font-headline mb-2">{{ title }}</h3>
-            <p class="text-on-surface-variant font-body text-sm mb-6">
-              {{ message }}
-            </p>
+        <div class="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+          <div class="p-6 sm:p-8">
+            <div class="mb-4 flex items-center gap-3">
+              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600 shrink-0">
+                <span class="material-symbols-outlined text-2xl">warning</span>
+              </div>
+              <div class="min-w-0">
+                <h3 class="truncate text-xl sm:text-2xl font-black text-slate-900">{{ title }}</h3>
+                <p class="mt-1 text-sm text-slate-500">{{ message }}</p>
+              </div>
+            </div>
 
             <slot />
 
-            <div class="flex justify-end gap-3 pt-8">
-              <button 
-                type="button" 
+            <div class="mt-8 flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
+              <button
+                type="button"
                 @click="emit('close')"
-                class="px-6 py-4 bg-surface-container-high text-primary font-black rounded-2xl hover:bg-surface-container-highest transition-all font-headline tracking-widest uppercase text-xs"
+                class="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 font-bold text-slate-700 shadow-sm hover:bg-slate-50 active:scale-[0.99]"
               >
                 {{ cancelText || 'Batal' }}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 @click="emit('confirm')"
                 :disabled="processing"
-                class="px-8 py-4 font-black rounded-2xl transition-all shadow-lg font-headline tracking-widest uppercase text-xs"
+                class="inline-flex h-12 items-center justify-center rounded-2xl px-5 font-black text-white shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 min-w-[160px]"
                 :class="{
-                  'bg-primary text-white shadow-primary/20 hover:bg-primary/90': variant !== 'error' && variant !== 'success',
-                  'bg-error text-white shadow-error/20 hover:bg-error/90': variant === 'error',
-                  'bg-success text-white shadow-success/20 hover:bg-success/90': variant === 'success'
+                  'bg-slate-900 hover:bg-slate-800': variant !== 'error' && variant !== 'success',
+                  'bg-red-600 hover:bg-red-700': variant === 'error',
+                  'bg-emerald-600 hover:bg-emerald-700': variant === 'success'
                 }"
               >
                 <span v-if="processing" class="material-symbols-outlined animate-spin text-sm mr-2">sync</span>
-                {{ confirmText || 'Konfirmasi' }}
+                <span>{{ confirmText || 'Konfirmasi' }}</span>
               </button>
             </div>
           </div>

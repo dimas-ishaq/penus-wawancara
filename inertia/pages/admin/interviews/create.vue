@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Head, useForm, Link } from '@inertiajs/vue3'
-import { toast } from 'vue-sonner'
+import { Head, useForm, Link, router } from '@inertiajs/vue3'
+import { onBeforeUnmount, ref, watch, onMounted } from 'vue'
+import ConfirmModal from '~/components/ConfirmModal.vue'
 import AdminLayout from '~/layouts/admin.vue'
 
 defineOptions({ layout: AdminLayout })
@@ -10,11 +11,85 @@ const form = useForm({
   schoolOrigin: ''
 })
 
+const isDirty = ref(false)
+const showUnsavedLeaveModal = ref(false)
+const isLeavingSilently = ref(false)
+let pendingVisitTarget: { url: string | URL; options: Record<string, any> } | null = null
+
+watch(
+  () => form.data(),
+  () => {
+    isDirty.value = !!form.studentName || !!form.schoolOrigin
+  },
+  { deep: true }
+)
+
+const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
+  if (isDirty.value) {
+    e.preventDefault()
+    e.returnValue = ''
+  }
+}
+
+const removeUnsavedGuard = router.on('before', (event) => {
+  if (isLeavingSilently.value) return
+  if (!isDirty.value) return
+
+  event.preventDefault()
+  pendingVisitTarget = {
+    url: event.detail.visit.url,
+    options: {
+      method: event.detail.visit.method,
+      data: event.detail.visit.data as any,
+      replace: event.detail.visit.replace,
+      preserveScroll: event.detail.visit.preserveScroll,
+      preserveState: event.detail.visit.preserveState,
+      only: event.detail.visit.only,
+      except: event.detail.visit.except,
+      headers: event.detail.visit.headers,
+      errorBag: event.detail.visit.errorBag,
+      forceFormData: event.detail.visit.forceFormData,
+      queryStringArrayFormat: event.detail.visit.queryStringArrayFormat,
+      async: event.detail.visit.async,
+      showProgress: event.detail.visit.showProgress,
+      prefetch: event.detail.visit.prefetch,
+      fresh: event.detail.visit.fresh,
+      reset: event.detail.visit.reset,
+      preserveUrl: event.detail.visit.preserveUrl,
+      invalidateCacheTags: event.detail.visit.invalidateCacheTags,
+      viewTransition: event.detail.visit.viewTransition,
+    },
+  }
+  showUnsavedLeaveModal.value = true
+  return false
+})
+
+onMounted(() => {
+  window.addEventListener('beforeunload', beforeUnloadHandler)
+})
+
+onBeforeUnmount(() => {
+  removeUnsavedGuard()
+  window.removeEventListener('beforeunload', beforeUnloadHandler)
+  pendingVisitTarget = null
+})
+
 const submitForm = () => {
   form.post('/admin/interviews', {
     onSuccess: () => {
+      isDirty.value = false
     }
   })
+}
+
+const confirmLeaveWithoutSave = () => {
+  if (!pendingVisitTarget) return
+  const target = pendingVisitTarget
+  pendingVisitTarget = null
+  showUnsavedLeaveModal.value = false
+  isLeavingSilently.value = true
+  router.visit(target.url, target.options)
+  isLeavingSilently.value = false
 }
 </script>
 
@@ -64,4 +139,15 @@ const submitForm = () => {
       </form>
     </div>
   </div>
+
+  <ConfirmModal
+    :show="showUnsavedLeaveModal"
+    title="Perubahan belum disimpan"
+    message="Simpan dulu sebelum keluar, reload, atau pindah halaman."
+    confirm-text="Keluar Tanpa Simpan"
+    cancel-text="Tetap Di Halaman"
+    variant="error"
+    @close="showUnsavedLeaveModal = false"
+    @confirm="confirmLeaveWithoutSave"
+  />
 </template>

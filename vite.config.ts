@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import adonisjs from '@adonisjs/vite/client'
 import inertia from '@adonisjs/inertia/vite'
+import { fileURLToPath } from 'node:url'
+import { dirname, resolve } from 'node:path'
+
+const root = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   plugins: [
@@ -12,9 +16,9 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '~/': `${import.meta.dirname}/inertia/`,
-      '@/': `${import.meta.dirname}/inertia/`,
-      '@generated': `${import.meta.dirname}/.adonisjs/client/`,
+      '~/': resolve(root, 'inertia') + '/',
+      '@/': resolve(root, 'inertia') + '/',
+      '@generated': resolve(root, '.adonisjs/client') + '/',
     },
   },
 })

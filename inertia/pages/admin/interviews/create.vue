@@ -144,7 +144,7 @@ const confirmLeaveWithoutSave = () => {
     :show="showUnsavedLeaveModal"
     title="Perubahan belum disimpan"
     message="Simpan dulu sebelum keluar, reload, atau pindah halaman."
-    confirm-text="Keluar Tanpa Simpan"
+    confirm-text="Tetap Simpan"
     cancel-text="Tetap Di Halaman"
     variant="error"
     @close="showUnsavedLeaveModal = false"
